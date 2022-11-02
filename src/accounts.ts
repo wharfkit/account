@@ -7,6 +7,7 @@ import type { AccountData } from './types'
 export class Account {
     chain_id: ChainId
     account_name: Name
+    permissions: Permission[] = []
 
      constructor(accountName: Name, chainId: ChainId) {
         this.account_name = accountName
@@ -25,10 +26,12 @@ export class Account {
         return this.chainId
      }
 
-     async getPermissions(scope): Promise<Permission> {
+     async getPermissions(scope): Promise<Permission | undefined> {
         const accountData = await this.getAccountData()
 
-        return Permission.from(accountData, scope)
+         return this.permissions.find((permission) => {
+            return permission.scope === scope
+         });
      }
 
      async getAccountData(): Promise<AccountData> {
