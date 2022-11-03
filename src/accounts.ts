@@ -1,4 +1,5 @@
-import { Name, ChainId } from '@greymass/eosio'
+import { Name } from '@greymass/eosio'
+import { ChainId } from 'anchor-link'
 
 import { Permission } from './accounts/permissions'
 
@@ -26,11 +27,11 @@ export class Account {
         return this.chainId
      }
 
-     async getPermissions(scope): Promise<Permission | undefined> {
+     async getPermissions(permissionName: Name): Promise<Permission | undefined> {
         const accountData = await this.getAccountData()
 
          return this.permissions.find((permission) => {
-            return permission.scope === scope
+            return permission.permissionName === permissionName
          });
      }
 
@@ -76,7 +77,7 @@ export class Account {
         // Add permission wait here..
     }
 
-    async removePermissionWait(permission: Permission, wait: number): void {
+    async removePermissionWait(permission: Permission, wait: number): Promise<void> {
         // Remove permission wait here..
     }
 

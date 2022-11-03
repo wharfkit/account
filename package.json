@@ -1,12 +1,12 @@
 {
-    "name": "PACKAGE",
-    "description": "DESCRIPTION",
-    "version": "0.0.0",
+    "name": "@wharfkit/account",
+    "description": "Account kit for Wharf Kit",
+    "version": "0.0.1",
     "homepage": "https://github.com/greymass/PACKAGE",
     "license": "BSD-3-Clause",
-    "main": "lib/PACKAGE.js",
-    "module": "lib/PACKAGE.m.js",
-    "types": "lib/PACKAGE.d.ts",
+    "main": "lib/account.js",
+    "module": "lib/account.m.js",
+    "types": "lib/account.d.ts",
     "sideEffects": false,
     "files": [
         "lib/*",
@@ -17,6 +17,7 @@
     },
     "dependencies": {
         "@greymass/eosio": "^0.6.4",
+        "anchor-link": "^3.5.1",
         "tslib": "^2.1.0"
     },
     "devDependencies": {
