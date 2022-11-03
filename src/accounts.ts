@@ -1,9 +1,11 @@
 import {Name, APIClient, API, NameType} from '@greymass/eosio'
 import { ChainId } from 'anchor-link'
+import { Session } from '@wharfkit/session'
 
 import { Permission } from './accounts/permissions'
 
 import type { AccountOptions } from './types'
+import {SigningRequest} from "eosio-signing-request";
 
 export class Account {
     chain_id: ChainId
@@ -11,14 +13,16 @@ export class Account {
     api_client: APIClient
     account_data: API.v1.AccountObject | undefined
     account_data_timestamp: number | undefined
+    session: Session | undefined
     cache_duration: number = 1000 * 60 * 5 // 5 minutes
 
-     constructor(accountName: Name, chainId: ChainId, options?: AccountOptions) {
+     constructor(accountName: Name, chainId: ChainId, session?: Session) {
         this.account_name = accountName
         this.chain_id = chainId
         this.api_client = new APIClient({
             url: 'https://eos.greymass.com', // This should be looked up with the chainId
         });
+        this.session = session
         this.cache_duration = options?.cacheDuration || this.cache_duration
      }
 
@@ -41,9 +45,11 @@ export class Account {
      }
 
      addPermission(permission: Permission): Promise<void> {
-        const permissionAction = Permission.addPermissionAction(permission)
+        const permissionESR = Permission.addPermissionESR(permission, {
+            client: this.api_client
+        })
 
-        return this.signAndBroadcastAction(permissionAction)
+        return this.signAndBroadcastESR(permissionESR)
     }
 
     async removePermission(permission: Permission): Promise<void> {
@@ -96,9 +102,12 @@ export class Account {
         });
     }
 
-    signAndBroadcastAction(action: API.v1.Action): Promise<API.v1.Transaction> {
+    signAndBroadcastESR(esr: SigningRequest): Promise<void> {
         return new Promise((resolve, reject) => {
-            // Use session kit to sign and broadcast the action
+            // Use session kit to sign and broadcast the action.
+            // Probably something like this:
+            //
+            // (this.session || globals.session)?.sign(esr)
         });
     }
 }

@@ -1,14 +1,24 @@
-import { Name, NameType } from '@greymass/eosio';
+import {APIClient, Name, NameType} from '@greymass/eosio';
 import type { API } from '@greymass/eosio';
+import * as zlib from "zlib";
+import { SigningRequest, AbiProvider } from 'eosio-signing-request'
+import type { PermissionOptions } from './types'
+import {createESR} from "../helpers/esr";
+
+declare const TextEncoder
+declare const TextDecoder
 
 export class Permission {
     permission_name: Name
     permission_data: API.v1.AccountPermission
+    client: APIClient
 
-    constructor(permissionName: Name, permissionData: API.v1.AccountPermission) {
+    constructor(permissionName: Name, permissionData: API.v1.AccountPermission, options?: PermissionOptions) {
         this.permission_name = permissionName
         this.permission_data = permissionData
+        this.client = options?.client
     }
+
 
     static from(permissionName: NameType, accountData: API.v1.AccountObject): Permission {
         const permissionObject = accountData.getPermission(permissionName)
@@ -20,8 +30,21 @@ export class Permission {
         return new Permission(Name.from(permissionName), permissionObject)
     }
 
-    static addPermissionAction(permission: Permission): void {
-        createPermissionAction('updateauth', permission)
+    static addPermissionESR(permission: Permission, options: PermissionOptions, session?: Session): void {
+        return createESR(
+            'eosio',
+            'updateauth',
+            [{
+                name: permission.name,
+                parent: permission.parent,
+                auth: {
+                    threshold: permission.threshold,
+                    keys: permission.keys,
+                    accounts: permission.accounts,
+                    waits: permission.waits
+                }
+            }]
+        )
     }
 
     get permissionName(): Name {
@@ -62,17 +85,5 @@ export class Permission {
 
     async removePermissionWaitAction(permission: Permission, wait: number): Promise<void> {
         // Remove permission wait here..
-    }
-}
-
-function createPermissionAction(actionData) {
-    return {
-        account: 'eosio',
-        name: 'updateauth',
-        authorization: [{
-            actor: actionData.accountName,
-            permission: actionData.permissionName,
-        }],
-        data: actionData,
     }
 }
