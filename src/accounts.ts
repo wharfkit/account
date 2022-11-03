@@ -1,18 +1,25 @@
-import { Name } from '@greymass/eosio'
+import {Name, APIClient, API, NameType} from '@greymass/eosio'
 import { ChainId } from 'anchor-link'
 
 import { Permission } from './accounts/permissions'
 
-import type { AccountData } from './types'
+import type { AccountOptions } from './types'
 
 export class Account {
     chain_id: ChainId
     account_name: Name
-    permissions: Permission[] = []
+    api_client: APIClient
+    account_data: API.v1.AccountObject | undefined
+    account_data_timestamp: number | undefined
+    cache_duration: number = 1000 * 60 * 5 // 5 minutes
 
-     constructor(accountName: Name, chainId: ChainId) {
+     constructor(accountName: Name, chainId: ChainId, options?: AccountOptions) {
         this.account_name = accountName
         this.chain_id = chainId
+        this.api_client = new APIClient({
+            url: 'https://eos.greymass.com', // This should be looked up with the chainId
+        });
+        this.cache_duration = options?.cacheDuration || this.cache_duration
      }
 
      static from(accountName: Name, chainId: ChainId): Account {
@@ -27,26 +34,16 @@ export class Account {
         return this.chainId
      }
 
-     async getPermissions(permissionName: Name): Promise<Permission | undefined> {
+     async getPermission(permissionName: NameType): Promise<Permission | undefined> {
         const accountData = await this.getAccountData()
 
-         return this.permissions.find((permission) => {
-            return permission.permissionName === permissionName
-         });
+         return Permission.from(permissionName, accountData)
      }
 
-     async getAccountData(): Promise<AccountData> {
-        // Fetch data here..
+     addPermission(permission: Permission): Promise<void> {
+        const permissionAction = Permission.addPermissionAction(permission)
 
-        return {
-            account_name: this.accountName.toString(),
-            head_block_num: 0,
-            head_block_time: '2020-01-01T00:00:00.000',
-        }
-     }
-
-    async addPermission(permission: Permission): Promise<void> {
-        // Add permission here..
+        return this.signAndBroadcastAction(permissionAction)
     }
 
     async removePermission(permission: Permission): Promise<void> {
@@ -81,4 +78,27 @@ export class Account {
         // Remove permission wait here..
     }
 
+    getAccountData(): Promise<API.v1.AccountObject> {
+        return new Promise((resolve, reject) => {
+            if (this.account_data && this.account_data_timestamp && this.account_data_timestamp + this.cache_duration > Date.now()) {
+                resolve(this.account_data)
+            }
+
+            this.api_client.v1.chain.get_account(this.accountName.toString())
+                .then(accountData => {
+                    this.account_data = accountData;
+                    this.account_data_timestamp = Date.now();
+                    resolve(accountData)
+                })
+                .catch(error => {
+                    reject(error)
+                });
+        });
+    }
+
+    signAndBroadcastAction(action: API.v1.Action): Promise<API.v1.Transaction> {
+        return new Promise((resolve, reject) => {
+            // Use session kit to sign and broadcast the action
+        });
+    }
 }
