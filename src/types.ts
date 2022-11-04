@@ -1,3 +1,5 @@
+import type { Session } from '@wharfkit/session'
+
 export interface AccountData {
     account_name: string
     head_block_num: number
@@ -5,7 +7,8 @@ export interface AccountData {
 }
 
 export interface AccountOptions {
-    cacheDuration?: number
+    cache_duration?: number
+    session?: Session
 }
 
 export interface PermissionData {

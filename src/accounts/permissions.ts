@@ -1,12 +1,36 @@
 import {APIClient, Name, NameType} from '@greymass/eosio';
 import type { API } from '@greymass/eosio';
-import * as zlib from "zlib";
-import { SigningRequest, AbiProvider } from 'eosio-signing-request'
-import type { PermissionOptions } from './types'
-import {createESR} from "../helpers/esr";
 
-declare const TextEncoder
-declare const TextDecoder
+import { Contract } from '@wharfkit/contract'
+
+import { Account } from '../accounts'
+
+import type { PermissionOptions } from '../types'
+
+interface PermissionType {
+    parent: string
+    permission: NameType
+    account: NameType
+    auth: {
+        accounts: ({
+            permission: {
+                actor: NameType
+                permission: string
+            }
+        })[]
+        waits: ({
+            wait_sec: number
+            weight: number
+        })[]
+        keys: ({
+            key: string
+            weight: number
+        })[]
+    },
+    authorized_by: NameType
+}
+
+
 
 export class Permission {
     permission_name: Name
@@ -19,7 +43,6 @@ export class Permission {
         this.client = options?.client
     }
 
-
     static from(permissionName: NameType, accountData: API.v1.AccountObject): Permission {
         const permissionObject = accountData.getPermission(permissionName)
 
@@ -30,21 +53,13 @@ export class Permission {
         return new Permission(Name.from(permissionName), permissionObject)
     }
 
-    static addPermissionESR(permission: Permission, options: PermissionOptions, session?: Session): void {
-        return createESR(
-            'eosio',
-            'updateauth',
-            [{
-                name: permission.name,
-                parent: permission.parent,
-                auth: {
-                    threshold: permission.threshold,
-                    keys: permission.keys,
-                    accounts: permission.accounts,
-                    waits: permission.waits
-                }
-            }]
-        )
+    static addPermission(permission: PermissionType, account: Account): Promise<void> {
+        return Contract.eosio.updateauth({
+            account: account.name.toString(),
+            "permission": permission.name,
+            "parent": permission.parent,
+            "auth": permission.auth
+        })
     }
 
     get permissionName(): Name {

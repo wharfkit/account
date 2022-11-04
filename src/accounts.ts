@@ -1,6 +1,6 @@
 import {Name, APIClient, API, NameType} from '@greymass/eosio'
 import { ChainId } from 'anchor-link'
-import { Session } from '@wharfkit/session'
+import { Contract } from '@wharfkit/contract'
 
 import { Permission } from './accounts/permissions'
 
@@ -8,22 +8,22 @@ import type { AccountOptions } from './types'
 import {SigningRequest} from "eosio-signing-request";
 
 export class Account {
-    chain_id: ChainId
     account_name: Name
+    chain_id: ChainId
     api_client: APIClient
     account_data: API.v1.AccountObject | undefined
     account_data_timestamp: number | undefined
-    session: Session | undefined
+    contract: Contract | undefined
     cache_duration: number = 1000 * 60 * 5 // 5 minutes
 
-     constructor(accountName: Name, chainId: ChainId, session?: Session) {
+     constructor(accountName: Name, chainId: ChainId, options?: AccountOptions) {
         this.account_name = accountName
         this.chain_id = chainId
         this.api_client = new APIClient({
             url: 'https://eos.greymass.com', // This should be looked up with the chainId
         });
-        this.session = session
-        this.cache_duration = options?.cacheDuration || this.cache_duration
+        this.contract = new Contract(chainId, this, options?.session)
+        this.cache_duration = options?.cache_duration || this.cache_duration
      }
 
      static from(accountName: Name, chainId: ChainId): Account {
@@ -44,12 +44,8 @@ export class Account {
          return Permission.from(permissionName, accountData)
      }
 
-     addPermission(permission: Permission): Promise<void> {
-        const permissionESR = Permission.addPermissionESR(permission, {
-            client: this.api_client
-        })
-
-        return this.signAndBroadcastESR(permissionESR)
+     addPermission(permissionData: PermissionType): Promise<void> {
+        Permission.addPermission(permissionData, this)
     }
 
     async removePermission(permission: Permission): Promise<void> {
@@ -99,15 +95,6 @@ export class Account {
                 .catch(error => {
                     reject(error)
                 });
-        });
-    }
-
-    signAndBroadcastESR(esr: SigningRequest): Promise<void> {
-        return new Promise((resolve, reject) => {
-            // Use session kit to sign and broadcast the action.
-            // Probably something like this:
-            //
-            // (this.session || globals.session)?.sign(esr)
         });
     }
 }
