@@ -1,11 +1,27 @@
 import {Name, APIClient, API, NameType} from '@greymass/eosio'
 import { ChainId } from 'anchor-link'
-import { Contract } from '@wharfkit/contract'
+import type { ChainIdType } from 'anchor-link'
 
-import { Permission } from './accounts/permissions'
+// import { Contract } from '@wharfkit/contract'
 
-import type { AccountOptions } from './types'
-import {SigningRequest} from "eosio-signing-request";
+// import type { Session } from '@wharfkit/session'
+
+// Remove these when Contract and Session are used
+interface Session {
+
+}
+
+interface Contract {
+
+}
+
+import { Permission } from './permissions'
+
+export interface AccountOptions {
+    cache_duration?: number
+    session?: Session
+    api_client?: APIClient
+}
 
 export class Account {
     account_name: Name
@@ -22,12 +38,12 @@ export class Account {
         this.api_client = new APIClient({
             url: 'https://eos.greymass.com', // This should be looked up with the chainId
         });
-        this.contract = new Contract(chainId, this, options?.session)
+        // this.contract = new Contract(chainId, this, options?.session)
         this.cache_duration = options?.cache_duration || this.cache_duration
      }
 
-     static from(accountName: Name, chainId: ChainId): Account {
-        return new Account(accountName, chainId)
+     static from(accountName: NameType, chain: ChainIdType, options?: AccountOptions): Account {
+        return new Account(Name.from(accountName), ChainId.from(chain), options)
      }
 
      get accountName(): Name {
@@ -44,41 +60,41 @@ export class Account {
          return Permission.from(permissionName, accountData)
      }
 
-     addPermission(permissionData: PermissionType): Promise<void> {
-        Permission.addPermission(permissionData, this)
-    }
-
-    async removePermission(permission: Permission): Promise<void> {
-        // Remove permission here..
-    }
-
-    async updatePermission(permission: Permission): Promise<void> {
-        // Update permission here..
-    }
-
-    async addPermissionKey(permission: Permission, key: string): Promise<void> {
-        // Add permission key here..
-    }
-
-    async removePermissionKey(permission: Permission, key: string): Promise<void> {
-        // Remove permission key here..
-    }
-
-    async addPermissionAccount(permission: Permission, account: Account): Promise<void> {
-        // Add permission account here..
-    }
-
-    async removePermissionAccount(permission: Permission, account: Account): Promise<void> {
-        // Remove permission account here..
-    }
-
-    async addPermissionWait(permission: Permission, wait: number): Promise<void> {
-        // Add permission wait here..
-    }
-
-    async removePermissionWait(permission: Permission, wait: number): Promise<void> {
-        // Remove permission wait here..
-    }
+    // addPermission(permissionData: PermissionType): Promise<void> {
+    //     Permission.addPermission(permissionData, this)
+    // }
+    //
+    // async removePermission(permission: Permission): Promise<void> {
+    //     // Remove permission here..
+    // }
+    //
+    // async updatePermission(permission: Permission): Promise<void> {
+    //     // Update permission here..
+    // }
+    //
+    // async addPermissionKey(permission: Permission, key: string): Promise<void> {
+    //     // Add permission key here..
+    // }
+    //
+    // async removePermissionKey(permission: Permission, key: string): Promise<void> {
+    //     // Remove permission key here..
+    // }
+    //
+    // async addPermissionAccount(permission: Permission, account: Account): Promise<void> {
+    //     // Add permission account here..
+    // }
+    //
+    // async removePermissionAccount(permission: Permission, account: Account): Promise<void> {
+    //     // Remove permission account here..
+    // }
+    //
+    // async addPermissionWait(permission: Permission, wait: number): Promise<void> {
+    //     // Add permission wait here..
+    // }
+    //
+    // async removePermissionWait(permission: Permission, wait: number): Promise<void> {
+    //     // Remove permission wait here..
+    // }
 
     getAccountData(): Promise<API.v1.AccountObject> {
         return new Promise((resolve, reject) => {

@@ -3,9 +3,21 @@ import type { API } from '@greymass/eosio';
 
 import { Contract } from '@wharfkit/contract'
 
-import { Account } from '../accounts'
+import { Account } from './accounts'
 
 import type { PermissionOptions } from '../types'
+
+interface PermissionData {
+    parent: string
+    required_auth: {
+        accounts: {
+            permission: {
+                actor: string
+                permission: string
+            }
+        }
+    }
+}
 
 interface PermissionType {
     parent: string
@@ -29,8 +41,6 @@ interface PermissionType {
     },
     authorized_by: NameType
 }
-
-
 
 export class Permission {
     permission_name: Name

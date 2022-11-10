@@ -6,4 +6,4 @@
  * @returns The solution.
  */
 export * from './accounts'
-export * from './accounts/permissions'
+export * from './permissions'

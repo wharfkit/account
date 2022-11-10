@@ -51,7 +51,7 @@ build/docs: $(SRC_FILES) node_modules
 	@${BIN}/typedoc --out build/docs \
 		--excludeInternal --excludePrivate --excludeProtected \
 		--includeVersion --hideGenerator --readme none \
-		src/index.ts
+		src/accounts.test.ts
 
 build/pages: build/docs test/browser.html
 	@mkdir -p build/pages

@@ -21,7 +21,7 @@ const external = Object.keys(pkg.dependencies)
 /** @type {import('rollup').RollupOptions} */
 export default [
     {
-        input: 'src/index.ts',
+        input: 'src/accounts.test.ts',
         output: {
             banner,
             file: pkg.main,
@@ -32,7 +32,7 @@ export default [
         external,
     },
     {
-        input: 'src/index.ts',
+        input: 'src/accounts.test.ts',
         output: {
             banner,
             file: pkg.module,
@@ -43,7 +43,7 @@ export default [
         external,
     },
     {
-        input: 'src/index.ts',
+        input: 'src/accounts.test.ts',
         output: {banner, file: pkg.types, format: 'esm'},
 
         plugins: [dts()],
