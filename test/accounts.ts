@@ -29,56 +29,51 @@ suite('accounts', function () {
 
         suite('getAccountData', function () {
             this.slow(200)
-            this.timeout(10 * 10000)
+            this.timeout(5 * 1000)
 
             test('returns account data', async function () {
-                const account = testAccount()
+               const account = testAccount()
 
                assert.instanceOf(await account.getAccountData(), API.v1.AccountObject)
             })
 
-            test('throws error when account does not exist', async function (done) {
-                const account = testAccount()
+            test('throws error when account does not exist', function (done) {
+                const account = nonExistentTestAccount()
 
-                try {
-                    await account.getAccountData()
-                } catch (error) {
+                account.getAccountData().catch((error) => {
                     assert((error as Error).message, "Account does not exist")
                     done()
-                }
+                });
             })
         })
 
         suite('getPermission', function () {
             this.slow(200)
-            this.timeout(10 * 10000)
+            this.timeout(5 * 1000)
 
-            test('returns account data', async function () {
+            test('returns permission object', async function () {
                 const account = testAccount()
 
                 assert.instanceOf(await account.getPermission('active'), Permission)
             })
 
-            test('throws error when account does not exist', async function (done) {
-                const account = testAccount()
+            test('throws error when account does not exist', function (done) {
+                const account = nonExistentTestAccount()
 
-                try {
-                    await account.getPermission('active')
-                } catch (error) {
-                    assert((error as Error).message, "Account does not exist")
+                account.getPermission('active').catch((error) => {
+                     console.log({ error: error.message })
+                    assert.equal((error as Error).message, "Account nonexistent does not exist on chain EOS.")
                     done()
-                }
+                });
             })
 
-            test('throws error when permission does not exist', async function (done) {
+            test('throws error when permission does not exist',  function (done) {
                 const account = testAccount()
 
-                try {
-                    await account.getPermission('nonexistent')
-                } catch (error) {
-                    assert((error as Error).message, "Permission does not exist")
+                account.getPermission('nonexistent').catch((error) => {
+                    assert.equal((error as Error).message, "Unknown permission nonexistent on account teamgreymass.")
                     done()
-                }
+                });
             })
         })
     })
@@ -86,4 +81,8 @@ suite('accounts', function () {
 
 function testAccount() {
     return Account.from('teamgreymass', ChainId.from(ChainName.EOS), { api_client: eosApiClient })
+}
+
+function nonExistentTestAccount() {
+    return Account.from('nonexistent', ChainId.from(ChainName.EOS), { api_client: eosApiClient })
 }

@@ -1,6 +1,6 @@
 import {Name, APIClient, API, NameType} from '@greymass/eosio'
-import { ChainId } from 'anchor-link'
-import type { ChainIdType } from 'anchor-link'
+import {ChainId, ChainName} from 'anchor-link'
+import type {ChainIdType} from 'anchor-link'
 
 // import { Contract } from '@wharfkit/contract'
 
@@ -47,11 +47,11 @@ export class Account {
      }
 
      get accountName(): Name {
-        return this.accountName
+        return this.account_name
      }
 
      get chainId(): ChainId {
-        return this.chainId
+        return this.chain_id
      }
 
      async getPermission(permissionName: NameType): Promise<Permission | undefined> {
@@ -99,7 +99,7 @@ export class Account {
     getAccountData(): Promise<API.v1.AccountObject> {
         return new Promise((resolve, reject) => {
             if (this.account_data && this.account_data_timestamp && this.account_data_timestamp + this.cache_duration > Date.now()) {
-                resolve(this.account_data)
+                return resolve(this.account_data)
             }
 
             this.api_client.v1.chain.get_account(this.accountName.toString())
@@ -109,6 +109,9 @@ export class Account {
                     resolve(accountData)
                 })
                 .catch(error => {
+                    if (error.message.includes('Account not found')) {
+                        return reject(new Error(`Account ${this.account_name} does not exist on chain ${ChainName[this.chain_id.chainName]}.`))
+                    }
                     reject(error)
                 });
         });
