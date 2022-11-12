@@ -1,4 +1,4 @@
-import {Name, APIClient, API, NameType} from '@greymass/eosio'
+import {API, APIClient, Name, NameType} from '@greymass/eosio'
 import {ChainId, ChainName} from 'anchor-link'
 import type {ChainIdType} from 'anchor-link'
 
@@ -8,14 +8,14 @@ import type {ChainIdType} from 'anchor-link'
 
 // Remove these when Contract and Session are used
 interface Session {
-
+    chainId?: ChainIdType
 }
 
 interface Contract {
-
+    chainId?: ChainIdType
 }
 
-import { Permission } from './permissions'
+import {Permission} from './permissions'
 
 export interface AccountOptions {
     cache_duration?: number
@@ -32,33 +32,35 @@ export class Account {
     contract: Contract | undefined
     cache_duration: number = 1000 * 60 * 5 // 5 minutes
 
-     constructor(accountName: Name, chainId: ChainId, options?: AccountOptions) {
+    constructor(accountName: Name, chainId: ChainId, options?: AccountOptions) {
         this.account_name = accountName
         this.chain_id = chainId
-        this.api_client = new APIClient({
-            url: 'https://eos.greymass.com', // This should be looked up with the chainId
-        });
+        this.api_client =
+            options?.api_client ||
+            new APIClient({
+                url: 'https://eos.greymass.com', // This should be looked up with the chainId
+            })
         // this.contract = new Contract(chainId, this, options?.session)
         this.cache_duration = options?.cache_duration || this.cache_duration
-     }
+    }
 
-     static from(accountName: NameType, chain: ChainIdType, options?: AccountOptions): Account {
+    static from(accountName: NameType, chain: ChainIdType, options?: AccountOptions): Account {
         return new Account(Name.from(accountName), ChainId.from(chain), options)
-     }
+    }
 
-     get accountName(): Name {
+    get accountName(): Name {
         return this.account_name
-     }
+    }
 
-     get chainId(): ChainId {
+    get chainId(): ChainId {
         return this.chain_id
-     }
+    }
 
-     async getPermission(permissionName: NameType): Promise<Permission | undefined> {
+    async getPermission(permissionName: NameType): Promise<Permission | undefined> {
         const accountData = await this.getAccountData()
 
-         return Permission.from(permissionName, accountData)
-     }
+        return Permission.from(permissionName, accountData)
+    }
 
     // addPermission(permissionData: PermissionType): Promise<void> {
     //     Permission.addPermission(permissionData, this)
@@ -98,22 +100,33 @@ export class Account {
 
     getAccountData(): Promise<API.v1.AccountObject> {
         return new Promise((resolve, reject) => {
-            if (this.account_data && this.account_data_timestamp && this.account_data_timestamp + this.cache_duration > Date.now()) {
+            if (
+                this.account_data &&
+                this.account_data_timestamp &&
+                this.account_data_timestamp + this.cache_duration > Date.now()
+            ) {
                 return resolve(this.account_data)
             }
 
-            this.api_client.v1.chain.get_account(this.accountName.toString())
-                .then(accountData => {
-                    this.account_data = accountData;
-                    this.account_data_timestamp = Date.now();
+            this.api_client.v1.chain
+                .get_account(this.accountName.toString())
+                .then((accountData) => {
+                    this.account_data = accountData
+                    this.account_data_timestamp = Date.now()
                     resolve(accountData)
                 })
-                .catch(error => {
+                .catch((error) => {
                     if (error.message.includes('Account not found')) {
-                        return reject(new Error(`Account ${this.account_name} does not exist on chain ${ChainName[this.chain_id.chainName]}.`))
+                        return reject(
+                            new Error(
+                                `Account ${this.account_name} does not exist on chain ${
+                                    ChainName[this.chain_id.chainName]
+                                }.`
+                            )
+                        )
                     }
                     reject(error)
-                });
-        });
+                })
+        })
     }
 }

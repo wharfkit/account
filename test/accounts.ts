@@ -13,7 +13,7 @@ const eosApiClient = new APIClient({
 suite('accounts', function () {
     suite('Account', function () {
         test('construct', function () {
-            const account = new Account(Name.from('teamgreymass'), ChainId.from(ChainName.EOS))
+            const account = new Account(Name.from('teamgreymass'), ChainId.from(ChainName.EOS), { api_client: eosApiClient })
 
             assert.instanceOf(account, Account)
         })
