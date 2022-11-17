@@ -543,6 +543,13 @@
     "@typescript-eslint/types" "5.41.0"
     eslint-visitor-keys "^3.3.0"
 
+"@wharfkit/contract@ssh:git@github.com:wharfkit/contract.git":
+  version "0.0.0"
+  resolved "ssh:git@github.com:wharfkit/contract.git#d01203e9e471f5a5866bd89e762f83eeee4be629"
+  dependencies:
+    "@greymass/eosio" "^0.6.4"
+    tslib "^2.1.0"
+
 acorn-jsx@^5.3.2:
   version "5.3.2"
   resolved "https://registry.yarnpkg.com/acorn-jsx/-/acorn-jsx-5.3.2.tgz#7ed5bb55908b3b2f1bc55c6af1653bada7f07937"
@@ -1354,6 +1361,13 @@ gh-pages@^4.0.0:
     fs-extra "^8.1.0"
     globby "^6.1.0"
 
+git@^0.1.5:
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/git/-/git-0.1.5.tgz#9ef62df93f851c27542143bf52d1c68b1017ca15"
+  integrity sha512-N+bfOrXyKMU/fQtCj6D/U9MQOEN0DAA8TLHSLdUQRSWBOkeRvsjJHdrdkvcq05xO7GSDKWc3nDEGoTZ4DfCCSg==
+  dependencies:
+    mime "1.2.9"
+
 glob-parent@^5.1.2, glob-parent@~5.1.2:
   version "5.1.2"
   resolved "https://registry.yarnpkg.com/glob-parent/-/glob-parent-5.1.2.tgz#869832c58034fe68a4093c17dc15e8340d8401c4"
@@ -1863,6 +1877,11 @@ micromatch@^4.0.4:
     braces "^3.0.2"
     picomatch "^2.3.1"
 
+mime@1.2.9:
+  version "1.2.9"
+  resolved "https://registry.yarnpkg.com/mime/-/mime-1.2.9.tgz#009cd40867bd35de521b3b966f04e2f8d4d13d09"
+  integrity sha512-WiLgbHTIq5AYUvU/Luli4mZ1bUcHpGNHyCsbl+KPMg4zt+XUDpQehWjuBjdLaEvDTinvKj/FgfQt3fPoT7j08g==
+
 minimalistic-assert@^1.0.0, minimalistic-assert@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/minimalistic-assert/-/minimalistic-assert-1.0.1.tgz#2e194de044626d4a10e7f7fbc00ce73e83e4d5c7"
@@ -1946,12 +1965,7 @@ natural-compare@^1.4.0:
   resolved "https://registry.yarnpkg.com/natural-compare/-/natural-compare-1.4.0.tgz#4abebfeed7541f2c27acfb29bdbbd15c8d5ba4f7"
   integrity sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==
 
-node-fetch@2.6.1:
-  version "2.6.1"
-  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.1.tgz#045bd323631f76ed2e2b55573394416b639a0052"
-  integrity sha512-V4aYg89jEoVRxRb2fJdAg8FHvI7cEyYdVAh94HH0UIK8oJxUfkjlDQN9RbMx+bEjP7+ggMiFRprSti032Oipxw==
-
-node-fetch@~2.6.1:
+node-fetch@^2.6.1, node-fetch@~2.6.1:
   version "2.6.7"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.7.tgz#24de9fba827e3b4ae44dc8b20256a379160052ad"
   integrity sha512-ZjMPFEfVx5j+y2yF35Kzx5sF7kDzxuDj6ziH4FFbOp87zKDZNx8yExJIb05OGF4Nlt9IHFIMBkRl41VdvcNdbQ==
