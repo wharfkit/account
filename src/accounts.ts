@@ -29,31 +29,26 @@ export class Account {
     api_client: APIClient
     account_data: API.v1.AccountObject | undefined
     account_data_timestamp: number | undefined
-    contract: Contract | undefined
+    // contract: Contract | undefined
     cache_duration: number = 1000 * 60 * 5 // 5 minutes
 
-    constructor(accountName: Name, chainId: ChainId, options?: AccountOptions) {
+    constructor(accountName: Name, chainId: ChainId, apiClient: APIClient) {
         this.account_name = accountName
         this.chain_id = chainId
-        this.api_client =
-            options?.api_client ||
-            new APIClient({
-                url: 'https://eos.greymass.com', // This should be looked up with the chainId
-            })
+        this.api_client = apiClient
         // this.contract = new Contract(chainId, this, options?.session)
-        this.cache_duration = options?.cache_duration || this.cache_duration
     }
 
-    static from(accountName: NameType, chain: ChainIdType, options?: AccountOptions): Account {
-        return new Account(Name.from(accountName), ChainId.from(chain), options)
+    static from(accountName: NameType, chain: ChainIdType, apiClient: APIClient): Account {
+        return new Account(Name.from(accountName), ChainId.from(chain), apiClient)
     }
 
     get accountName(): Name {
-        return this.account_name
+        return this.accountName
     }
 
     get chainId(): ChainId {
-        return this.chain_id
+        return this.chainId
     }
 
     async getPermission(permissionName: NameType): Promise<Permission | undefined> {
@@ -109,7 +104,7 @@ export class Account {
             }
 
             this.api_client.v1.chain
-                .get_account(this.accountName.toString())
+                .get_account(String(this.accountName))
                 .then((accountData) => {
                     this.account_data = accountData
                     this.account_data_timestamp = Date.now()

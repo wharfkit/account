@@ -1,13 +1,11 @@
 import {APIClient, Name, NameType} from '@greymass/eosio'
-import type {API} from '@greymass/eosio'
+import {API} from '@greymass/eosio'
 
 // import { Contract } from '@wharfkit/contract'
 
 // import {Account} from './accounts'
 
-interface PermissionOptions {
-    api_client?: APIClient
-}
+type PermissionParams = { permissionName: NameType, accountData: API.v1.AccountObject } | API.v1.AccountPermission
 
 // interface PermissionType {
 //     parent: string
@@ -35,19 +33,22 @@ interface PermissionOptions {
 export class Permission {
     permission_name: Name
     permission_data: API.v1.AccountPermission
-    api_client: APIClient | undefined
 
     constructor(
         permissionName: Name,
         permissionData: API.v1.AccountPermission,
-        options?: PermissionOptions
     ) {
         this.permission_name = permissionName
         this.permission_data = permissionData
-        this.api_client = options?.api_client
     }
 
-    static from(permissionName: NameType, accountData: API.v1.AccountObject): Permission {
+    static from(permissionParams: PermissionParams) : Permission {
+        if (permissionParams instanceof API.v1.AccountPermission) {
+            return new Permission(permissionParams.perm_name, permissionParams)
+        }
+
+        const {permissionName, accountData} = permissionParams;
+
         const permissionObject = accountData.getPermission(permissionName)
 
         if (!permissionObject) {
@@ -68,7 +69,7 @@ export class Permission {
     //         resolve()
     //     })
     //     // return Contract.eosio.updateauth({
-    //     //     account: account.name.toString(),
+    //     //     account: String(account.name),
     //     //     permission: permissionNam    e,
     //     //     parent: permission.parent,
     //     //     auth: permission.auth
