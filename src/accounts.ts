@@ -2,8 +2,6 @@ import {API, APIClient, Name, NameType} from '@greymass/eosio'
 import {ChainId, ChainName} from 'anchor-link'
 import type {ChainIdType} from 'anchor-link'
 
-// import { Contract } from '@wharfkit/contract'
-
 // import type { Session } from '@wharfkit/session'
 
 // Remove these when Contract and Session are used
@@ -11,17 +9,7 @@ interface Session {
     chainId?: ChainIdType
 }
 
-interface Contract {
-    chainId?: ChainIdType
-}
-
 import {Permission} from './permissions'
-
-export interface AccountOptions {
-    cache_duration?: number
-    session?: Session
-    api_client?: APIClient
-}
 
 export class Account {
     account_name: Name
@@ -54,25 +42,29 @@ export class Account {
     async getPermission(permissionName: NameType): Promise<Permission | undefined> {
         const accountData = await this.getAccountData()
 
-        return Permission.from(permissionName, accountData)
+        return Permission.from({ permissionName, accountData })
     }
 
-    // addPermission(permissionData: PermissionType): Promise<void> {
-    //     Permission.addPermission(permissionData, this)
-    // }
-    //
-    // async removePermission(permission: Permission): Promise<void> {
-    //     // Remove permission here..
-    // }
-    //
-    // async updatePermission(permission: Permission): Promise<void> {
-    //     // Update permission here..
-    // }
-    //
-    // async addPermissionKey(permission: Permission, key: string): Promise<void> {
-    //     // Add permission key here..
-    // }
-    //
+    addPermission(permissionData, { session }): Promise<void> {
+        return Permission.updatePermission(permissionData,{ account: this, session })
+    }
+
+    removePermission(permissionName: NameType, { session }): Promise<void> {
+        return Permission.removePermission(Name.from(permissionName),{ account: this, session })
+    }
+
+    updatePermission(permissionData, { session }): Promise<void> {
+        return Permission.updatePermission(permissionData,{ account: this, session })
+    }
+
+    async addPermissionKey({ permissionName, key }: { permissionName: NameType, key: string } , { session }: { session: Session }): Promise<void> {
+        const accountData = await this.getAccountData()
+
+        const permission = Permission.from({ permissionName, accountData })
+
+        return Permission.addPermissionKey({ permission, key },{ account: this, session })
+    }
+
     // async removePermissionKey(permission: Permission, key: string): Promise<void> {
     //     // Remove permission key here..
     // }

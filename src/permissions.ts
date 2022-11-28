@@ -1,34 +1,33 @@
-import {APIClient, Name, NameType} from '@greymass/eosio'
+import {APIClient, Authority, Name, NameType} from '@greymass/eosio'
 import {API} from '@greymass/eosio'
 
-// import { Contract } from '@wharfkit/contract'
+import { PermissionActions } from './accounts/actions/permissions'
 
-// import {Account} from './accounts'
+import type {Account} from './accounts'
+
+interface Session {
+    [key: string]: any;
+}
 
 type PermissionParams = { permissionName: NameType, accountData: API.v1.AccountObject } | API.v1.AccountPermission
 
-// interface PermissionType {
-//     parent: string
-//     permission: NameType
-//     account: NameType
-//     auth: {
-//         accounts: {
-//             permission: {
-//                 actor: NameType
-//                 permission: string
-//             }
-//         }[]
-//         waits: {
-//             wait_sec: number
-//             weight: number
-//         }[]
-//         keys: {
-//             key: string
-//             weight: number
-//         }[]
-//     }
-//     authorized_by: NameType
-// }
+interface PermissionActionData {
+    parent: string
+    permission: NameType
+    account: NameType
+    auth: Authority
+    authorized_by: NameType
+}
+
+interface ActionParam {
+    session: Session;
+    account: Account;
+}
+
+interface AddKeyActionParam {
+    permission: Permission;
+    key: string;
+}
 
 export class Permission {
     permission_name: Name
@@ -64,33 +63,32 @@ export class Permission {
         return this.permission_name
     }
 
-    // static addPermission(permissionName: PermissionType, account: Account): Promise<void> {
-    //     return new Promise((resolve) => {
-    //         resolve()
-    //     })
-    //     // return Contract.eosio.updateauth({
-    //     //     account: String(account.name),
-    //     //     permission: permissionNam    e,
-    //     //     parent: permission.parent,
-    //     //     auth: permission.auth
-    //     // })
-    // }
+    // These methods will generate the transaction and pass it to the session SDK for signing.
 
-    // async addPermissionAction(permission: Permission): Promise<void> {
-    //     // Add permission here..
-    // }
-    //
-    // async removePermissionAction(permission: Permission): Promise<void> {
-    //     // Remove permission here..
-    // }
-    //
-    // async updatePermissionAction(permission: Permission): Promise<void> {
-    //     // Update permission here..
-    // }
-    //
-    // async addPermissionKeyAction(permission: Permission, key: string): Promise<void> {
-    //     // Add permission key here..
-    // }
+    static updatePermission(permissionData: PermissionActionData, { session, account }: ActionParam): Promise<void> {
+        return PermissionActions.updateauth(permissionData, { session, account });
+        // or
+        // return session.transact(PermissionActions.updateauth(addPermissionAction), account)
+    }
+
+    static removePermission(permissionName: Name, { session, account }: ActionParam): Promise<void> {
+        return PermissionActions.deleteAuth({
+            account: account.accountName,
+            permission: permissionName,
+        }, { session, account });
+    }
+
+    static addPermissionKey({ permission, key } : AddKeyActionParam, { session, account }: ActionParam): Promise<void> {
+        return PermissionActions.updateauth({
+            permission: permission.permissionName,
+            auth: {
+                keys: [
+                    ...permission.permission_data.required_auth.keys,
+                ]
+
+            }
+        }, { session, account });
+    }
     //
     // async removePermissionKeyAction(permission: Permission, key: string): Promise<void> {
     //     // Remove permission key here..
