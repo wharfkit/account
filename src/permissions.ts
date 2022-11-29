@@ -1,7 +1,7 @@
-import {KeyWeight, PermissionLevelWeight, WaitWeight, Authority, Name, NameType, PublicKeyType, UInt32Type} from '@greymass/eosio'
-import {API} from '@greymass/eosio'
+import { KeyWeight, PermissionLevelWeight, WaitWeight, AuthorityType, Authority, Name, NameType, PublicKeyType, UInt32Type } from '@greymass/eosio'
+import { API } from '@greymass/eosio'
 
-import type {Account} from './accounts'
+import type { Account } from './accounts'
 
 interface Session {
     [key: string]: any;
@@ -13,7 +13,7 @@ interface PermissionData {
     account: NameType
     parent: NameType
     permission: NameType
-    auth: Authority
+    auth: AuthorityType | Authority
     authorized_by?: NameType
 }
 
@@ -43,12 +43,15 @@ export class Permission {
         this.permission_data = permissionData
     }
 
-    static from(permissionParams: PermissionParams) : Permission {
+    static from(permissionParams: PermissionParams): Permission {
         if (instanceOfPermissionData(permissionParams)) {
-            return new Permission(Name.from(permissionParams.permission), permissionParams)
+            return new Permission(Name.from(permissionParams.permission), {
+                ...permissionParams,
+                auth: Authority.from(permissionParams.auth),
+            })
         }
 
-        const {permissionName, accountData} = permissionParams;
+        const { permissionName, accountData } = permissionParams;
 
         const permissionObject = accountData.getPermission(permissionName)
 
@@ -62,7 +65,7 @@ export class Permission {
             account: accountData.account_name,
             parent: permissionObject.parent,
             permission: permissionObject.perm_name,
-            auth: permissionObject.required_auth,
+            auth: Authority.from(permissionObject.required_auth),
         })
     }
 
@@ -70,12 +73,12 @@ export class Permission {
         return this.permission_name
     }
 
-    get actionParams() : PermissionData {
+    get actionParams(): PermissionData {
         return this.permission_data;
     }
 
     addKey(key: PublicKeyType, weight: number = 1): void {
-       this.permission_data = {
+        this.permission_data = {
             ...this.permission_data,
             auth: Authority.from({
                 ...this.permission_data.auth,
@@ -89,7 +92,7 @@ export class Permission {
             })
         };
     }
-    
+
     removeKey(key: PublicKeyType): void {
         this.permission_data = {
             ...this.permission_data,
@@ -101,7 +104,7 @@ export class Permission {
             })
         };
     }
-    
+
     addAccount(account: NameType, weight: number = 1): void {
         this.permission_data = {
             ...this.permission_data,

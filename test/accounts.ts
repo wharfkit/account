@@ -1,10 +1,10 @@
-import {assert} from 'chai'
-import {ChainId, ChainName} from "anchor-link";
-import {Name, APIClient, API} from "@greymass/eosio";
+import { assert } from 'chai'
+import { ChainId, ChainName } from "anchor-link";
+import { Name, APIClient, API } from "@greymass/eosio";
 
-import {Account} from '../src/accounts'
-import {Permission} from '../src/permissions'
-import {MockProvider} from './utils/mock-provider'
+import { Account } from '../src/accounts'
+import { Permission } from '../src/permissions'
+import { MockProvider } from './utils/mock-provider'
 
 const eosApiClient = new APIClient({
     provider: new MockProvider('https://eos.greymass.com'),
@@ -13,7 +13,7 @@ const eosApiClient = new APIClient({
 suite('accounts', function () {
     suite('Account', function () {
         test('construct', function () {
-            const account = new Account(Name.from('teamgreymass'), ChainId.from(ChainName.EOS), { api_client: eosApiClient })
+            const account = new Account(Name.from('teamgreymass'), ChainId.from(ChainName.EOS), eosApiClient)
 
             assert.instanceOf(account, Account)
         })
@@ -32,9 +32,9 @@ suite('accounts', function () {
             this.timeout(5 * 1000)
 
             test('returns account data', async function () {
-               const account = testAccount()
+                const account = testAccount()
 
-               assert.instanceOf(await account.getAccountData(), API.v1.AccountObject)
+                assert.instanceOf(await account.getAccountData(), API.v1.AccountObject)
             })
 
             test('throws error when account does not exist', function (done) {
@@ -61,13 +61,13 @@ suite('accounts', function () {
                 const account = nonExistentTestAccount()
 
                 account.getPermission('active').catch((error) => {
-                     console.log({ error: error.message })
+                    console.log({ error: error.message })
                     assert.equal((error as Error).message, "Account nonexistent does not exist on chain EOS.")
                     done()
                 });
             })
 
-            test('throws error when permission does not exist',  function (done) {
+            test('throws error when permission does not exist', function (done) {
                 const account = testAccount()
 
                 account.getPermission('nonexistent').catch((error) => {
