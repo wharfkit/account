@@ -1,22 +1,25 @@
-import {APIClient, Authority, Name, NameType} from '@greymass/eosio'
+import {KeyWeight, Authority, Name, NameType} from '@greymass/eosio'
 import {API} from '@greymass/eosio'
 
-import { PermissionActions } from './accounts/actions/permissions'
-
 import type {Account} from './accounts'
+import {Struct} from "@greymass/eosio/src/chain";
 
 interface Session {
     [key: string]: any;
 }
 
-type PermissionParams = { permissionName: NameType, accountData: API.v1.AccountObject } | API.v1.AccountPermission
+type PermissionParams = { permissionName: NameType, accountData: API.v1.AccountObject } | PermissionData
 
-interface PermissionActionData {
-    parent: string
-    permission: NameType
+interface PermissionData {
     account: NameType
+    parent: NameType
+    permission: NameType
     auth: Authority
-    authorized_by: NameType
+    authorized_by?: NameType
+}
+
+function instanceOfPermissionData(object: any): object is PermissionData {
+    return 'account' in object;
 }
 
 interface ActionParam {
@@ -31,19 +34,19 @@ interface AddKeyActionParam {
 
 export class Permission {
     permission_name: Name
-    permission_data: API.v1.AccountPermission
+    permission_data: PermissionData
 
     constructor(
         permissionName: Name,
-        permissionData: API.v1.AccountPermission,
+        permissionData: PermissionData,
     ) {
         this.permission_name = permissionName
         this.permission_data = permissionData
     }
 
     static from(permissionParams: PermissionParams) : Permission {
-        if (permissionParams instanceof API.v1.AccountPermission) {
-            return new Permission(permissionParams.perm_name, permissionParams)
+        if (instanceOfPermissionData(permissionParams)) {
+            return new Permission(Name.from(permissionParams.permission), permissionParams)
         }
 
         const {permissionName, accountData} = permissionParams;
@@ -56,39 +59,41 @@ export class Permission {
             )
         }
 
-        return new Permission(Name.from(permissionName), permissionObject)
+        return new Permission(Name.from(permissionName), {
+            account: accountData.account_name,
+            parent: permissionObject.parent,
+            permission: permissionObject.perm_name,
+            auth: permissionObject.required_auth,
+        })
     }
 
     get permissionName(): Name {
         return this.permission_name
     }
 
-    // These methods will generate the transaction and pass it to the session SDK for signing.
-
-    static updatePermission(permissionData: PermissionActionData, { session, account }: ActionParam): Promise<void> {
-        return PermissionActions.updateauth(permissionData, { session, account });
-        // or
-        // return session.transact(PermissionActions.updateauth(addPermissionAction), account)
+    get actionParams() : PermissionData {
+        return this.permission_data;
     }
 
-    static removePermission(permissionName: Name, { session, account }: ActionParam): Promise<void> {
-        return PermissionActions.deleteAuth({
-            account: account.accountName,
-            permission: permissionName,
-        }, { session, account });
+    addKey( key: string, weight?: number): void {
+       this.permission_data = {
+        ...this.permission_data,
+        auth: {
+            ...this.permission_data.auth,
+            keys: [
+                ...(this.permission_data.auth.keys.map((keyWeight: KeyWeight) => KeyWeight.from({
+                    key: keyWeight.key,
+                    weight: keyWeight.weight,
+                })) || []),
+                KeyWeight.from({
+                    key: key,
+                    weight: weight || 1,
+                }),
+            ]
+        }
+    };
     }
 
-    static addPermissionKey({ permission, key } : AddKeyActionParam, { session, account }: ActionParam): Promise<void> {
-        return PermissionActions.updateauth({
-            permission: permission.permissionName,
-            auth: {
-                keys: [
-                    ...permission.permission_data.required_auth.keys,
-                ]
-
-            }
-        }, { session, account });
-    }
     //
     // async removePermissionKeyAction(permission: Permission, key: string): Promise<void> {
     //     // Remove permission key here..

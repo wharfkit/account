@@ -1,6 +1,9 @@
-import {API, APIClient, Name, NameType} from '@greymass/eosio'
+import {API, APIClient, Checksum256, Name, NameType} from '@greymass/eosio'
 import {ChainId, ChainName} from 'anchor-link'
 import type {ChainIdType} from 'anchor-link'
+
+import { PermissionActions } from './accounts/actions/permissions'
+import { Permission } from './permissions'
 
 // import type { Session } from '@wharfkit/session'
 
@@ -9,7 +12,9 @@ interface Session {
     chainId?: ChainIdType
 }
 
-import {Permission} from './permissions'
+interface SessionTransactResult {
+    id: Checksum256
+}
 
 export class Account {
     account_name: Name
@@ -45,24 +50,16 @@ export class Account {
         return Permission.from({ permissionName, accountData })
     }
 
-    addPermission(permissionData, { session }): Promise<void> {
-        return Permission.updatePermission(permissionData,{ account: this, session })
+    addPermission(permissionData, { session }): Promise<SessionTransactResult> {
+        return PermissionActions.shared().updateAuth(permissionData, { account: this, session })
     }
 
-    removePermission(permissionName: NameType, { session }): Promise<void> {
-        return Permission.removePermission(Name.from(permissionName),{ account: this, session })
+    updatePermission(permission, { session }): Promise<SessionTransactResult> {
+        return PermissionActions.shared().updateAuth(permission.permission_data, { account: this, session })
     }
 
-    updatePermission(permissionData, { session }): Promise<void> {
-        return Permission.updatePermission(permissionData,{ account: this, session })
-    }
-
-    async addPermissionKey({ permissionName, key }: { permissionName: NameType, key: string } , { session }: { session: Session }): Promise<void> {
-        const accountData = await this.getAccountData()
-
-        const permission = Permission.from({ permissionName, accountData })
-
-        return Permission.addPermissionKey({ permission, key },{ account: this, session })
+    removePermission(permissionName: NameType, { session }): Promise<SessionTransactResult> {
+        return PermissionActions.shared().deleteAuth(Name.from(permissionName), Name.from(this.account_name), { account: this, session })
     }
 
     // async removePermissionKey(permission: Permission, key: string): Promise<void> {

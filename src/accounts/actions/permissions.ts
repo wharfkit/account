@@ -6,11 +6,11 @@ import {Contract} from '../../tmp/contract'
 class PermissionActions extends Contract {
     static account = Name.from('eosio')
 
-    async updateAuth(account: NameType, permission: NameType, parent: string, auth: Authority) {
-        return this.call('updateauth', PermissionActions.Types.UpdateAuth.from({account, permission, parent, auth}))
+    async updateAuth(permissionData : { account: NameType, permission: NameType, parent: string, auth: Authority }, sessionData?: any) {
+        return this.call('updateauth', PermissionActions.Types.UpdateAuth.from(permissionData))
     }
 
-    async deleteAuth(account: NameType, permission: NameType) {
+    async deleteAuth(account: NameType, permission: NameType, sessionData?: any) {
         return this.call('deleteauth', PermissionActions.Types.DeleteAuth.from({account, permission}))
     }
 }
