@@ -1,8 +1,7 @@
-import {KeyWeight, Authority, Name, NameType} from '@greymass/eosio'
+import {KeyWeight, PermissionLevelWeight, WaitWeight, Authority, Name, NameType, PublicKeyType, UInt32Type} from '@greymass/eosio'
 import {API} from '@greymass/eosio'
 
 import type {Account} from './accounts'
-import {Struct} from "@greymass/eosio/src/chain";
 
 interface Session {
     [key: string]: any;
@@ -75,43 +74,87 @@ export class Permission {
         return this.permission_data;
     }
 
-    addKey( key: string, weight?: number): void {
+    addKey(key: PublicKeyType, weight: number = 1): void {
        this.permission_data = {
-        ...this.permission_data,
-        auth: {
-            ...this.permission_data.auth,
-            keys: [
-                ...(this.permission_data.auth.keys.map((keyWeight: KeyWeight) => KeyWeight.from({
-                    key: keyWeight.key,
-                    weight: keyWeight.weight,
-                })) || []),
-                KeyWeight.from({
-                    key: key,
-                    weight: weight || 1,
+            ...this.permission_data,
+            auth: Authority.from({
+                ...this.permission_data.auth,
+                keys: [
+                    ...(this.permission_data.auth.keys || []),
+                    KeyWeight.from({
+                        key: key,
+                        weight: weight,
+                    }),
+                ]
+            })
+        };
+    }
+    
+    removeKey(key: PublicKeyType): void {
+        this.permission_data = {
+            ...this.permission_data,
+            auth: Authority.from({
+                ...this.permission_data.auth,
+                keys: this.permission_data.auth.keys.filter((keyWeight: KeyWeight) => {
+                    return String(keyWeight.key) !== key;
                 }),
-            ]
-        }
-    };
+            })
+        };
+    }
+    
+    addAccount(account: NameType, weight: number = 1): void {
+        this.permission_data = {
+            ...this.permission_data,
+            auth: Authority.from({
+                ...this.permission_data.auth,
+                accounts: [
+                    ...(this.permission_data.auth.accounts || []),
+                    PermissionLevelWeight.from({
+                        permission: account,
+                        weight: weight,
+                    }),
+                ]
+            })
+        };
     }
 
-    //
-    // async removePermissionKeyAction(permission: Permission, key: string): Promise<void> {
-    //     // Remove permission key here..
-    // }
-    //
-    // async addPermissionAccountAction(permission: Permission, account: Account): Promise<void> {
-    //     // Add permission account here..
-    // }
-    //
-    // async removePermissionAccountAction(permission: Permission, account: Account): Promise<void> {
-    //     // Remove permission account here..
-    // }
-    //
-    // async addPermissionWaitAction(permission: Permission, wait: number): Promise<void> {
-    //     // Add permission wait here..
-    // }
-    //
-    // async removePermissionWaitAction(permission: Permission, wait: number): Promise<void> {
-    //     // Remove permission wait here..
-    // }
+    removeAccount(account: NameType): void {
+        this.permission_data = {
+            ...this.permission_data,
+            auth: Authority.from({
+                ...this.permission_data.auth,
+                accounts: this.permission_data.auth.accounts.filter((permissionWeight: PermissionLevelWeight) => {
+                    return String(permissionWeight.permission) !== account;
+                }),
+            })
+        };
+    }
+
+    addWait(wait_sec: number, weight: number = 1): void {
+        this.permission_data = {
+            ...this.permission_data,
+            auth: Authority.from({
+                ...this.permission_data.auth,
+                waits: [
+                    ...(this.permission_data.auth.waits || []),
+                    WaitWeight.from({
+                        wait_sec: wait_sec,
+                        weight: weight,
+                    }),
+                ]
+            })
+        };
+    }
+
+    removeWait(wait_sec: UInt32Type): void {
+        this.permission_data = {
+            ...this.permission_data,
+            auth: Authority.from({
+                ...this.permission_data.auth,
+                waits: this.permission_data.auth.waits.filter((waitWeight: WaitWeight) => {
+                    return waitWeight.wait_sec !== wait_sec;
+                }),
+            })
+        };
+    }
 }
