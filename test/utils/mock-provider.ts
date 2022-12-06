@@ -1,18 +1,18 @@
 import fetch from 'node-fetch'
 
-import {APIProvider, Bytes, Checksum160, FetchProvider} from '@greymass/eosio'
+import { APIProvider, Bytes, Checksum160, FetchProvider } from '@greymass/eosio'
 
-import {join as joinPath} from 'path'
-import {promisify} from 'util'
-import {readFile as _readFile, writeFile as _writeFile} from 'fs'
+import { join as joinPath } from 'path'
+import { promisify } from 'util'
+import { readFile as _readFile, writeFile as _writeFile } from 'fs'
 
 const readFile = promisify(_readFile)
 const writeFile = promisify(_writeFile)
 
 export class MockProvider implements APIProvider {
-    recordProvider = new FetchProvider(this.api, {fetch})
+    recordProvider = new FetchProvider(this.api, { fetch })
 
-    constructor(private api: string = 'https://jungle3.greymass.com') {}
+    constructor(private api: string = 'https://jungle3.greymass.com') { }
 
     getFilename(path: string, params?: unknown) {
         const digest = Checksum160.hash(

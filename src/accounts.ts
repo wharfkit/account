@@ -1,6 +1,6 @@
-import {API, APIClient, Checksum256, Name, NameType} from '@greymass/eosio'
-import {ChainId, ChainName} from 'anchor-link'
-import type {ChainIdType} from 'anchor-link'
+import { API, APIClient, Checksum256, Name, NameType } from '@greymass/eosio'
+import { ChainId, ChainName } from 'anchor-link'
+import type { ChainIdType } from 'anchor-link'
 
 import { PermissionActions } from './accounts/actions/permissions'
 import { Permission } from './permissions'
@@ -37,11 +37,11 @@ export class Account {
     }
 
     get accountName(): Name {
-        return this.accountName
+        return this.account_name
     }
 
     get chainId(): ChainId {
-        return this.chainId
+        return this.chain_id
     }
 
     async getPermission(permissionName: NameType): Promise<Permission | undefined> {
@@ -50,37 +50,13 @@ export class Account {
         return Permission.from({ permissionName, accountData })
     }
 
-    addPermission(permissionData, { session }): Promise<SessionTransactResult> {
-        return PermissionActions.shared().updateAuth(permissionData, { account: this, session })
+    updatePermission(permission: Permission, { session }: { session: Session }): Promise<SessionTransactResult> {
+        return PermissionActions.shared().updateAuth(permission.actionData, { account: this, session })
     }
 
-    updatePermission(permission, { session }): Promise<SessionTransactResult> {
-        return PermissionActions.shared().updateAuth(permission.permission_data, { account: this, session })
-    }
-
-    removePermission(permissionName: NameType, { session }): Promise<SessionTransactResult> {
+    removePermission(permissionName: NameType, { session }: { session: Session }): Promise<SessionTransactResult> {
         return PermissionActions.shared().deleteAuth(Name.from(permissionName), Name.from(this.account_name), { account: this, session })
     }
-
-    // async removePermissionKey(permission: Permission, key: string): Promise<void> {
-    //     // Remove permission key here..
-    // }
-    //
-    // async addPermissionAccount(permission: Permission, account: Account): Promise<void> {
-    //     // Add permission account here..
-    // }
-    //
-    // async removePermissionAccount(permission: Permission, account: Account): Promise<void> {
-    //     // Remove permission account here..
-    // }
-    //
-    // async addPermissionWait(permission: Permission, wait: number): Promise<void> {
-    //     // Add permission wait here..
-    // }
-    //
-    // async removePermissionWait(permission: Permission, wait: number): Promise<void> {
-    //     // Remove permission wait here..
-    // }
 
     getAccountData(): Promise<API.v1.AccountObject> {
         return new Promise((resolve, reject) => {
@@ -89,6 +65,7 @@ export class Account {
                 this.account_data_timestamp &&
                 this.account_data_timestamp + this.cache_duration > Date.now()
             ) {
+                console.log('Using cached account data')
                 return resolve(this.account_data)
             }
 
@@ -103,8 +80,7 @@ export class Account {
                     if (error.message.includes('Account not found')) {
                         return reject(
                             new Error(
-                                `Account ${this.account_name} does not exist on chain ${
-                                    ChainName[this.chain_id.chainName]
+                                `Account ${this.account_name} does not exist on chain ${ChainName[this.chain_id.chainName]
                                 }.`
                             )
                         )

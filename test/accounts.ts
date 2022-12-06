@@ -61,10 +61,11 @@ suite('accounts', function () {
                 const account = nonExistentTestAccount()
 
                 account.getPermission('active').catch((error) => {
-                    console.log({ error: error.message })
                     assert.equal((error as Error).message, "Account nonexistent does not exist on chain EOS.")
                     done()
-                });
+                }).then(() => {
+                    assert.fail()
+                })
             })
 
             test('throws error when permission does not exist', function (done) {
@@ -73,16 +74,18 @@ suite('accounts', function () {
                 account.getPermission('nonexistent').catch((error) => {
                     assert.equal((error as Error).message, "Unknown permission nonexistent on account teamgreymass.")
                     done()
-                });
+                }).then(() => {
+                    assert.fail()
+                })
             })
         })
     })
 })
 
 function testAccount() {
-    return Account.from('teamgreymass', ChainId.from(ChainName.EOS), { api_client: eosApiClient })
+    return Account.from('teamgreymass', ChainId.from(ChainName.EOS), eosApiClient)
 }
 
 function nonExistentTestAccount() {
-    return Account.from('nonexistent', ChainId.from(ChainName.EOS), { api_client: eosApiClient })
+    return Account.from('nonexistent', ChainId.from(ChainName.EOS), eosApiClient)
 }

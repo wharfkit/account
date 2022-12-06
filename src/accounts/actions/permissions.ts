@@ -1,17 +1,17 @@
-import {Authority, Name, NameType, Struct} from '@greymass/eosio'
+import { Authority, AuthorityType, Name, NameType, Struct } from '@greymass/eosio'
 
 // Temporarily use a custom version of Contract class.
-import {Contract} from '../../tmp/contract'
+import { Contract } from '../../tmp/contract'
 
 class PermissionActions extends Contract {
     static account = Name.from('eosio')
 
-    async updateAuth(permissionData : { account: NameType, permission: NameType, parent: string, auth: Authority }, sessionData?: any) {
+    async updateAuth(permissionData: { account: NameType, permission: NameType, parent: NameType, auth: AuthorityType }, sessionData?: any) {
         return this.call('updateauth', PermissionActions.Types.UpdateAuth.from(permissionData))
     }
 
     async deleteAuth(account: NameType, permission: NameType, sessionData?: any) {
-        return this.call('deleteauth', PermissionActions.Types.DeleteAuth.from({account, permission}))
+        return this.call('deleteauth', PermissionActions.Types.DeleteAuth.from({ account, permission }))
     }
 }
 
