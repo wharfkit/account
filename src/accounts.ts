@@ -58,6 +58,14 @@ export class Account {
         return PermissionActions.shared().deleteAuth(Name.from(permissionName), Name.from(this.account_name), { account: this, session })
     }
 
+    buyRam(bytes: number, { session }: { session: Session }): Promise<SessionTransactResult> {
+        return ResourceActions.shared().buyRam(bytes, { account: this, session })
+    }
+
+    sellRam(bytes: number, { session }: { session: Session }): Promise<SessionTransactResult> {
+        return ResourceActions.shared().sellRam(bytes, { account: this, session })
+    }
+
     getAccountData(): Promise<API.v1.AccountObject> {
         return new Promise((resolve, reject) => {
             if (
