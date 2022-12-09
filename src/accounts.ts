@@ -4,6 +4,7 @@ import type { ChainIdType } from 'anchor-link'
 
 import { PermissionActions } from './accounts/actions/permissions'
 import { Permission } from './permissions'
+import { ResourceActions } from './accounts/actions/resources'
 
 // import type { Session } from '@wharfkit/session'
 
@@ -64,6 +65,22 @@ export class Account {
 
     sellRam(bytes: number, { session }: { session: Session }): Promise<SessionTransactResult> {
         return ResourceActions.shared().sellRam(bytes, { account: this, session })
+    }
+
+    delegateBandwidth(net: number, cpu: number, { session }: { session: Session }): Promise<SessionTransactResult> {
+        return ResourceActions.shared().delegateBandwidth(net, cpu, { account: this, session })
+    }
+
+    undelegateBandwidth(net: number, cpu: number, { session }: { session: Session }): Promise<SessionTransactResult> {
+        return ResourceActions.shared().undelegateBandwidth(net, cpu, { account: this, session })
+    }
+
+    delegateCpu(cpu: number, { session }: { session: Session }): Promise<SessionTransactResult> {
+        return ResourceActions.shared().delegateCpu(cpu, { account: this, session })
+    }
+
+    undelegateCpu(cpu: number, { session }: { session: Session }): Promise<SessionTransactResult> {
+        return ResourceActions.shared().undelegateCpu(cpu, { account: this, session })
     }
 
     getAccountData(): Promise<API.v1.AccountObject> {

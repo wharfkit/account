@@ -35,7 +35,4 @@ export class Resources {
     get ram(): number {
         return Number(this.ram_amount);
     }
-
-
-
 }

@@ -1,4 +1,4 @@
-import { Authority, AuthorityType, Name, NameType, Struct } from '@greymass/eosio'
+import { Asset, AssetType, Name, NameType, Struct } from '@greymass/eosio'
 
 // Temporarily use a custom version of Contract class.
 import { Contract } from '../../tmp/contract'
@@ -91,5 +91,6 @@ namespace ResourceActions {
         }
 
     }
+}
 
-    export { PermissionActions }
+export { ResourceActions }
