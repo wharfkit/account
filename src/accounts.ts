@@ -1,9 +1,10 @@
-import { API, APIClient, Checksum256, Name, NameType } from '@greymass/eosio'
+import { API, APIClient, Checksum256, Name, NameType, AssetType, Action, Asset } from '@greymass/eosio'
 import { ChainId, ChainName } from 'anchor-link'
 import type { ChainIdType } from 'anchor-link'
 
 import { PermissionActions } from './accounts/actions/permissions'
 import { Permission } from './permissions'
+import { Resources } from './resources'
 import { ResourceActions } from './accounts/actions/resources'
 
 // import type { Session } from '@wharfkit/session'
@@ -59,28 +60,48 @@ export class Account {
         return PermissionActions.shared().deleteAuth(Name.from(permissionName), Name.from(this.account_name), { account: this, session })
     }
 
-    buyRam(bytes: number, { session }: { session: Session }): Promise<SessionTransactResult> {
-        return ResourceActions.shared().buyRam(bytes, { account: this, session })
+    buyRam(amount: AssetType, { session }: { session: Session }): Promise<SessionTransactResult> {
+        return ResourceActions.shared().buyRam(this.accountName, this.accountName, amount, { account: this, session })
+    }
+
+    buyRamBytes(bytes: number, { session }: { session: Session }): Promise<SessionTransactResult> {
+        return ResourceActions.shared().buyRamBytes(this.accountName, this.accountName, bytes, { account: this, session })
     }
 
     sellRam(bytes: number, { session }: { session: Session }): Promise<SessionTransactResult> {
-        return ResourceActions.shared().sellRam(bytes, { account: this, session })
+        return ResourceActions.shared().sellRam(this.accountName, bytes, { account: this, session })
     }
 
-    delegateBandwidth(net: number, cpu: number, { session }: { session: Session }): Promise<SessionTransactResult> {
-        return ResourceActions.shared().delegateBandwidth(net, cpu, { account: this, session })
+    delegateResources(cpu: AssetType, net: AssetType, transfer: boolean, { session }: { session: Session }): Promise<SessionTransactResult> {
+        return ResourceActions.shared().delegateResources(this.accountName, this.accountName, net, cpu, transfer, { account: this, session })
     }
 
-    undelegateBandwidth(net: number, cpu: number, { session }: { session: Session }): Promise<SessionTransactResult> {
-        return ResourceActions.shared().undelegateBandwidth(net, cpu, { account: this, session })
+    undelegateResources(cpu: AssetType, net: AssetType, { session }: { session: Session }): Promise<SessionTransactResult> {
+        return ResourceActions.shared().undelegateResources(this.accountName, this.accountName, cpu, net, { account: this, session })
     }
 
-    delegateCpu(cpu: number, { session }: { session: Session }): Promise<SessionTransactResult> {
-        return ResourceActions.shared().delegateCpu(cpu, { account: this, session })
-    }
+    async updateResources(resources: Resources, { session }: { session: Session }): Promise<void> {
+        const {
+            ram_to_buy,
+            ram_to_sell,
+            cpu_to_stake,
+            cpu_to_unstake,
+            net_to_stake,
+            net_to_unstake,
+        } = resources.desiredResourceChanges
 
-    undelegateCpu(cpu: number, { session }: { session: Session }): Promise<SessionTransactResult> {
-        return ResourceActions.shared().undelegateCpu(cpu, { account: this, session })
+        const actionsToExecute: Action[] = []
+
+        ram_to_buy && actionsToExecute.push(await ResourceActions.shared().buyRamBytesAction(this.accountName, this.accountName, Number(ram_to_buy), { account: this, session }))
+        ram_to_sell && actionsToExecute.push(await ResourceActions.shared().sellRamAction(this.accountName, Number(ram_to_sell), { account: this, session }))
+        cpu_to_stake || net_to_stake && actionsToExecute.push(await ResourceActions.shared().delegateResourcesAction(this.accountName, this.accountName, String(net_to_stake), String(cpu_to_stake), false, { account: this, session }))
+        cpu_to_unstake || net_to_unstake && actionsToExecute.push(await ResourceActions.shared().undelegateResourcesAction(this.accountName, this.accountName, String(net_to_unstake), String(cpu_to_unstake), { account: this, session }))
+
+        // Execute all actions here
+
+        // const transactionId = session.transact(actionsToExecute, { broadcast: true, blocksBehind: 3, expireSeconds: 30 })
+
+        // return transactionId
     }
 
     getAccountData(): Promise<API.v1.AccountObject> {

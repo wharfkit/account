@@ -1,4 +1,4 @@
-import { Asset, AssetType, Name, NameType, Struct } from '@greymass/eosio'
+import { ABISerializableObject, Action, Asset, AssetType, Name, NameType, Struct } from '@greymass/eosio'
 
 // Temporarily use a custom version of Contract class.
 import { Contract } from '../../tmp/contract'
@@ -18,16 +18,36 @@ class ResourceActions extends Contract {
         return this.call('sellram', ResourceActions.Types.SellRam.from({ account, bytes }))
     }
 
-    async delegateCpu(from: NameType, receiver: NameType, stake_net_quantity: AssetType, stake_cpu_quantity: AssetType, transfer: boolean, sessionData?: any) {
+    async delegateResources(from: NameType, receiver: NameType, stake_net_quantity: AssetType, stake_cpu_quantity: AssetType, transfer: boolean = false, sessionData?: any) {
         return this.call('delegatebw', ResourceActions.Types.DelegateCpu.from({ from, receiver, stake_net_quantity, stake_cpu_quantity, transfer }))
     }
 
-    async undelegateCpu(from: NameType, receiver: NameType, unstake_net_quantity: AssetType, unstake_cpu_quantity: AssetType, sessionData?: any) {
+    async undelegateResources(from: NameType, receiver: NameType, unstake_net_quantity: AssetType, unstake_cpu_quantity: AssetType, sessionData?: any) {
         return this.call('undelegatebw', ResourceActions.Types.UndelegateCpu.from({ from, receiver, unstake_net_quantity, unstake_cpu_quantity }))
     }
 
     async refundCpu(owner: NameType, sessionData?: any) {
         return this.call('refund', ResourceActions.Types.Refund.from({ owner }))
+    }
+
+    async buyRamAction(payer: NameType, receiver: NameType, quant: AssetType, sessionData?: any): Promise<Action> {
+        return this.getAction('buyram', ResourceActions.Types.BuyRam.from({ payer, receiver, quant }))
+    }
+
+    async buyRamBytesAction(payer: NameType, receiver: NameType, bytes: number, sessionData?: any): Promise<Action> {
+        return this.getAction('buyrambytes', ResourceActions.Types.BuyRamBytes.from({ payer, receiver, bytes }))
+    }
+
+    async sellRamAction(account: NameType, bytes: number, sessionData?: any): Promise<Action> {
+        return this.getAction('sellram', ResourceActions.Types.SellRam.from({ account, bytes }))
+    }
+
+    async delegateResourcesAction(from: NameType, receiver: NameType, stake_net_quantity: AssetType, stake_cpu_quantity: AssetType, transfer: boolean, sessionData?: any): Promise<Action> {
+        return this.getAction('delegatebw', ResourceActions.Types.DelegateCpu.from({ from, receiver, stake_net_quantity, stake_cpu_quantity, transfer }))
+    }
+
+    async undelegateResourcesAction(from: NameType, receiver: NameType, unstake_net_quantity: AssetType, unstake_cpu_quantity: AssetType, sessionData?: any): Promise<Action> {
+        return this.getAction('undelegatebw', ResourceActions.Types.UndelegateCpu.from({ from, receiver, unstake_net_quantity, unstake_cpu_quantity }))
     }
 }
 

@@ -31,7 +31,7 @@ export class Contract {
     private static _session: Session | null = null
 
     /** Shared instance of the contract. */
-    static shared<T extends {new ()}>(this: T): InstanceType<T> {
+    static shared<T extends { new() }>(this: T): InstanceType<T> {
         const self = this as unknown as typeof Contract
         if (!self._shared) {
             self._shared = new self()
@@ -47,8 +47,30 @@ export class Contract {
     /** Call a contract action. */
     async call(
         name: NameType,
-        data: ABISerializableObject | {[key: string]: any}
+        data: ABISerializableObject | { [key: string]: any }
     ): Promise<SessionTransactResult> {
+        let action: Action
+        if (isABISerializableObject(data)) {
+            action = Action.from({
+                account: this.account,
+                name,
+                authorization: [],
+                data,
+            })
+        } else {
+            // TODO: here we need to fetch the ABI and construct the action
+            throw new Error('Not implemented')
+        }
+        // TODO: resolve session and transact
+        throw new Error('Not implemented')
+    }
+
+    /** Generate a contract action. */
+
+    async getAction(
+        name: NameType,
+        data: ABISerializableObject | { [key: string]: any }
+    ): Promise<Action> {
         let action: Action
         if (isABISerializableObject(data)) {
             action = Action.from({
