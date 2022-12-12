@@ -114,6 +114,20 @@ export class Account {
                 })
         })
     }
+
+    getBalances(): Promise<Asset[]> {
+        return new Promise((resolve, reject) => {
+            this.getAccountData().then(accountData => {
+                // We need to fetch the balances here
+
+                //resolve(accountData.balances)
+            })
+                .catch(err => {
+                    reject(err)
+                })
+        })
+    }
+
     getAccountData(): Promise<API.v1.AccountObject> {
         return new Promise((resolve, reject) => {
             if (
