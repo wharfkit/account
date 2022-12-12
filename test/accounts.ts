@@ -4,6 +4,7 @@ import { Name, APIClient, API } from "@greymass/eosio";
 
 import { Account } from '../src/accounts'
 import { Permission } from '../src/permissions'
+import { Resources } from '../src/resources'
 import { MockProvider } from './utils/mock-provider'
 
 const eosApiClient = new APIClient({
@@ -73,6 +74,28 @@ suite('accounts', function () {
 
                 account.getPermission('nonexistent').catch((error) => {
                     assert.equal((error as Error).message, "Unknown permission nonexistent on account teamgreymass.")
+                    done()
+                }).then(() => {
+                    assert.fail()
+                })
+            })
+        })
+
+        suite('getResources', function () {
+            this.slow(200)
+            this.timeout(5 * 1000)
+
+            test('returns resources object', async function () {
+                const account = testAccount()
+
+                assert.instanceOf(await account.getResources(), Resources)
+            })
+
+            test('throws error when account does not exist', function (done) {
+                const account = nonExistentTestAccount()
+
+                account.getResources().catch((error) => {
+                    assert.equal((error as Error).message, "Account nonexistent does not exist on chain EOS.")
                     done()
                 }).then(() => {
                     assert.fail()

@@ -1,6 +1,6 @@
-import { API, UInt64, AssetType } from '@greymass/eosio';
+import { API, UInt64 } from '@greymass/eosio';
 
-type ResourceValue = UInt64 | AssetType | number;
+type ResourceValue = UInt64 | number;
 
 interface ResourcesType {
     cpu?: ResourceValue;
@@ -101,55 +101,52 @@ export class Resources {
     }
 
     get resourcesNeeded(): ResourcesType {
-        const resources: ResourcesType = {};
-
-        if (this.cpuNeeded > 0) {
-            resources.cpu = this.cpuNeeded;
+        return {
+            cpu: this.cpuNeeded,
+            net: this.netNeeded,
+            ram: this.ramNeeded,
         }
-
-        if (this.netNeeded > 0) {
-            resources.net = this.netNeeded;
-        }
-
-        if (this.ramNeeded > 0) {
-            resources.ram = this.ramNeeded;
-        }
-
-        return resources;
     }
 
     get surplusResources(): ResourcesType {
-        const resources: ResourcesType = {};
-
-        if (this.surplusCpu > 0) {
-            resources.cpu = this.surplusCpu;
-        }
-
-        if (this.surplusNet > 0) {
-            resources.net = this.surplusNet;
-        }
-
-        if (this.surplusRam > 0) {
-            resources.ram = this.surplusRam;
-        }
-
-        return resources;
+        return {
+            cpu: this.surplusCpu,
+            net: this.surplusNet,
+            ram: this.surplusRam,
+        };
     }
 
     get desiredResourceChanges(): ResourcesDeltaType {
-        const resources: ResourcesType = {};
+        const resourcesDelta: ResourcesDeltaType = {};
 
         const resourcesToSell = this.surplusResources;
 
         const resourcesToBuy = this.resourcesNeeded;
 
-        return {
-            cpu_to_stake: resourcesToBuy.cpu,
-            cpu_to_unstake: resourcesToSell.cpu,
-            net_to_stake: resourcesToBuy.net,
-            net_to_unstake: resourcesToSell.net,
-            ram_to_buy: resourcesToBuy.ram,
-            ram_to_sell: resourcesToSell.ram,
+        if (resourcesToBuy.cpu && resourcesToBuy.cpu > 0) {
+            resourcesDelta.cpu_to_stake = resourcesToBuy.cpu;
         }
+
+        if (resourcesToBuy.net && resourcesToBuy.net > 0) {
+            resourcesDelta.net_to_stake = resourcesToBuy.net;
+        }
+
+        if (resourcesToBuy.ram && resourcesToBuy.ram > 0) {
+            resourcesDelta.ram_to_buy = resourcesToBuy.ram;
+        }
+
+        if (resourcesToSell.cpu && resourcesToSell.cpu > 0) {
+            resourcesDelta.cpu_to_unstake = resourcesToSell.cpu;
+        }
+
+        if (resourcesToSell.net && resourcesToSell.net > 0) {
+            resourcesDelta.net_to_unstake = resourcesToSell.net;
+        }
+
+        if (resourcesToSell.ram && resourcesToSell.ram > 0) {
+            resourcesDelta.ram_to_sell = resourcesToSell.ram;
+        }
+
+        return resourcesDelta
     }
 }

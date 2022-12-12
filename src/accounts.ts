@@ -104,6 +104,16 @@ export class Account {
         // return transactionId
     }
 
+    async getResources(): Promise<Resources> {
+        return new Promise((resolve, reject) => {
+            this.getAccountData().then(accountData => {
+                resolve(Resources.from(accountData))
+            })
+                .catch(err => {
+                    reject(err)
+                })
+        })
+    }
     getAccountData(): Promise<API.v1.AccountObject> {
         return new Promise((resolve, reject) => {
             if (
@@ -111,7 +121,6 @@ export class Account {
                 this.account_data_timestamp &&
                 this.account_data_timestamp + this.cache_duration > Date.now()
             ) {
-                console.log('Using cached account data')
                 return resolve(this.account_data)
             }
 
