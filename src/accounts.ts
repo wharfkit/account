@@ -1,10 +1,9 @@
-import { API, APIClient, Checksum256, Name, NameType, AssetType, Action, Asset } from '@greymass/eosio'
+import { API, APIClient, Checksum256, Name, NameType, AssetType, Asset } from '@greymass/eosio'
 import { ChainId, ChainName } from 'anchor-link'
 import type { ChainIdType } from 'anchor-link'
 
 import { PermissionActions } from './accounts/actions/permissions'
 import { Permission } from './permissions'
-import { Resources } from './resources'
 import { ResourceActions } from './accounts/actions/resources'
 
 // import type { Session } from '@wharfkit/session'
@@ -16,6 +15,15 @@ interface Session {
 
 interface SessionTransactResult {
     id: Checksum256
+}
+
+interface Resources {
+    cpu_available: number,
+    cpu_used: number,
+    net_available: number,
+    net_used: number,
+    ram_quota: number,
+    ram_usage: number,
 }
 
 export class Account {
@@ -80,34 +88,17 @@ export class Account {
         return ResourceActions.shared().undelegateResources(this.accountName, this.accountName, cpu, net, { account: this, session })
     }
 
-    async updateResources(resources: Resources, { session }: { session: Session }): Promise<void> {
-        const {
-            ram_to_buy,
-            ram_to_sell,
-            cpu_to_stake,
-            cpu_to_unstake,
-            net_to_stake,
-            net_to_unstake,
-        } = resources.desiredResourceChanges
-
-        const actionsToExecute: Action[] = []
-
-        ram_to_buy && actionsToExecute.push(await ResourceActions.shared().buyRamBytesAction(this.accountName, this.accountName, Number(ram_to_buy), { account: this, session }))
-        ram_to_sell && actionsToExecute.push(await ResourceActions.shared().sellRamAction(this.accountName, Number(ram_to_sell), { account: this, session }))
-        cpu_to_stake || net_to_stake && actionsToExecute.push(await ResourceActions.shared().delegateResourcesAction(this.accountName, this.accountName, String(net_to_stake), String(cpu_to_stake), false, { account: this, session }))
-        cpu_to_unstake || net_to_unstake && actionsToExecute.push(await ResourceActions.shared().undelegateResourcesAction(this.accountName, this.accountName, String(net_to_unstake), String(cpu_to_unstake), { account: this, session }))
-
-        // Execute all actions here
-
-        // const transactionId = session.transact(actionsToExecute, { broadcast: true, blocksBehind: 3, expireSeconds: 30 })
-
-        // return transactionId
-    }
-
     async getResources(): Promise<Resources> {
         return new Promise((resolve, reject) => {
             this.getAccountData().then(accountData => {
-                resolve(Resources.from(accountData))
+                resolve({
+                    net_available: Number(accountData.net_limit.available),
+                    net_used: Number(accountData.net_limit.available),
+                    cpu_available: Number(accountData.cpu_limit.available),
+                    cpu_used: Number(accountData.cpu_limit.used),
+                    ram_quota: Number(accountData.ram_quota),
+                    ram_usage: Number(accountData.ram_usage),
+                })
             })
                 .catch(err => {
                     reject(err)
@@ -115,14 +106,23 @@ export class Account {
         })
     }
 
-    getBalances(): Promise<Asset[]> {
+    getBalance(contract: NameType = 'eosio.token', symbol?: Asset.SymbolType): Promise<Asset> {
         return new Promise((resolve, reject) => {
-            this.getAccountData().then(accountData => {
-                // We need to fetch the balances here
+            this.api_client.v1.chain
+                .get_currency_balance(contract, String(this.accountName), symbol && String(symbol))
+                .then(balances => {
+                    const balance = (balances as any)[0]
 
-                //resolve(accountData.balances)
-            })
+                    if (!balance) {
+                        reject(new Error(`No balance found for ${symbol} token of ${contract} contract on chain ${ChainName[this.chain_id.chainName]}.`))
+                    }
+
+                    resolve(balance)
+                })
                 .catch(err => {
+                    if (err.message.includes('No data') || err.message.includes('Account Query Exception')) {
+                        reject(new Error(`Token contract ${contract} does not exist on chain ${ChainName[this.chain_id.chainName]}.`))
+                    }
                     reject(err)
                 })
         })

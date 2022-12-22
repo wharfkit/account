@@ -1,0 +1,31 @@
+{
+    "headers": {
+        "access-control-allow-headers": "X-Requested-With,Accept,Content-Type,Origin",
+        "access-control-allow-methods": "GET, POST, OPTIONS",
+        "access-control-allow-origin": "*",
+        "connection": "close",
+        "content-length": "269",
+        "content-type": "application/json",
+        "date": "Fri, 23 Dec 2022 01:09:01 GMT",
+        "server": "nginx"
+    },
+    "status": 500,
+    "json": {
+        "code": 500,
+        "message": "Internal Service Error",
+        "error": {
+            "code": 3060002,
+            "name": "account_query_exception",
+            "what": "Account Query Exception",
+            "details": [
+                {
+                    "message": "Fail to retrieve account for nonexistent",
+                    "file": "chain_plugin.cpp",
+                    "line_number": 1664,
+                    "method": "get_abi"
+                }
+            ]
+        }
+    },
+    "text": "{\"code\":500,\"message\":\"Internal Service Error\",\"error\":{\"code\":3060002,\"name\":\"account_query_exception\",\"what\":\"Account Query Exception\",\"details\":[{\"message\":\"Fail to retrieve account for nonexistent\",\"file\":\"chain_plugin.cpp\",\"line_number\":1664,\"method\":\"get_abi\"}]}}"
+}
