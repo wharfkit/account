@@ -2,7 +2,7 @@ import fs from 'fs'
 import dts from 'rollup-plugin-dts'
 import typescript from '@rollup/plugin-typescript'
 
-import pkg from './package.json' assert {type: 'json'}
+import pkg from './@wharfkit/account.json' assert {type: 'json'}
 
 const license = fs.readFileSync('LICENSE').toString('utf-8').trim()
 const banner = `
@@ -26,7 +26,7 @@ export default [
             format: 'cjs',
             sourcemap: true,
         },
-        plugins: [typescript({target: 'es6'})],
+        plugins: [typescript({ target: 'es6' })],
         external,
         onwarn,
     },
@@ -38,13 +38,13 @@ export default [
             format: 'esm',
             sourcemap: true,
         },
-        plugins: [typescript({target: 'es2020'})],
+        plugins: [typescript({ target: 'es2020' })],
         external,
         onwarn,
     },
     {
         input: 'src/index.ts',
-        output: {banner, file: pkg.types, format: 'esm'},
+        output: { banner, file: pkg.types, format: 'esm' },
         onwarn,
         plugins: [dts()],
     },

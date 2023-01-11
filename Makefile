@@ -5,7 +5,7 @@ BIN := ./node_modules/.bin
 MOCHA_OPTS := -u tdd -r ts-node/register -r tsconfig-paths/register --extension ts
 NYC_OPTS := --temp-dir build/nyc_output --report-dir build/coverage
 
-lib: ${SRC_FILES} package.json tsconfig.json node_modules rollup.config.mjs
+lib: ${SRC_FILES} @wharfkit/account.json tsconfig.json node_modules rollup.config.mjs
 	@${BIN}/rollup -c && touch lib
 
 .PHONY: test

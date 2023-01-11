@@ -255,7 +255,7 @@
   dependencies:
     camelcase "^5.3.1"
     find-up "^4.1.0"
-    get-package-type "^0.1.0"
+    get-@wharfkit/account-type "^0.1.0"
     js-yaml "^3.13.1"
     resolve-from "^5.0.0"
 
@@ -762,7 +762,7 @@ caching-transform@^4.0.0:
   dependencies:
     hasha "^5.0.0"
     make-dir "^3.0.0"
-    package-hash "^4.0.0"
+    @wharfkit/account-hash "^4.0.0"
     write-file-atomic "^3.0.0"
 
 callsites@^3.0.0:
@@ -1343,9 +1343,9 @@ get-func-name@^2.0.0:
   resolved "https://registry.yarnpkg.com/get-func-name/-/get-func-name-2.0.0.tgz#ead774abee72e20409433a066366023dd6887a41"
   integrity sha512-Hm0ixYtaSZ/V7C8FJrtZIuBBI+iSgL+1Aq82zSu8VQNB4S3Gk8e7Qs3VwBDJAhmRZcFqkl3tQu36g/Foh5I5ig==
 
-get-package-type@^0.1.0:
+get-@wharfkit/account-type@^0.1.0:
   version "0.1.0"
-  resolved "https://registry.yarnpkg.com/get-package-type/-/get-package-type-0.1.0.tgz#8de2d803cff44df3bc6c456e6668b36c3926e11a"
+  resolved "https://registry.yarnpkg.com/get-@wharfkit/account-type/-/get-@wharfkit/account-type-0.1.0.tgz#8de2d803cff44df3bc6c456e6668b36c3926e11a"
   integrity sha512-pjzuKtY64GYfWizNAJ0fr9VqttZkNiK2iS430LtIHzjBEr6bX8Am2zm4sW4Ro5wjWW5cAlRL1qAMTcXbjNAO2Q==
 
 gh-pages@^4.0.0:
@@ -2002,7 +2002,7 @@ nyc@^15.1.0:
     find-cache-dir "^3.2.0"
     find-up "^4.1.0"
     foreground-child "^2.0.0"
-    get-package-type "^0.1.0"
+    get-@wharfkit/account-type "^0.1.0"
     glob "^7.1.6"
     istanbul-lib-coverage "^3.0.0"
     istanbul-lib-hook "^3.0.0"
@@ -2086,9 +2086,9 @@ p-try@^2.0.0:
   resolved "https://registry.yarnpkg.com/p-try/-/p-try-2.2.0.tgz#cb2868540e313d61de58fafbe35ce9004d5540e6"
   integrity sha512-R4nPAVTAU0B9D35/Gk3uJf/7XYbQcyohSKdvAxIRSNghFl4e71hVoGnBNQz9cWaXxO2I10KTC+3jMdvvoKw6dQ==
 
-package-hash@^4.0.0:
+@wharfkit/account-hash@^4.0.0:
   version "4.0.0"
-  resolved "https://registry.yarnpkg.com/package-hash/-/package-hash-4.0.0.tgz#3537f654665ec3cc38827387fc904c163c54f506"
+  resolved "https://registry.yarnpkg.com/@wharfkit/account-hash/-/@wharfkit/account-hash-4.0.0.tgz#3537f654665ec3cc38827387fc904c163c54f506"
   integrity sha512-whdkPIooSu/bASggZ96BWVvZTRMOFxnyUG5PnTSGKoJE2gd5mbVNmR2Nj20QFzxYYgAXpoqC+AiXzl+UMRh7zQ==
   dependencies:
     graceful-fs "^4.1.15"
