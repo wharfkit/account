@@ -1,13 +1,26 @@
-import { KeyWeight, PermissionLevelWeight, PermissionLevelType, WaitWeight, AuthorityType, Authority, Name, NameType, PublicKeyType, UInt32Type } from '@greymass/eosio'
-import { API } from '@greymass/eosio'
+import {
+    Authority,
+    AuthorityType,
+    KeyWeight,
+    Name,
+    NameType,
+    PermissionLevelType,
+    PermissionLevelWeight,
+    PublicKeyType,
+    UInt32Type,
+    WaitWeight,
+} from '@greymass/eosio'
+import {API} from '@greymass/eosio'
 
-import type { Account } from './accounts'
+import type {Account} from './accounts'
 
 interface Session {
-    [key: string]: any;
+    [key: string]: any
 }
 
-type PermissionParams = { permissionName: NameType, accountData: API.v1.AccountObject } | PermissionData
+type PermissionParams =
+    | {permissionName: NameType; accountData: API.v1.AccountObject}
+    | PermissionData
 
 interface PermissionData {
     account: NameType
@@ -18,34 +31,31 @@ interface PermissionData {
 }
 
 function instanceOfPermissionData(object: any): object is PermissionData {
-    return 'account' in object;
+    return 'account' in object
 }
 
 interface ActionParam {
-    session: Session;
-    account: Account;
+    session: Session
+    account: Account
 }
 
 interface AddKeyActionParam {
-    permission: Permission;
-    key: string;
+    permission: Permission
+    key: string
 }
 
 interface ActionData {
-    account: NameType;
-    parent: NameType;
-    permission: NameType;
-    auth: AuthorityType;
+    account: NameType
+    parent: NameType
+    permission: NameType
+    auth: AuthorityType
 }
 
 export class Permission {
     permission_name: Name
     permission_data: PermissionData
 
-    constructor(
-        permissionName: Name,
-        permissionData: PermissionData,
-    ) {
+    constructor(permissionName: Name, permissionData: PermissionData) {
         this.permission_name = permissionName
         this.permission_data = permissionData
     }
@@ -58,7 +68,7 @@ export class Permission {
             })
         }
 
-        const { permissionName, accountData } = permissionParams;
+        const {permissionName, accountData} = permissionParams
 
         const permissionObject = accountData.getPermission(permissionName)
 
@@ -84,42 +94,42 @@ export class Permission {
         return {
             ...this.permission_data,
             auth: {
-                keys: this.permission_data.auth?.keys?.map(({ key, weight }) => {
+                keys: this.permission_data.auth?.keys?.map(({key, weight}) => {
                     return {
                         key: String(key),
                         weight: Number(weight),
                     }
                 }),
-                accounts: this.permission_data.auth?.accounts?.map(({ permission, weight }) => ({
+                accounts: this.permission_data.auth?.accounts?.map(({permission, weight}) => ({
                     permission: {
                         actor: String(permission.actor),
                         permission: String(permission.permission),
                     },
                     weight: Number(weight),
                 })),
-                waits: this.permission_data.auth?.waits?.map(({ wait_sec, weight }) => ({
+                waits: this.permission_data.auth?.waits?.map(({wait_sec, weight}) => ({
                     wait_sec: Number(wait_sec),
                     weight: Number(weight),
                 })),
                 threshold: Number(this.permission_data.auth?.threshold),
-            }
+            },
         }
     }
 
-    addKey(key: PublicKeyType, weight: number = 1): void {
+    addKey(key: PublicKeyType, weight = 1): void {
         this.permission_data = {
             ...this.permission_data,
             auth: Authority.from({
-                ...this.permission_data.auth || {},
+                ...(this.permission_data.auth || {}),
                 keys: [
                     ...(this.permission_data.auth?.keys || []),
                     KeyWeight.from({
                         key: key,
                         weight: weight,
                     }),
-                ]
-            })
-        };
+                ],
+            }),
+        }
     }
 
     removeKey(key: PublicKeyType): void {
@@ -127,14 +137,14 @@ export class Permission {
             ...this.permission_data,
             auth: Authority.from({
                 ...this.permission_data.auth,
-                keys: this.permission_data.auth?.keys?.filter((keyWeight: { key: PublicKeyType }) => {
-                    return String(keyWeight.key) !== key;
+                keys: this.permission_data.auth?.keys?.filter((keyWeight: {key: PublicKeyType}) => {
+                    return String(keyWeight.key) !== key
                 }),
-            })
-        };
+            }),
+        }
     }
 
-    addAccount(accountPermission: { actor: NameType, permission: NameType }, weight: number = 1): void {
+    addAccount(accountPermission: {actor: NameType; permission: NameType}, weight = 1): void {
         this.permission_data = {
             ...this.permission_data,
             auth: Authority.from({
@@ -148,9 +158,9 @@ export class Permission {
                         },
                         weight: weight,
                     }),
-                ]
-            })
-        };
+                ],
+            }),
+        }
     }
 
     removeAccount(account: NameType): void {
@@ -158,14 +168,16 @@ export class Permission {
             ...this.permission_data,
             auth: Authority.from({
                 ...this.permission_data.auth,
-                accounts: this.permission_data.auth?.accounts?.filter((permissionWeight: { permission: PermissionLevelType }) => {
-                    return String(permissionWeight.permission?.actor) !== account;
-                }),
-            })
-        };
+                accounts: this.permission_data.auth?.accounts?.filter(
+                    (permissionWeight: {permission: PermissionLevelType}) => {
+                        return String(permissionWeight.permission?.actor) !== account
+                    }
+                ),
+            }),
+        }
     }
 
-    addWait(wait_sec: number, weight: number = 1): void {
+    addWait(wait_sec: number, weight = 1): void {
         this.permission_data = {
             ...this.permission_data,
             auth: Authority.from({
@@ -176,9 +188,9 @@ export class Permission {
                         wait_sec: wait_sec,
                         weight: weight,
                     }),
-                ]
-            })
-        };
+                ],
+            }),
+        }
     }
 
     removeWait(wait_sec: UInt32Type): void {
@@ -186,10 +198,12 @@ export class Permission {
             ...this.permission_data,
             auth: Authority.from({
                 ...this.permission_data.auth,
-                waits: this.permission_data.auth?.waits?.filter((waitWeight: { wait_sec: number, weight: number }) => {
-                    return Number(waitWeight.wait_sec) !== wait_sec;
-                }),
-            })
-        };
+                waits: this.permission_data.auth?.waits?.filter(
+                    (waitWeight: {wait_sec: number; weight: number}) => {
+                        return Number(waitWeight.wait_sec) !== wait_sec
+                    }
+                ),
+            }),
+        }
     }
 }
