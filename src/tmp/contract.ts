@@ -14,7 +14,7 @@ interface Session {
 interface SessionTransactArgs {
     actions: AnyAction[]
 }
-interface SessionTransactResult {
+export interface SessionTransactResult {
     id: Checksum256
 }
 
@@ -57,6 +57,8 @@ export class Contract {
                 authorization: [],
                 data,
             })
+
+            return { id: Checksum256.from('random_id') }
         } else {
             // TODO: here we need to fetch the ABI and construct the action
             throw new Error('Not implemented')
