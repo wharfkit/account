@@ -1,7 +1,5 @@
 import { assert } from 'chai'
-
 import { Authority, Name } from '@greymass/eosio'
-import { ChainId, ChainName } from "anchor-link";
 
 import { Permission } from '../src/permissions'
 

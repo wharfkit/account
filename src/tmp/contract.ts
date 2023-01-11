@@ -14,7 +14,7 @@ interface Session {
 interface SessionTransactArgs {
     actions: AnyAction[]
 }
-interface SessionTransactResult {
+export interface SessionTransactResult {
     id: Checksum256
 }
 
@@ -49,6 +49,30 @@ export class Contract {
         name: NameType,
         data: ABISerializableObject | {[key: string]: any}
     ): Promise<SessionTransactResult> {
+        let action: Action
+        if (isABISerializableObject(data)) {
+            action = Action.from({
+                account: this.account,
+                name,
+                authorization: [],
+                data,
+            })
+
+            return {id: Checksum256.from('random_id')}
+        } else {
+            // TODO: here we need to fetch the ABI and construct the action
+            throw new Error('Not implemented')
+        }
+        // TODO: resolve session and transact
+        throw new Error('Not implemented')
+    }
+
+    /** Generate a contract action. */
+
+    async getAction(
+        name: NameType,
+        data: ABISerializableObject | {[key: string]: any}
+    ): Promise<Action> {
         let action: Action
         if (isABISerializableObject(data)) {
             action = Action.from({

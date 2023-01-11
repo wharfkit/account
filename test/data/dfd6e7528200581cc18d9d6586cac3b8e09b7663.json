@@ -1,0 +1,18 @@
+{
+    "headers": {
+        "access-control-allow-headers": "X-Requested-With,Accept,Content-Type,Origin",
+        "access-control-allow-methods": "GET, POST, OPTIONS",
+        "access-control-allow-origin": "*",
+        "connection": "close",
+        "content-length": "18",
+        "content-type": "application/json",
+        "date": "Fri, 23 Dec 2022 00:48:25 GMT",
+        "host": "eos.greymass.com",
+        "server": "nginx"
+    },
+    "status": 200,
+    "json": [
+        "20853.0388 EOS"
+    ],
+    "text": "[\"20853.0388 EOS\"]"
+}
