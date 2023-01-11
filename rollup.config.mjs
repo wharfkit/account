@@ -2,7 +2,7 @@ import fs from 'fs'
 import dts from 'rollup-plugin-dts'
 import typescript from '@rollup/plugin-typescript'
 
-import pkg from './@wharfkit/account.json' assert {type: 'json'}
+import pkg from './package.json' assert {type: 'json'}
 
 const license = fs.readFileSync('LICENSE').toString('utf-8').trim()
 const banner = `

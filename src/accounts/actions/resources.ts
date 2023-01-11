@@ -1,5 +1,4 @@
 import {
-    ABISerializableObject,
     Action,
     Asset,
     AssetType,
@@ -9,24 +8,24 @@ import {
 } from '@greymass/eosio'
 
 // Temporarily use a custom version of Contract class.
-import {Contract} from '../../tmp/contract'
+import { Contract } from '../../tmp/contract'
 
 class ResourceActions extends Contract {
     static account = Name.from('eosio')
 
     async buyRam(payer: NameType, receiver: NameType, quant: AssetType, sessionData?: any) {
-        return this.call('buyram', ResourceActions.Types.BuyRam.from({payer, receiver, quant}))
+        return this.call('buyram', ResourceActions.Types.BuyRam.from({ payer, receiver, quant }))
     }
 
     async buyRamBytes(payer: NameType, receiver: NameType, bytes: number, sessionData?: any) {
         return this.call(
             'buyrambytes',
-            ResourceActions.Types.BuyRamBytes.from({payer, receiver, bytes})
+            ResourceActions.Types.BuyRamBytes.from({ payer, receiver, bytes })
         )
     }
 
     async sellRam(account: NameType, bytes: number, sessionData?: any) {
-        return this.call('sellram', ResourceActions.Types.SellRam.from({account, bytes}))
+        return this.call('sellram', ResourceActions.Types.SellRam.from({ account, bytes }))
     }
 
     async delegateResources(
@@ -68,7 +67,7 @@ class ResourceActions extends Contract {
     }
 
     async refundCpu(owner: NameType, sessionData?: any) {
-        return this.call('refund', ResourceActions.Types.Refund.from({owner}))
+        return this.call('refund', ResourceActions.Types.Refund.from({ owner }))
     }
 
     async buyRamAction(
@@ -77,7 +76,7 @@ class ResourceActions extends Contract {
         quant: AssetType,
         sessionData?: any
     ): Promise<Action> {
-        return this.getAction('buyram', ResourceActions.Types.BuyRam.from({payer, receiver, quant}))
+        return this.getAction('buyram', ResourceActions.Types.BuyRam.from({ payer, receiver, quant }))
     }
 
     async buyRamBytesAction(
@@ -88,12 +87,12 @@ class ResourceActions extends Contract {
     ): Promise<Action> {
         return this.getAction(
             'buyrambytes',
-            ResourceActions.Types.BuyRamBytes.from({payer, receiver, bytes})
+            ResourceActions.Types.BuyRamBytes.from({ payer, receiver, bytes })
         )
     }
 
     async sellRamAction(account: NameType, bytes: number, sessionData?: any): Promise<Action> {
-        return this.getAction('sellram', ResourceActions.Types.SellRam.from({account, bytes}))
+        return this.getAction('sellram', ResourceActions.Types.SellRam.from({ account, bytes }))
     }
 
     async delegateResourcesAction(
@@ -196,4 +195,4 @@ namespace ResourceActions {
     }
 }
 
-export {ResourceActions}
+export { ResourceActions }
