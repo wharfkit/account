@@ -2,7 +2,7 @@
     "name": "@wharfkit/account",
     "description": "Account kit for Wharf Kit",
     "version": "0.0.3",
-    "homepage": "https://github.com/@wharfkit/account",
+    "homepage": "https://github.com/wharfkit/account",
     "license": "BSD-3-Clause",
     "main": "lib/account.js",
     "module": "lib/account.m.js",
