@@ -21,8 +21,7 @@
         "anchor-link": "^3.5.1",
         "eosio-signing-request": "^2.5.2",
         "git": "^0.1.5",
-        "tslib": "^2.1.0",
-        "zlib": "^1.0.5"
+        "tslib": "^2.1.0"
     },
     "devDependencies": {
         "@rollup/plugin-alias": "^4.0.2",

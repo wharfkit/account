@@ -1,23 +1,23 @@
-import {API, APIClient, Asset, AssetType, Checksum256, Name, NameType} from '@greymass/eosio'
-import {ChainId, ChainName} from 'anchor-link'
-import type {ChainIdType} from 'anchor-link'
+import { API, APIClient, Asset, AssetType, Checksum256, Name, NameType } from '@greymass/eosio'
+import { ChainId, ChainName } from 'anchor-link'
+import type { ChainIdType } from 'anchor-link'
 
-import {PermissionActions} from './accounts/actions/permissions'
-import {Permission} from './permissions'
-import {ResourceActions} from './accounts/actions/resources'
+import { PermissionActions } from './accounts/actions/permissions'
+import { Permission } from './permissions'
+import { ResourceActions } from './accounts/actions/resources'
 
 // import type { Session } from '@wharfkit/session'
 
 // Remove these when Contract and Session are used
-interface Session {
-    chainId?: ChainIdType
+export interface Session {
+    [key: string]: any
 }
 
-interface SessionTransactResult {
+export interface SessionTransactResult {
     id: Checksum256
 }
 
-interface Resources {
+export interface Resources {
     cpu_available: number
     cpu_used: number
     net_available: number
@@ -57,12 +57,12 @@ export class Account {
     async getPermission(permissionName: NameType): Promise<Permission | undefined> {
         const accountData = await this.getAccountData()
 
-        return Permission.from({permissionName, accountData})
+        return Permission.from({ permissionName, accountData })
     }
 
     updatePermission(
         permission: Permission,
-        {session}: {session: Session}
+        { session }: { session: Session }
     ): Promise<SessionTransactResult> {
         return PermissionActions.shared().updateAuth(permission.actionData, {
             account: this,
@@ -72,38 +72,38 @@ export class Account {
 
     removePermission(
         permissionName: NameType,
-        {session}: {session: Session}
+        { session }: { session: Session }
     ): Promise<SessionTransactResult> {
         return PermissionActions.shared().deleteAuth(
             Name.from(permissionName),
             Name.from(this.account_name),
-            {account: this, session}
+            { account: this, session }
         )
     }
 
-    buyRam(amount: AssetType, {session}: {session: Session}): Promise<SessionTransactResult> {
+    buyRam(amount: AssetType, { session }: { session: Session }): Promise<SessionTransactResult> {
         return ResourceActions.shared().buyRam(this.accountName, this.accountName, amount, {
             account: this,
             session,
         })
     }
 
-    buyRamBytes(bytes: number, {session}: {session: Session}): Promise<SessionTransactResult> {
+    buyRamBytes(bytes: number, { session }: { session: Session }): Promise<SessionTransactResult> {
         return ResourceActions.shared().buyRamBytes(this.accountName, this.accountName, bytes, {
             account: this,
             session,
         })
     }
 
-    sellRam(bytes: number, {session}: {session: Session}): Promise<SessionTransactResult> {
-        return ResourceActions.shared().sellRam(this.accountName, bytes, {account: this, session})
+    sellRam(bytes: number, { session }: { session: Session }): Promise<SessionTransactResult> {
+        return ResourceActions.shared().sellRam(this.accountName, bytes, { account: this, session })
     }
 
     delegateResources(
         cpu: AssetType,
         net: AssetType,
         transfer: boolean,
-        {session}: {session: Session}
+        { session }: { session: Session }
     ): Promise<SessionTransactResult> {
         return ResourceActions.shared().delegateResources(
             this.accountName,
@@ -111,21 +111,21 @@ export class Account {
             net,
             cpu,
             transfer,
-            {account: this, session}
+            { account: this, session }
         )
     }
 
     undelegateResources(
         cpu: AssetType,
         net: AssetType,
-        {session}: {session: Session}
+        { session }: { session: Session }
     ): Promise<SessionTransactResult> {
         return ResourceActions.shared().undelegateResources(
             this.accountName,
             this.accountName,
             cpu,
             net,
-            {account: this, session}
+            { account: this, session }
         )
     }
 
@@ -158,8 +158,7 @@ export class Account {
                     if (!balance) {
                         reject(
                             new Error(
-                                `No balance found for ${symbol} token of ${contract} contract on chain ${
-                                    ChainName[this.chain_id.chainName]
+                                `No balance found for ${symbol} token of ${contract} contract on chain ${ChainName[this.chain_id.chainName]
                                 }.`
                             )
                         )
@@ -174,8 +173,7 @@ export class Account {
                     ) {
                         reject(
                             new Error(
-                                `Token contract ${contract} does not exist on chain ${
-                                    ChainName[this.chain_id.chainName]
+                                `Token contract ${contract} does not exist on chain ${ChainName[this.chain_id.chainName]
                                 }.`
                             )
                         )
@@ -206,8 +204,7 @@ export class Account {
                     if (error.message.includes('Account not found')) {
                         return reject(
                             new Error(
-                                `Account ${this.account_name} does not exist on chain ${
-                                    ChainName[this.chain_id.chainName]
+                                `Account ${this.account_name} does not exist on chain ${ChainName[this.chain_id.chainName]
                                 }.`
                             )
                         )

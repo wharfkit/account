@@ -1,8 +1,6 @@
 @wharfkit/account
 =======
 
-Greymass TypeScript library template, intended for libraries that work in any JavaScript context (node.js, Browser, React native), `@types/node` are installed only for tests, don't rely on any node.js types or imports inside `src/` (no `buffer`, `crypto` imports etc, they can be filled for browser but will bloat the bundle 100x)
-
 ## Installation
 
 The `@wharfkit/account` @wharfkit/account is distributed as a module on [npm](https://www.npmjs.com/@wharfkit/account/@wharfkit/account).
@@ -16,6 +14,13 @@ npm install --save @wharfkit/account
 ## Usage
 
 TODO
+
+See [unit tests](https://github.com/wharfkit/account/tree/main/test) for usage examples during early development.
+
+## Autodocs
+
+-   [API Documentation](https://wharfkit.github.io/account/)
+-   [Code Coverage Report](https://wharfkit.github.io/account/coverage/)
 
 ## Developing
 
