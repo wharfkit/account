@@ -540,13 +540,6 @@
     "@typescript-eslint/types" "5.49.0"
     eslint-visitor-keys "^3.3.0"
 
-"@wharfkit/contract@ssh:git@github.com:wharfkit/contract.git":
-  version "0.0.0"
-  resolved "ssh:git@github.com:wharfkit/contract.git#4f64ad03ee61b9cb8b147333558585ddfd45362b"
-  dependencies:
-    "@greymass/eosio" "^0.6.4"
-    tslib "^2.1.0"
-
 acorn-jsx@^5.3.2:
   version "5.3.2"
   resolved "https://registry.yarnpkg.com/acorn-jsx/-/acorn-jsx-5.3.2.tgz#7ed5bb55908b3b2f1bc55c6af1653bada7f07937"

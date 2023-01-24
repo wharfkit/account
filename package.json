@@ -17,7 +17,6 @@
     },
     "dependencies": {
         "@greymass/eosio": "^0.6.4",
-        "@wharfkit/contract": "ssh:git@github.com:wharfkit/contract.git",
         "anchor-link": "^3.5.1",
         "eosio-signing-request": "^2.5.2",
         "git": "^0.1.5",
