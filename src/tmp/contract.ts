@@ -5,23 +5,29 @@ import {
     Checksum256,
     Name,
     NameType,
+    PermissionLevel,
+    PrivateKey,
 } from '@greymass/eosio'
 
-// stubs for session kit
-interface Session {
-    transact(SessionTransactArgs: any): Promise<SessionTransactResult>
-}
-interface SessionTransactArgs {
-    actions: AnyAction[]
-}
-export interface SessionTransactResult {
-    id: Checksum256
-}
+import {Session, TransactArgs, TransactResult, WalletPluginPrivateKey} from '@wharfkit/session'
 
 // TODO: move this to core
 export function isABISerializableObject(value: any): value is ABISerializableObject {
     return value.constructor && typeof value.constructor.abiName === 'string'
 }
+
+// TODO: Remove this mock session once a real one exists
+const mockSession = new Session({
+    broadcast: false, // Disable broadcasting by default for tests, enable when required.
+    chain: {
+        id: '73e4385a2708e6d7048834fbc1079f2fabb17b3c125b146af438971e90716c4d',
+        url: 'https://jungle4.greymass.com',
+    },
+    permissionLevel: PermissionLevel.from('foo@active'),
+    walletPlugin: new WalletPluginPrivateKey({
+        privateKey: PrivateKey.from('5Jtoxgny5tT7NiNFp1MLogviuPJ9NniWjnU4wKzaX4t7pL4kJ8s'),
+    }),
+})
 
 export class Contract {
     /** Account where contract is deployed. */
@@ -45,10 +51,7 @@ export class Contract {
     }
 
     /** Call a contract action. */
-    async call(
-        name: NameType,
-        data: ABISerializableObject | {[key: string]: any}
-    ): Promise<SessionTransactResult> {
+    async call(name: NameType, data: ABISerializableObject | {[key: string]: any}) {
         let action: Action
         if (isABISerializableObject(data)) {
             action = Action.from({
@@ -58,7 +61,12 @@ export class Contract {
                 data,
             })
 
-            return {id: Checksum256.from('random_id')}
+            return mockSession.transact(
+                {
+                    action,
+                },
+                {broadcast: false}
+            )
         } else {
             // TODO: here we need to fetch the ABI and construct the action
             throw new Error('Not implemented')

@@ -13,16 +13,7 @@ import {PermissionActions} from './accounts/actions/permissions'
 import {Permission} from './permissions'
 import {ResourceActions} from './accounts/actions/resources'
 
-// import type { Session } from '@wharfkit/session'
-
-// Remove these when Contract and Session are used
-export interface Session {
-    [key: string]: any
-}
-
-export interface SessionTransactResult {
-    id: Checksum256
-}
+import type {Session, TransactResult} from '@wharfkit/session'
 
 export interface Resources {
     cpu_available: number
@@ -70,7 +61,7 @@ export class Account {
     updatePermission(
         permission: Permission,
         {session}: {session: Session}
-    ): Promise<SessionTransactResult> {
+    ): Promise<TransactResult> {
         return PermissionActions.shared().updateAuth(permission.actionData, {
             account: this,
             session,
@@ -80,7 +71,7 @@ export class Account {
     removePermission(
         permissionName: NameType,
         {session}: {session: Session}
-    ): Promise<SessionTransactResult> {
+    ): Promise<TransactResult> {
         return PermissionActions.shared().deleteAuth(
             Name.from(permissionName),
             Name.from(this.account_name),
@@ -88,21 +79,21 @@ export class Account {
         )
     }
 
-    buyRam(amount: AssetType, {session}: {session: Session}): Promise<SessionTransactResult> {
+    buyRam(amount: AssetType, {session}: {session: Session}): Promise<TransactResult> {
         return ResourceActions.shared().buyRam(this.accountName, this.accountName, amount, {
             account: this,
             session,
         })
     }
 
-    buyRamBytes(bytes: number, {session}: {session: Session}): Promise<SessionTransactResult> {
+    buyRamBytes(bytes: number, {session}: {session: Session}): Promise<TransactResult> {
         return ResourceActions.shared().buyRamBytes(this.accountName, this.accountName, bytes, {
             account: this,
             session,
         })
     }
 
-    sellRam(bytes: number, {session}: {session: Session}): Promise<SessionTransactResult> {
+    sellRam(bytes: number, {session}: {session: Session}): Promise<TransactResult> {
         return ResourceActions.shared().sellRam(this.accountName, bytes, {account: this, session})
     }
 
@@ -111,7 +102,7 @@ export class Account {
         net: AssetType,
         transfer: boolean,
         {session}: {session: Session}
-    ): Promise<SessionTransactResult> {
+    ): Promise<TransactResult> {
         return ResourceActions.shared().delegateResources(
             this.accountName,
             this.accountName,
@@ -126,7 +117,7 @@ export class Account {
         cpu: AssetType,
         net: AssetType,
         {session}: {session: Session}
-    ): Promise<SessionTransactResult> {
+    ): Promise<TransactResult> {
         return ResourceActions.shared().undelegateResources(
             this.accountName,
             this.accountName,

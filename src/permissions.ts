@@ -12,7 +12,8 @@ import {
 } from '@greymass/eosio'
 import {API} from '@greymass/eosio'
 
-import type {Account, Session} from './accounts'
+import type {Account} from './accounts'
+import type {Session} from '@wharfkit/session'
 
 export type PermissionParams =
     | {permissionName: NameType; accountData: API.v1.AccountObject}
