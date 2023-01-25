@@ -34,7 +34,7 @@ check: node_modules
 
 .PHONY: format
 format: node_modules
-	@${BIN}/eslint src --ext .ts --fix
+	@${BIN}/eslint src test --ext .ts --fix
 
 .PHONY: publish
 publish: | distclean node_modules
