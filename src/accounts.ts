@@ -9,15 +9,15 @@ import {ResourceActions} from './accounts/actions/resources'
 // import type { Session } from '@wharfkit/session'
 
 // Remove these when Contract and Session are used
-interface Session {
-    chainId?: ChainIdType
+export interface Session {
+    [key: string]: any
 }
 
-interface SessionTransactResult {
+export interface SessionTransactResult {
     id: Checksum256
 }
 
-interface Resources {
+export interface Resources {
     cpu_available: number
     cpu_used: number
     net_available: number

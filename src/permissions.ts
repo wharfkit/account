@@ -12,17 +12,13 @@ import {
 } from '@greymass/eosio'
 import {API} from '@greymass/eosio'
 
-import type {Account} from './accounts'
+import type {Account, Session} from './accounts'
 
-interface Session {
-    [key: string]: any
-}
-
-type PermissionParams =
+export type PermissionParams =
     | {permissionName: NameType; accountData: API.v1.AccountObject}
     | PermissionData
 
-interface PermissionData {
+export interface PermissionData {
     account: NameType
     parent: NameType
     permission: NameType
@@ -30,25 +26,25 @@ interface PermissionData {
     authorized_by?: NameType
 }
 
-function instanceOfPermissionData(object: any): object is PermissionData {
-    return 'account' in object
-}
-
-interface ActionParam {
+export interface ActionParam {
     session: Session
     account: Account
 }
 
-interface AddKeyActionParam {
+export interface AddKeyActionParam {
     permission: Permission
     key: string
 }
 
-interface ActionData {
+export interface ActionData {
     account: NameType
     parent: NameType
     permission: NameType
     auth: AuthorityType
+}
+
+export function instanceOfPermissionData(object: any): object is PermissionData {
+    return 'account' in object
 }
 
 export class Permission {
