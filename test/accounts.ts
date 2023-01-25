@@ -1,6 +1,5 @@
 import {assert} from 'chai'
-import {ChainId, ChainName} from 'anchor-link'
-import {API, APIClient, Asset, Name} from '@greymass/eosio'
+import {API, APIClient, Asset, Checksum256, Name} from '@greymass/eosio'
 
 import {Account} from '../src/accounts'
 import {Permission} from '../src/permissions'
@@ -10,14 +9,12 @@ const eosApiClient = new APIClient({
     provider: new MockProvider('https://eos.greymass.com'),
 })
 
+const chainId = Checksum256.from('aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906')
+
 suite('accounts', function () {
     suite('Account', function () {
         test('construct', function () {
-            const account = new Account(
-                Name.from('teamgreymass'),
-                ChainId.from(ChainName.EOS),
-                eosApiClient
-            )
+            const account = new Account(Name.from('teamgreymass'), chainId, eosApiClient)
 
             assert.instanceOf(account, Account)
         })
@@ -28,7 +25,7 @@ suite('accounts', function () {
             assert(testAccount().accountName.equals('teamgreymass'))
         })
         test('chainId', function () {
-            assert.equal(testAccount().chainId.chainName, ChainName.EOS)
+            assert.equal(testAccount().chainId, chainId)
         })
 
         suite('getAccountData', function () {
@@ -188,9 +185,9 @@ suite('accounts', function () {
 })
 
 function testAccount() {
-    return Account.from('teamgreymass', ChainId.from(ChainName.EOS), eosApiClient)
+    return Account.from('teamgreymass', chainId, eosApiClient)
 }
 
 function nonExistentTestAccount() {
-    return Account.from('nonexistent', ChainId.from(ChainName.EOS), eosApiClient)
+    return Account.from('nonexistent', chainId, eosApiClient)
 }
