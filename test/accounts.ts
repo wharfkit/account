@@ -66,7 +66,7 @@ suite('accounts', function () {
                     .catch((error) => {
                         assert.equal(
                             (error as Error).message,
-                            'Account nonexistent does not exist on chain EOS.'
+                            'Account nonexistent does not exist.'
                         )
                         done()
                     })
@@ -118,7 +118,7 @@ suite('accounts', function () {
                     .catch((error) => {
                         assert.equal(
                             (error as Error).message,
-                            'Account nonexistent does not exist on chain EOS.'
+                            'Account nonexistent does not exist.'
                         )
                         done()
                     })
@@ -155,7 +155,7 @@ suite('accounts', function () {
                     .catch((error) => {
                         assert.equal(
                             (error as Error).message,
-                            'No balance found for nonexist token of eosio.token contract on chain EOS.'
+                            'No balance found for nonexist token of eosio.token contract.'
                         )
                         done()
                     })
@@ -172,7 +172,7 @@ suite('accounts', function () {
                     .catch((error) => {
                         assert.equal(
                             (error as Error).message,
-                            'Token contract nonexist does not exist on chain EOS.'
+                            'Token contract nonexist does not exist.'
                         )
                         done()
                     })
