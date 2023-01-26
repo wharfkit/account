@@ -16,6 +16,13 @@ export function isABISerializableObject(value: any): value is ABISerializableObj
     return value.constructor && typeof value.constructor.abiName === 'string'
 }
 
+function mockFetch(data) {
+    return Promise.resolve({
+        json: () => Promise.resolve(data),
+        text: () => Promise.resolve(JSON.stringify(data)),
+    })
+}
+
 // TODO: Remove this mock session once a real one exists
 const mockSession = new Session({
     broadcast: false, // Disable broadcasting by default for tests, enable when required.
@@ -27,6 +34,7 @@ const mockSession = new Session({
     walletPlugin: new WalletPluginPrivateKey({
         privateKey: PrivateKey.from('5Jtoxgny5tT7NiNFp1MLogviuPJ9NniWjnU4wKzaX4t7pL4kJ8s'),
     }),
+    fetch: mockFetch,
 })
 
 export class Contract {
