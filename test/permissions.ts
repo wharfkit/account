@@ -1,7 +1,7 @@
-import { assert } from 'chai'
-import { Authority, Name } from '@greymass/eosio'
+import {assert} from 'chai'
+import {Authority, Name} from '@greymass/eosio'
 
-import { Permission } from '../src/permissions'
+import {Permission} from '../src/permissions'
 
 const authorityExample = {
     threshold: 1,
@@ -17,9 +17,9 @@ const authorityExample = {
 
 const expectedKeyData = {
     data: {
-        array: "2,192,222,210,188,31,19,5,251,15,170,197,230,192,62,227,161,146,66,52,152,84,39,182,22,124,165,105,209,61,244,53,207"
+        array: '2,192,222,210,188,31,19,5,251,15,170,197,230,192,62,227,161,146,66,52,152,84,39,182,22,124,165,105,209,61,244,53,207',
     },
-    type: "K1"
+    type: 'K1',
 }
 
 const expectedWeightData = {
@@ -27,10 +27,8 @@ const expectedWeightData = {
         length: 1,
         negative: 0,
         red: [null],
-        words: [
-            1
-        ],
-    }
+        words: [1],
+    },
 }
 
 const expectedThresholdData = {
@@ -38,16 +36,12 @@ const expectedThresholdData = {
         length: 1,
         negative: 0,
         red: [null],
-        words: [
-            1
-        ]
-    }
+        words: [1],
+    },
 }
 
 const expectedAuthorityData = {
-    keys: [
-        expectedKeyData
-    ],
+    keys: [expectedKeyData],
     threshold: expectedThresholdData,
 }
 
@@ -58,7 +52,7 @@ suite('accounts', function () {
                 account: 'teamgreymass',
                 parent: 'owner',
                 permission: 'active',
-                auth: Authority.from(authorityExample)
+                auth: Authority.from(authorityExample),
             })
             assert.instanceOf(permission, Permission)
         })
@@ -74,7 +68,7 @@ suite('accounts', function () {
         })
 
         test('permissionName', function () {
-            assert.equal(String(testPermission().permissionName), 'active');
+            assert.equal(String(testPermission().permissionName), 'active')
         })
 
         test('actionData', function () {
@@ -84,10 +78,12 @@ suite('accounts', function () {
                 parent: 'owner',
                 auth: {
                     accounts: [],
-                    keys: [{
-                        key: "PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63",
-                        weight: 1,
-                    }],
+                    keys: [
+                        {
+                            key: 'PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63',
+                            weight: 1,
+                        },
+                    ],
                     threshold: 1,
                     waits: [],
                 },
@@ -109,7 +105,7 @@ suite('accounts', function () {
 
         test('addAccount', function () {
             const permission = testPermission()
-            permission.addAccount({ actor: 'trust.gm', permission: 'active' })
+            permission.addAccount({actor: 'trust.gm', permission: 'active'})
             assert.deepEqual(permission.actionData.auth, {
                 ...authorityExample,
                 accounts: [
@@ -126,7 +122,7 @@ suite('accounts', function () {
 
         test('removeAccount', function () {
             const permission = testPermission()
-            permission.addAccount({ actor: 'trust.gm', permission: 'active' })
+            permission.addAccount({actor: 'trust.gm', permission: 'active'})
             permission.removeAccount('trust.gm')
             assert.deepEqual(permission.actionData.auth, {
                 ...authorityExample,
@@ -137,9 +133,10 @@ suite('accounts', function () {
         test('addWait', function () {
             const permission = testPermission()
             permission.addWait(100)
-            assert.deepEqual(JSON.parse(JSON.stringify(permission.actionData.auth.waits)), [{ wait_sec: 100, weight: 1 }])
+            assert.deepEqual(JSON.parse(JSON.stringify(permission.actionData.auth.waits)), [
+                {wait_sec: 100, weight: 1},
+            ])
         })
-
 
         test('removeWait', function () {
             const permission = testPermission()
@@ -161,13 +158,11 @@ function testPermission() {
             keys: [
                 {
                     key: 'PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63',
-                    weight: 1
-                }
+                    weight: 1,
+                },
             ],
             accounts: [],
-            waits: []
-        })
+            waits: [],
+        }),
     })
 }
-
-

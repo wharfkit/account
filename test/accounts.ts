@@ -1,19 +1,20 @@
-import { assert } from 'chai'
-import { ChainId, ChainName } from "anchor-link";
-import { Name, APIClient, API, Asset } from "@greymass/eosio";
+import {assert} from 'chai'
+import {API, APIClient, Asset, Checksum256, Name} from '@greymass/eosio'
 
-import { Account } from '../src/accounts'
-import { Permission } from '../src/permissions'
-import { MockProvider } from './utils/mock-provider'
+import {Account} from '../src/accounts'
+import {Permission} from '../src/permissions'
+import {MockProvider} from './utils/mock-provider'
 
 const eosApiClient = new APIClient({
     provider: new MockProvider('https://eos.greymass.com'),
 })
 
+const chainId = Checksum256.from('aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906')
+
 suite('accounts', function () {
     suite('Account', function () {
         test('construct', function () {
-            const account = new Account(Name.from('teamgreymass'), ChainId.from(ChainName.EOS), eosApiClient)
+            const account = new Account(Name.from('teamgreymass'), chainId, eosApiClient)
 
             assert.instanceOf(account, Account)
         })
@@ -21,10 +22,10 @@ suite('accounts', function () {
             assert.instanceOf(testAccount(), Account)
         })
         test('accountName', function () {
-            assert(testAccount().accountName.equals("teamgreymass"));
+            assert(testAccount().accountName.equals('teamgreymass'))
         })
         test('chainId', function () {
-            assert.equal(testAccount().chainId.chainName, ChainName.EOS);
+            assert.equal(testAccount().chainId, chainId)
         })
 
         suite('getAccountData', function () {
@@ -41,9 +42,9 @@ suite('accounts', function () {
                 const account = nonExistentTestAccount()
 
                 account.getAccountData().catch((error) => {
-                    assert((error as Error).message, "Account does not exist")
+                    assert((error as Error).message, 'Account does not exist')
                     done()
-                });
+                })
             })
         })
 
@@ -60,23 +61,35 @@ suite('accounts', function () {
             test('throws error when account does not exist', function (done) {
                 const account = nonExistentTestAccount()
 
-                account.getPermission('active').catch((error) => {
-                    assert.equal((error as Error).message, "Account nonexistent does not exist on chain EOS.")
-                    done()
-                }).then(() => {
-                    assert.fail()
-                })
+                account
+                    .getPermission('active')
+                    .catch((error) => {
+                        assert.equal(
+                            (error as Error).message,
+                            'Account nonexistent does not exist.'
+                        )
+                        done()
+                    })
+                    .then(() => {
+                        assert.fail()
+                    })
             })
 
             test('throws error when permission does not exist', function (done) {
                 const account = testAccount()
 
-                account.getPermission('nonexistent').catch((error) => {
-                    assert.equal((error as Error).message, "Unknown permission nonexistent on account teamgreymass.")
-                    done()
-                }).then(() => {
-                    assert.fail()
-                })
+                account
+                    .getPermission('nonexistent')
+                    .catch((error) => {
+                        assert.equal(
+                            (error as Error).message,
+                            'Unknown permission nonexistent on account teamgreymass.'
+                        )
+                        done()
+                    })
+                    .then(() => {
+                        assert.fail()
+                    })
             })
         })
 
@@ -100,12 +113,18 @@ suite('accounts', function () {
             test('throws error when account does not exist', function (done) {
                 const account = nonExistentTestAccount()
 
-                account.getResources().catch((error) => {
-                    assert.equal((error as Error).message, "Account nonexistent does not exist on chain EOS.")
-                    done()
-                }).then(() => {
-                    assert.fail()
-                })
+                account
+                    .getResources()
+                    .catch((error) => {
+                        assert.equal(
+                            (error as Error).message,
+                            'Account nonexistent does not exist.'
+                        )
+                        done()
+                    })
+                    .then(() => {
+                        assert.fail()
+                    })
             })
         })
 
@@ -122,38 +141,53 @@ suite('accounts', function () {
             test('returns resources object for secondary token', async function () {
                 const account = testAccount()
 
-                assert.equal(String(await account.getBalance('bingobetoken', 'BINGO')), '1000.0000 BINGO')
+                assert.equal(
+                    String(await account.getBalance('bingobetoken', 'BINGO')),
+                    '1000.0000 BINGO'
+                )
             })
 
             test('throws error when token does not exist for given contract', function (done) {
                 const account = testAccount()
 
-                account.getBalance('eosio.token', 'nonexist').catch((error) => {
-                    assert.equal((error as Error).message, "No balance found for nonexist token of eosio.token contract on chain EOS.")
-                    done()
-                }).then((data) => {
-                    assert.fail()
-                })
+                account
+                    .getBalance('eosio.token', 'nonexist')
+                    .catch((error) => {
+                        assert.equal(
+                            (error as Error).message,
+                            'No balance found for nonexist token of eosio.token contract.'
+                        )
+                        done()
+                    })
+                    .then((data) => {
+                        assert.fail()
+                    })
             })
 
             test('throws error when token contract does not exist', function (done) {
                 const account = testAccount()
 
-                account.getBalance('nonexist').catch((error) => {
-                    assert.equal((error as Error).message, "Token contract nonexist does not exist on chain EOS.")
-                    done()
-                }).then(() => {
-                    assert.fail()
-                })
+                account
+                    .getBalance('nonexist')
+                    .catch((error) => {
+                        assert.equal(
+                            (error as Error).message,
+                            'Token contract nonexist does not exist.'
+                        )
+                        done()
+                    })
+                    .then(() => {
+                        assert.fail()
+                    })
             })
         })
     })
 })
 
 function testAccount() {
-    return Account.from('teamgreymass', ChainId.from(ChainName.EOS), eosApiClient)
+    return Account.from('teamgreymass', chainId, eosApiClient)
 }
 
 function nonExistentTestAccount() {
-    return Account.from('nonexistent', ChainId.from(ChainName.EOS), eosApiClient)
+    return Account.from('nonexistent', chainId, eosApiClient)
 }

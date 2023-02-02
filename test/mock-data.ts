@@ -1,4 +1,4 @@
-import { API, UInt32, UInt64, Name, TimePoint, Asset, Int64 } from '@greymass/eosio'
+import {API, Asset, Int64, Name, TimePoint, UInt32, UInt64} from '@greymass/eosio'
 
 const mockAccountObject = API.v1.AccountObject.from({
     cpu_weight: UInt64.from(333),
@@ -43,4 +43,4 @@ const mockAccountObject = API.v1.AccountObject.from({
     }),
 })
 
-export { mockAccountObject }
+export {mockAccountObject}
