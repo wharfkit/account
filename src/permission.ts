@@ -1,4 +1,5 @@
 import {
+    API,
     Authority,
     AuthorityType,
     KeyWeight,
@@ -9,11 +10,10 @@ import {
     PublicKeyType,
     UInt32Type,
     WaitWeight,
-} from '@greymass/eosio'
-import {API} from '@greymass/eosio'
+} from '@wharfkit/antelope'
 
-import type {Account} from './accounts'
 import type {Session} from '@wharfkit/session'
+import type {Account} from './account'
 
 export type PermissionParams =
     | {permissionName: NameType; accountData: API.v1.AccountObject}
@@ -24,7 +24,7 @@ export interface PermissionData {
     parent: NameType
     permission: NameType
     auth: AuthorityType | Authority
-    authorized_by?: NameType
+    authorized_by: NameType
 }
 
 export interface ActionParam {
@@ -41,7 +41,8 @@ export interface ActionData {
     account: NameType
     parent: NameType
     permission: NameType
-    auth: AuthorityType
+    auth: Authority
+    authorized_by: NameType
 }
 
 export function instanceOfPermissionData(object: any): object is PermissionData {
@@ -80,6 +81,7 @@ export class Permission {
             parent: permissionObject.parent,
             permission: permissionObject.perm_name,
             auth: Authority.from(permissionObject.required_auth),
+            authorized_by: "............1",
         })
     }
 
@@ -90,7 +92,7 @@ export class Permission {
     get actionData(): ActionData {
         return {
             ...this.permission_data,
-            auth: {
+            auth: Authority.from({
                 keys: this.permission_data.auth?.keys?.map(({key, weight}) => {
                     return {
                         key: String(key),
@@ -109,7 +111,7 @@ export class Permission {
                     weight: Number(weight),
                 })),
                 threshold: Number(this.permission_data.auth?.threshold),
-            },
+            }),
         }
     }
 

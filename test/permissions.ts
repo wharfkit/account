@@ -1,7 +1,7 @@
 import {assert} from 'chai'
 import {Authority, Name} from '@greymass/eosio'
 
-import {Permission} from '../src/permissions'
+import {Permission} from '../src/permission'
 
 const authorityExample = {
     threshold: 1,

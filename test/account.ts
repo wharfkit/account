@@ -1,8 +1,8 @@
 import {assert} from 'chai'
 import {API, APIClient, Asset, Checksum256, Name} from '@greymass/eosio'
 
-import {Account} from '../src/accounts'
-import {Permission} from '../src/permissions'
+import {Account} from '../src/account'
+import {Permission} from '../src/permission'
 import {MockProvider} from './utils/mock-provider'
 
 const eosApiClient = new APIClient({
@@ -14,7 +14,7 @@ const chainId = Checksum256.from('aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119f
 suite('accounts', function () {
     suite('Account', function () {
         test('construct', function () {
-            const account = new Account(Name.from('teamgreymass'), chainId, eosApiClient)
+            const account = new Account()
 
             assert.instanceOf(account, Account)
         })
