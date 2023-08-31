@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 SRC_FILES := $(shell find src -name '*.ts')
-TEST_FILES := $(wildcard test/*.ts)
+TEST_FILES := $(wildcard test/tests/*.ts)
 BIN := ./node_modules/.bin
 MOCHA_OPTS := -u tdd -r ts-node/register -r tsconfig-paths/register --extension ts
 NYC_OPTS := --temp-dir build/nyc_output --report-dir build/coverage
@@ -11,7 +11,7 @@ lib: ${SRC_FILES} package.json tsconfig.json node_modules rollup.config.mjs
 .PHONY: test
 test: node_modules
 	@TS_NODE_PROJECT='./test/tsconfig.json' \
-		${BIN}/mocha ${MOCHA_OPTS} test/*.ts --grep '$(grep)'
+		${BIN}/mocha ${MOCHA_OPTS} test/tests/*.ts --grep '$(grep)'
 
 build/coverage: ${SRC_FILES} ${TEST_FILES} node_modules
 	@TS_NODE_PROJECT='./test/tsconfig.json' \

@@ -1,11 +1,9 @@
 import {assert} from 'chai'
 import {API, APIClient} from '@wharfkit/antelope'
 
-import {Account} from '../src/account'
-import {AccountKit} from '../src/kit'
-import {Permission} from '../src/permission'
-import {MockProvider} from './utils/mock-provider'
-import {deserializedMockAccountObject} from './mock-data'
+import {Account, AccountKit, Permission} from '../../src'
+import {MockProvider} from '../utils/mock-provider'
+import {deserializedMockAccountObject} from '../utils/mock-data'
 
 const eosApiClient = new APIClient({
     provider: new MockProvider('https://eos.greymass.com'),
