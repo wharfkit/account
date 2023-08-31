@@ -6,7 +6,7 @@
         "connection": "close",
         "content-length": "266",
         "content-type": "application/json",
-        "date": "Fri, 23 Dec 2022 01:23:41 GMT",
+        "date": "Thu, 31 Aug 2023 05:54:25 GMT",
         "server": "nginx"
     },
     "status": 500,
@@ -21,11 +21,11 @@
                 {
                     "message": "Fail to retrieve account for nonexist",
                     "file": "chain_plugin.cpp",
-                    "line_number": 1664,
+                    "line_number": 1695,
                     "method": "get_abi"
                 }
             ]
         }
     },
-    "text": "{\"code\":500,\"message\":\"Internal Service Error\",\"error\":{\"code\":3060002,\"name\":\"account_query_exception\",\"what\":\"Account Query Exception\",\"details\":[{\"message\":\"Fail to retrieve account for nonexist\",\"file\":\"chain_plugin.cpp\",\"line_number\":1664,\"method\":\"get_abi\"}]}}"
+    "text": "{\"code\":500,\"message\":\"Internal Service Error\",\"error\":{\"code\":3060002,\"name\":\"account_query_exception\",\"what\":\"Account Query Exception\",\"details\":[{\"message\":\"Fail to retrieve account for nonexist\",\"file\":\"chain_plugin.cpp\",\"line_number\":1695,\"method\":\"get_abi\"}]}}"
 }

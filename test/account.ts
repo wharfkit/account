@@ -1,193 +1,115 @@
 import {assert} from 'chai'
-import {API, APIClient, Asset, Checksum256, Name} from '@greymass/eosio'
+import {API, APIClient} from '@wharfkit/antelope'
 
 import {Account} from '../src/account'
+import {AccountKit} from '../src/kit'
 import {Permission} from '../src/permission'
 import {MockProvider} from './utils/mock-provider'
+import {deserializedMockAccountObject} from './mock-data'
 
 const eosApiClient = new APIClient({
     provider: new MockProvider('https://eos.greymass.com'),
 })
 
-const chainId = Checksum256.from('aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906')
+suite('Account', function () {
+    let testAccount: Account
 
-suite('accounts', function () {
-    suite('Account', function () {
-        test('construct', function () {
-            const account = new Account()
+    this.beforeAll(async function () {
+        testAccount = await (new AccountKit({client: eosApiClient})).load('teamgreymass')
+    })
 
-            assert.instanceOf(account, Account)
+    test('construct', function () {
+        const account = new Account({ client: eosApiClient, accountData: deserializedMockAccountObject})
+
+        assert.instanceOf(account, Account)
+    })
+    test('accountName', function () {
+        assert.isTrue(testAccount.accountName.equals('teamgreymass'))
+    })
+
+    suite('account_data', function () {
+        test('returns account data', async function () {
+            assert.instanceOf(testAccount.account_data, API.v1.AccountObject)
         })
-        test('from', function () {
-            assert.instanceOf(testAccount(), Account)
-        })
-        test('accountName', function () {
-            assert(testAccount().accountName.equals('teamgreymass'))
-        })
-        test('chainId', function () {
-            assert.equal(testAccount().chainId, chainId)
-        })
+    })
 
-        suite('getAccountData', function () {
-            this.slow(200)
-            this.timeout(5 * 1000)
-
-            test('returns account data', async function () {
-                const account = testAccount()
-
-                assert.instanceOf(await account.getAccountData(), API.v1.AccountObject)
-            })
-
-            test('throws error when account does not exist', function (done) {
-                const account = nonExistentTestAccount()
-
-                account.getAccountData().catch((error) => {
-                    assert((error as Error).message, 'Account does not exist')
-                    done()
-                })
-            })
+    suite('getPermission', function () {
+        test('returns permission object', async function () {
+            assert.instanceOf(testAccount.getPermission('active'), Permission)
         })
 
-        suite('getPermission', function () {
-            this.slow(200)
-            this.timeout(5 * 1000)
-
-            test('returns permission object', async function () {
-                const account = testAccount()
-
-                assert.instanceOf(await account.getPermission('active'), Permission)
-            })
-
-            test('throws error when account does not exist', function (done) {
-                const account = nonExistentTestAccount()
-
-                account
-                    .getPermission('active')
-                    .catch((error) => {
-                        assert.equal(
-                            (error as Error).message,
-                            'Account nonexistent does not exist.'
-                        )
-                        done()
-                    })
-                    .then(() => {
-                        assert.fail()
-                    })
-            })
-
-            test('throws error when permission does not exist', function (done) {
-                const account = testAccount()
-
-                account
-                    .getPermission('nonexistent')
-                    .catch((error) => {
-                        assert.equal(
-                            (error as Error).message,
-                            'Unknown permission nonexistent on account teamgreymass.'
-                        )
-                        done()
-                    })
-                    .then(() => {
-                        assert.fail()
-                    })
-            })
-        })
-
-        suite('getResources', function () {
-            this.slow(200)
-            this.timeout(5 * 1000)
-
-            test('returns resources data', async function () {
-                const account = testAccount()
-
-                assert.deepEqual(await account.getResources(), {
-                    cpu_available: 236250,
-                    cpu_used: 826079,
-                    net_available: 8253324,
-                    net_used: 8253324,
-                    ram_quota: 67988,
-                    ram_usage: 17086,
-                })
-            })
-
-            test('throws error when account does not exist', function (done) {
-                const account = nonExistentTestAccount()
-
-                account
-                    .getResources()
-                    .catch((error) => {
-                        assert.equal(
-                            (error as Error).message,
-                            'Account nonexistent does not exist.'
-                        )
-                        done()
-                    })
-                    .then(() => {
-                        assert.fail()
-                    })
-            })
-        })
-
-        suite('getBalance', function () {
-            this.slow(200)
-            this.timeout(5 * 1000)
-
-            test('returns resources object for system token', async function () {
-                const account = testAccount()
-
-                assert.equal(String(await account.getBalance()), '20853.0388 EOS')
-            })
-
-            test('returns resources object for secondary token', async function () {
-                const account = testAccount()
-
+        test('throws error when permission does not exist', function () {
+            try {
+                testAccount.getPermission('nonexistent')
+                assert.fail()
+            } catch (error) {
                 assert.equal(
-                    String(await account.getBalance('bingobetoken', 'BINGO')),
-                    '1000.0000 BINGO'
+                    (error as Error).message,
+                    'Permission nonexistent does not exist on account teamgreymass.'
                 )
-            })
+            }
+        })
+    })
 
-            test('throws error when token does not exist for given contract', function (done) {
-                const account = testAccount()
+    suite('getResources', function () {
+        this.slow(200)
+        this.timeout(5 * 1000)
 
-                account
-                    .getBalance('eosio.token', 'nonexist')
-                    .catch((error) => {
-                        assert.equal(
-                            (error as Error).message,
-                            'No balance found for nonexist token of eosio.token contract.'
-                        )
-                        done()
-                    })
-                    .then((data) => {
-                        assert.fail()
-                    })
-            })
-
-            test('throws error when token contract does not exist', function (done) {
-                const account = testAccount()
-
-                account
-                    .getBalance('nonexist')
-                    .catch((error) => {
-                        assert.equal(
-                            (error as Error).message,
-                            'Token contract nonexist does not exist.'
-                        )
-                        done()
-                    })
-                    .then(() => {
-                        assert.fail()
-                    })
+        test('returns resources data', async function () {
+            assert.deepEqual(testAccount.getResources(), {
+                cpu_available: 400021,
+                cpu_used: 1018013,
+                net_available: 8225481,
+                net_used: 8225481,
+                ram_quota: 67988,
+                ram_usage: 18101,
             })
         })
     })
+
+    suite('getBalance', function () {
+        this.slow(200)
+        this.timeout(5 * 1000)
+
+        test('returns resources object for system token', async function () {
+            assert.equal(String(await testAccount.getBalance()), '4968.2348 EOS')
+        })
+
+        test('returns resources object for secondary token', async function () {
+            assert.equal(
+                String(await testAccount.getBalance('bingobetoken', 'BINGO')),
+                '1000.0000 BINGO'
+            )
+        })
+
+        test('throws error when token does not exist for given contract', function (done) {
+            testAccount
+                .getBalance('eosio.token', 'nonexist')
+                .catch((error) => {
+                    assert.equal(
+                        (error as Error).message,
+                        'No balance found for nonexist token of eosio.token contract.'
+                    )
+                    done()
+                })
+                .then((data) => {
+                    assert.fail()
+                })
+        })
+
+        test('throws error when token contract does not exist', function (done) {
+            testAccount
+                .getBalance('nonexist')
+                .catch((error) => {
+                    assert.equal(
+                        (error as Error).message,
+                        'Token contract nonexist does not exist.'
+                    )
+                    done()
+                })
+                .then(() => {
+                    assert.fail()
+                })
+        })
+    })
 })
-
-function testAccount() {
-    return Account.from('teamgreymass', chainId, eosApiClient)
-}
-
-function nonExistentTestAccount() {
-    return Account.from('nonexistent', chainId, eosApiClient)
-}

@@ -4,8 +4,7 @@ import {
     APIClient,
     Asset,
     AssetType,
-    Checksum256,
-    Checksum256Type,
+    Authority,
     Name,
     NameType,
 } from '@wharfkit/antelope'
@@ -38,12 +37,28 @@ export class Account {
         this.client = client
     }
 
-    get accountName(): NameType {
-        return String(this.account_data.account_name)
+    get accountName() {
+        return Name.from(this.account_data.account_name)
     }
 
     getPermission(permissionName: NameType): Permission {
-        return Permission.from({permissionName, accountData: this.account_data})
+        const permissionObject = this.account_data.permissions.find(
+            (permission) => permission.perm_name.equals(permissionName)
+        )
+
+        if (!permissionObject) {
+            throw new Error(
+                `Permission ${permissionName} does not exist on account ${this.accountName}.`
+            )
+        }
+
+        return new Permission(permissionName, {
+            account: this.accountName,
+            parent: permissionObject.parent,
+            permission: permissionObject.perm_name,
+            auth: Authority.from(permissionObject.required_auth),
+            authorized_by: "............1",
+        })
     }
 
     updatePermission(permission: Permission): Action {

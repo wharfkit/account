@@ -15,21 +15,12 @@ import {
 import type {Session} from '@wharfkit/session'
 import type {Account} from './account'
 
-export type PermissionParams =
-    | {permissionName: NameType; accountData: API.v1.AccountObject}
-    | PermissionData
-
 export interface PermissionData {
     account: NameType
     parent: NameType
     permission: NameType
     auth: AuthorityType | Authority
     authorized_by: NameType
-}
-
-export interface ActionParam {
-    session: Session
-    account: Account
 }
 
 export interface AddKeyActionParam {
@@ -45,44 +36,13 @@ export interface ActionData {
     authorized_by: NameType
 }
 
-export function instanceOfPermissionData(object: any): object is PermissionData {
-    return 'account' in object
-}
-
 export class Permission {
     permission_name: Name
     permission_data: PermissionData
 
-    constructor(permissionName: Name, permissionData: PermissionData) {
-        this.permission_name = permissionName
+    constructor(permissionName: NameType, permissionData: PermissionData) {
+        this.permission_name = Name.from(permissionName)
         this.permission_data = permissionData
-    }
-
-    static from(permissionParams: PermissionParams): Permission {
-        if (instanceOfPermissionData(permissionParams)) {
-            return new Permission(Name.from(permissionParams.permission), {
-                ...permissionParams,
-                auth: Authority.from(permissionParams.auth),
-            })
-        }
-
-        const {permissionName, accountData} = permissionParams
-
-        const permissionObject = accountData.getPermission(permissionName)
-
-        if (!permissionObject) {
-            throw new Error(
-                `Permission ${permissionName} does not exist on account ${accountData.account_name}`
-            )
-        }
-
-        return new Permission(Name.from(permissionName), {
-            account: accountData.account_name,
-            parent: permissionObject.parent,
-            permission: permissionObject.perm_name,
-            auth: Authority.from(permissionObject.required_auth),
-            authorized_by: "............1",
-        })
     }
 
     get permissionName(): Name {
