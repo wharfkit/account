@@ -16,43 +16,6 @@ const authorityExample = {
     waits: [],
 }
 
-const expectedKeyData = {
-    data: {
-        array: '2,192,222,210,188,31,19,5,251,15,170,197,230,192,62,227,161,146,66,52,152,84,39,182,22,124,165,105,209,61,244,53,207',
-    },
-    type: 'K1',
-}
-
-const expectedWeightData = {
-    value: {
-        length: 1,
-        negative: 0,
-        red: [null],
-        words: [1],
-    },
-}
-
-const expectedThresholdData = {
-    value: {
-        length: 1,
-        negative: 0,
-        red: [null],
-        words: [1],
-    },
-}
-
-const expectedAuthorityData = {
-    keys: [expectedKeyData],
-    threshold: expectedThresholdData,
-}
- interface DeserializedActionData {
-    account: NameType
-    parent: NameType
-    permission: NameType
-    auth: AuthorityType
-    authorized_by: NameType
-}
-
 suite('Permission', function () {
     test('construct', function () {
         const permission = new Permission(Name.from('active'), {
