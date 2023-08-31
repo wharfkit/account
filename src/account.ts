@@ -31,9 +31,9 @@ export class Account {
     readonly eosioContract: Eosio.Contract
     readonly client: APIClient
 
-    constructor({ accountData, client }: AccountArgs) {
+    constructor({accountData, client}: AccountArgs) {
         this.account_data = accountData
-        this.eosioContract = new Eosio.Contract({ client })
+        this.eosioContract = new Eosio.Contract({client})
         this.client = client
     }
 
@@ -42,8 +42,8 @@ export class Account {
     }
 
     getPermission(permissionName: NameType): Permission {
-        const permissionObject = this.account_data.permissions.find(
-            (permission) => permission.perm_name.equals(permissionName)
+        const permissionObject = this.account_data.permissions.find((permission) =>
+            permission.perm_name.equals(permissionName)
         )
 
         if (!permissionObject) {
@@ -57,7 +57,7 @@ export class Account {
             parent: permissionObject.parent,
             permission: permissionObject.perm_name,
             auth: Authority.from(permissionObject.required_auth),
-            authorized_by: "............1",
+            authorized_by: '............1',
         })
     }
 
@@ -67,58 +67,52 @@ export class Account {
 
     removePermission(permissionName: NameType): Action {
         return this.eosioContract.action('deleteauth', {
-            account: "............1",
-            authorized_by: "............1",
+            account: '............1',
+            authorized_by: '............1',
             permission: permissionName,
         })
     }
 
     buyRam(amount: AssetType): Action {
         return this.eosioContract.action('buyram', {
-            payer: "............1",
-            receiver: "............1",
+            payer: '............1',
+            receiver: '............1',
             quant: amount,
         })
     }
 
     buyRamBytes(bytes: number): Action {
         return this.eosioContract.action('buyrambytes', {
-            payer: "............1",
-            receiver: "............1",
+            payer: '............1',
+            receiver: '............1',
             bytes,
         })
     }
 
     sellRam(bytes: number): Action {
         return this.eosioContract.action('sellram', {
-            account: "............1",
+            account: '............1',
             bytes,
         })
     }
 
     delegateResources(cpu: AssetType, net: AssetType): Action {
-        return this.eosioContract.action(
-            'delegatebw',
-            {
-                from: "............1",
-                receiver: "............1",
-                stake_cpu_quantity: cpu,
-                stake_net_quantity: net,
-                transfer: false,
-            }
-        )
+        return this.eosioContract.action('delegatebw', {
+            from: '............1',
+            receiver: '............1',
+            stake_cpu_quantity: cpu,
+            stake_net_quantity: net,
+            transfer: false,
+        })
     }
 
     undelegateResources(cpu: AssetType, net: AssetType): Action {
-        return this.eosioContract.action(
-            'undelegatebw',
-            {
-                from: "............1",
-                receiver: "............1",
-                unstake_cpu_quantity: cpu,
-                unstake_net_quantity: net,
-            }
-        )
+        return this.eosioContract.action('undelegatebw', {
+            from: '............1',
+            receiver: '............1',
+            unstake_cpu_quantity: cpu,
+            unstake_net_quantity: net,
+        })
     }
 
     getResources(): Resources {

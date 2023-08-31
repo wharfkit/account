@@ -1536,4 +1536,3 @@ export namespace Eosio {
     }
 }
 export default Eosio
-

@@ -4,8 +4,8 @@ import {API, APIClient} from '@wharfkit/antelope'
 import {Account, AccountKit, Permission} from '../../src'
 import {MockProvider} from '../utils/mock-provider'
 import {deserializedMockAccountObject} from '../utils/mock-data'
-import { Name } from '@greymass/eosio'
-import { deserialize } from 'test/utils/helpers'
+import {Name} from '@greymass/eosio'
+import {deserialize} from 'test/utils/helpers'
 
 const eosApiClient = new APIClient({
     provider: new MockProvider('https://eos.greymass.com'),
@@ -15,11 +15,14 @@ suite('Account', function () {
     let testAccount: Account
 
     this.beforeAll(async function () {
-        testAccount = await (new AccountKit({client: eosApiClient})).load('teamgreymass')
+        testAccount = await new AccountKit({client: eosApiClient}).load('teamgreymass')
     })
 
     test('construct', function () {
-        const account = new Account({ client: eosApiClient, accountData: deserializedMockAccountObject})
+        const account = new Account({
+            client: eosApiClient,
+            accountData: deserializedMockAccountObject,
+        })
 
         assert.instanceOf(account, Account)
     })
@@ -69,11 +72,11 @@ suite('Account', function () {
 
     suite('updatePermission', () => {
         test('returns current Action', () => {
-            const permission = new Permission("permission", {
-                account: "............1",
-                parent: "............1",
-                permission: "............1",
-                authorized_by: "............1",
+            const permission = new Permission('permission', {
+                account: '............1',
+                parent: '............1',
+                permission: '............1',
+                authorized_by: '............1',
                 auth: {
                     accounts: [],
                     keys: [
@@ -85,123 +88,123 @@ suite('Account', function () {
                     threshold: 1,
                     waits: [],
                 },
-            });
-            const action = testAccount.updatePermission(permission);
+            })
+            const action = testAccount.updatePermission(permission)
             assert.deepEqual(deserialize(action), {
-                account: "eosio",
+                account: 'eosio',
                 authorization: [
                     {
-                        actor: "............1",
-                        permission: "............2"
-                    }
+                        actor: '............1',
+                        permission: '............2',
+                    },
                 ],
-                data: "01000000000000000100000000000000010000000000000001000000010002c0ded2bc1f1305fb0faac5e6c03ee3a1924234985427b6167ca569d13df435cf010000000100000000000000",
-                name: "updateauth"
-            });
-        });
-    });
+                data: '01000000000000000100000000000000010000000000000001000000010002c0ded2bc1f1305fb0faac5e6c03ee3a1924234985427b6167ca569d13df435cf010000000100000000000000',
+                name: 'updateauth',
+            })
+        })
+    })
 
     suite('removePermission', () => {
         test('returns current Action', () => {
-            const action = testAccount.removePermission("someName");
+            const action = testAccount.removePermission('someName')
             assert.deepEqual(deserialize(action), {
-                account: "eosio",
+                account: 'eosio',
                 authorization: [
                     {
-                      actor: "............1",
-                      permission: "............2"
-                    }
+                        actor: '............1',
+                        permission: '............2',
+                    },
                 ],
-                data: "01000000000000000000004a1aa024c50100000000000000",
-                name: "deleteauth"
-            });
-        });
-    });
+                data: '01000000000000000000004a1aa024c50100000000000000',
+                name: 'deleteauth',
+            })
+        })
+    })
 
     suite('buyRam', () => {
         test('returns current Action', () => {
-            const action = testAccount.buyRam("1.0000 EOS");
+            const action = testAccount.buyRam('1.0000 EOS')
             assert.deepEqual(deserialize(action), {
-                account: "eosio",
+                account: 'eosio',
                 authorization: [
                     {
-                        "actor": "............1",
-                        "permission": "............2"
-                    }
+                        actor: '............1',
+                        permission: '............2',
+                    },
                 ],
-                data: "01000000000000000100000000000000102700000000000004454f5300000000",
-                name: "buyram"
-            });
-        });
-    });
+                data: '01000000000000000100000000000000102700000000000004454f5300000000',
+                name: 'buyram',
+            })
+        })
+    })
 
     suite('buyRamBytes', () => {
         test('returns current Action', () => {
-            const action = testAccount.buyRamBytes(1024);
+            const action = testAccount.buyRamBytes(1024)
             assert.deepEqual(deserialize(action), {
-                account: "eosio",
+                account: 'eosio',
                 authorization: [
                     {
-                        actor: "............1",
-                        permission: "............2"
-                    }
+                        actor: '............1',
+                        permission: '............2',
+                    },
                 ],
-                data: "0100000000000000010000000000000000040000",
-                name: "buyrambytes"
-            });
-        });
-    });
+                data: '0100000000000000010000000000000000040000',
+                name: 'buyrambytes',
+            })
+        })
+    })
 
     suite('sellRam', () => {
         test('returns current Action', () => {
-            const action = testAccount.sellRam(1024);
+            const action = testAccount.sellRam(1024)
             assert.deepEqual(deserialize(action), {
-                account: "eosio",
+                account: 'eosio',
                 authorization: [
                     {
-                        actor: "............1",
-                        permission: "............2"
-                    }
+                        actor: '............1',
+                        permission: '............2',
+                    },
                 ],
-                data: "01000000000000000004000000000000",
-                name: "sellram"
-            });
-        });
-    });
+                data: '01000000000000000004000000000000',
+                name: 'sellram',
+            })
+        })
+    })
 
     suite('delegateResources', () => {
         test('returns current Action', () => {
-            const action = testAccount.delegateResources("1.0000 EOS", "0.5000 EOS");
+            const action = testAccount.delegateResources('1.0000 EOS', '0.5000 EOS')
             assert.deepEqual(deserialize(action), {
-                account: "eosio",
+                account: 'eosio',
                 authorization: [
                     {
-                        actor: "............1",
-                        permission: "............2"
-                    }
+                        actor: '............1',
+                        permission: '............2',
+                    },
                 ],
-                data: "01000000000000000100000000000000881300000000000004454f5300000000102700000000000004454f530000000000",
-                name: "delegatebw"
-            });
-        });
-    });
+                data: '01000000000000000100000000000000881300000000000004454f5300000000102700000000000004454f530000000000',
+                name: 'delegatebw',
+            })
+        })
+    })
 
     suite('undelegateResources', () => {
         test('returns current Action', () => {
-            const action = testAccount.undelegateResources("0.5000 EOS", "1.0000 EOS");
+            const action = testAccount.undelegateResources('0.5000 EOS', '1.0000 EOS')
             assert.deepEqual(deserialize(action), {
-                account: "eosio",
+                account: 'eosio',
                 authorization: [
                     {
-                        actor: "............1",
-                        permission: "............2"
-                    }
+                        actor: '............1',
+                        permission: '............2',
+                    },
                 ],
-                data: "01000000000000000100000000000000102700000000000004454f5300000000881300000000000004454f5300000000",
-                name: "undelegatebw"
-            });
-        });
-    });
+                data: '01000000000000000100000000000000102700000000000004454f5300000000881300000000000004454f5300000000',
+                name: 'undelegatebw',
+            })
+        })
+    })
 
     suite('getBalance', function () {
         this.slow(200)

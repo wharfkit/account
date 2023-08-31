@@ -1,5 +1,5 @@
 import {API, Asset, Name, TimePoint, UInt32, UInt64} from '@greymass/eosio'
-import { deserialize } from './helpers'
+import {deserialize} from './helpers'
 
 export const mockAccountObject = API.v1.AccountObject.from({
     cpu_weight: UInt64.from(236250),

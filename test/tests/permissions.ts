@@ -1,8 +1,8 @@
 import {assert} from 'chai'
-import {Authority, Name, NameType, AuthorityType} from '@wharfkit/antelope'
+import {Authority, AuthorityType, Name, NameType} from '@wharfkit/antelope'
 
 import {ActionData, Permission} from '../../src'
-import { deserialize } from '../utils/helpers'
+import {deserialize} from '../utils/helpers'
 
 const authorityExample = {
     threshold: 1,
@@ -128,4 +128,3 @@ function testPermission() {
         }),
     })
 }
-

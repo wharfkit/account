@@ -1,4 +1,3 @@
-
 import {APIClient, Name, NameType} from '@wharfkit/antelope'
 import {Account} from './account'
 
