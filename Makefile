@@ -26,7 +26,7 @@ coverage: build/coverage
 ci-test: node_modules
 	@TS_NODE_PROJECT='./test/tsconfig.json' \
 		${BIN}/nyc ${NYC_OPTS} --reporter=text \
-		${BIN}/mocha ${MOCHA_OPTS} -R list test/*.ts
+		${BIN}/mocha ${MOCHA_OPTS} -R list test/tests/*.ts
 
 .PHONY: check
 check: node_modules
