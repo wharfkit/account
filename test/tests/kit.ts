@@ -1,19 +1,14 @@
 import {assert, expect} from 'chai'
 
-import {APIClient} from '@wharfkit/antelope'
+import {Account, AccountKit, SystemContract} from '../../src'
+import {makeClient} from '@wharfkit/mock-data'
 
-import {Account, AccountKit} from '../../src'
-import {MockProvider} from 'test/utils/mock-provider'
-
-const eosApiClient = new APIClient({
-    provider: new MockProvider('https://eos.greymass.com'),
-})
+const client = makeClient('https://jungle4.greymass.com')
 
 suite('AccountKit', function () {
     let accountKit: AccountKit
 
     this.beforeAll(function () {
-        const client = eosApiClient
         accountKit = new AccountKit({client})
     })
 
@@ -32,6 +27,13 @@ suite('AccountKit', function () {
         test('sets client if provided', function () {
             expect(accountKit.client).to.exist
         })
+
+        test('allow overriding of default contract', function () {
+            const kit = new AccountKit({
+                client,
+                contract: new SystemContract.Contract({client: makeClient()}),
+            })
+        })
     })
 
     suite('load', function () {
@@ -40,7 +42,7 @@ suite('AccountKit', function () {
                 await accountKit.load('nonexistent')
                 assert.fail()
             } catch (error) {
-                assert.equal(error.message, 'Account nonexistent does not exist')
+                assert.instanceOf(error, Error)
             }
         })
 

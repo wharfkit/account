@@ -1,229 +1,506 @@
 import {assert} from 'chai'
-import {API, APIClient} from '@wharfkit/antelope'
+import {API, Asset, Authority, Int64, KeyWeight, Serializer} from '@wharfkit/antelope'
+import {makeClient, mockSessionArgs, mockSessionOptions} from '@wharfkit/mock-data'
+import {Session} from '@wharfkit/session'
+import {PlaceholderAuth} from '@wharfkit/signing-request'
 
-import {Account, AccountKit, Permission} from '../../src'
-import {MockProvider} from '../utils/mock-provider'
-import {deserializedMockAccountObject} from '../utils/mock-data'
-import {Name} from '@greymass/eosio'
-import {deserialize} from 'test/utils/helpers'
+import {Account, AccountKit, Permission, SystemContract} from '../../src'
 
-const eosApiClient = new APIClient({
-    provider: new MockProvider('https://eos.greymass.com'),
-})
+const mockAccountName = 'wharfkit1133'
+
+const client = makeClient('https://jungle4.greymass.com')
+const accountKit = new AccountKit({client})
+const session = new Session(
+    {
+        ...mockSessionArgs,
+        actor: mockAccountName,
+        permission: 'active',
+        permissionLevel: `${mockAccountName}@active`,
+    },
+    mockSessionOptions
+)
 
 suite('Account', function () {
     let testAccount: Account
 
-    this.beforeAll(async function () {
-        testAccount = await new AccountKit({client: eosApiClient}).load('teamgreymass')
+    setup(async function () {
+        testAccount = await accountKit.load(mockAccountName)
     })
 
     test('construct', function () {
         const account = new Account({
-            client: eosApiClient,
-            accountData: deserializedMockAccountObject,
+            client,
+            data: testAccount.data,
         })
 
         assert.instanceOf(account, Account)
     })
     test('accountName', function () {
-        assert.isTrue(testAccount.accountName.equals('teamgreymass'))
+        assert.isTrue(testAccount.accountName.equals('wharfkit1133'))
     })
 
-    suite('account_data', function () {
+    suite('data', function () {
         test('returns account data', async function () {
-            assert.instanceOf(testAccount.account_data, API.v1.AccountObject)
+            assert.instanceOf(testAccount.data, API.v1.AccountObject)
         })
     })
 
-    suite('getPermission', function () {
+    suite('permission', function () {
         test('returns permission object', async function () {
-            assert.instanceOf(testAccount.getPermission('active'), Permission)
+            assert.instanceOf(testAccount.permission('active'), Permission)
         })
 
         test('throws error when permission does not exist', function () {
-            try {
-                testAccount.getPermission('nonexistent')
-                assert.fail()
-            } catch (error) {
-                assert.equal(
-                    (error as Error).message,
-                    'Permission nonexistent does not exist on account teamgreymass.'
-                )
-            }
+            assert.throws(() => testAccount.permission('nonexistent'))
         })
     })
 
-    suite('getResources', function () {
+    suite('resource', function () {
         this.slow(200)
         this.timeout(5 * 1000)
 
-        test('returns resources data', async function () {
-            assert.deepEqual(testAccount.getResources(), {
-                cpu_available: 400021,
-                cpu_used: 1018013,
-                net_available: 8225481,
-                net_used: 8225481,
-                ram_quota: 67988,
-                ram_usage: 18101,
-            })
+        test('cpu', async function () {
+            const resources = testAccount.resource('cpu')
+            assert.instanceOf(resources.available, Int64)
+            assert.instanceOf(resources.used, Int64)
+            assert.instanceOf(resources.max, Int64)
+        })
+
+        test('net', async function () {
+            const resources = testAccount.resource('net')
+            assert.instanceOf(resources.available, Int64)
+            assert.instanceOf(resources.used, Int64)
+            assert.instanceOf(resources.max, Int64)
+        })
+
+        test('ram', async function () {
+            const resources = testAccount.resource('ram')
+            assert.instanceOf(resources.available, Int64)
+            assert.instanceOf(resources.used, Int64)
+            assert.instanceOf(resources.max, Int64)
         })
     })
 
-    suite('updatePermission', () => {
-        test('returns current Action', () => {
-            const permission = new Permission('permission', {
-                account: '............1',
-                parent: '............1',
-                permission: '............1',
-                authorized_by: '............1',
-                auth: {
-                    accounts: [],
-                    keys: [
-                        {
-                            key: 'PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63',
-                            weight: 1,
-                        },
-                    ],
-                    threshold: 1,
-                    waits: [],
-                },
+    suite('setPermission', () => {
+        test('basic syntax', () => {
+            const auth = Authority.from({
+                accounts: [],
+                keys: [],
+                threshold: 1,
+                waits: [],
             })
-            const action = testAccount.updatePermission(permission)
-            assert.deepEqual(deserialize(action), {
-                account: 'eosio',
-                authorization: [
-                    {
-                        actor: '............1',
-                        permission: '............2',
-                    },
-                ],
-                data: '01000000000000000100000000000000010000000000000001000000010002c0ded2bc1f1305fb0faac5e6c03ee3a1924234985427b6167ca569d13df435cf010000000100000000000000',
-                name: 'updateauth',
+            const permission = Permission.from({
+                parent: 'active',
+                perm_name: 'foo',
+                required_auth: auth,
+            })
+            const action = testAccount.setPermission(permission)
+            assert.isTrue(action.account.equals('eosio'))
+            assert.isTrue(action.name.equals('updateauth'))
+            assert.isTrue(action.authorization[0].equals(PlaceholderAuth))
+
+            const decoded = Serializer.decode({
+                data: action.data,
+                type: SystemContract.Types.Updateauth,
+            })
+            assert.isTrue(decoded.account.equals('wharfkit1133'))
+            assert.isTrue(decoded.parent.equals('active'))
+            assert.isTrue(decoded.permission.equals('foo'))
+            assert.isTrue(decoded.auth.equals(auth))
+        })
+        suite('create and remove permission', function () {
+            test('create new permission', async () => {
+                // Setup new permission, will be removed in next test
+                const permission = Permission.from({
+                    parent: 'active',
+                    perm_name: 'unittest',
+                    required_auth: Authority.from({
+                        accounts: [],
+                        keys: [],
+                        threshold: 1,
+                        waits: [],
+                    }),
+                })
+                // Mutate to add a key
+                permission.addKey('PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63')
+                // Get action to commit change to chain
+                const action = testAccount.setPermission(permission)
+                await session.transact({action}, {broadcast: true})
+            })
+            test('remove it', async () => {
+                const action = testAccount.removePermission('unittest')
+                assert.isTrue(action.account.equals('eosio'))
+                assert.isTrue(action.name.equals('deleteauth'))
+                assert.isTrue(action.authorization[0].equals(PlaceholderAuth))
+
+                const decoded = Serializer.decode({
+                    data: action.data,
+                    type: SystemContract.Types.Deleteauth,
+                })
+                assert.isTrue(decoded.account.equals('wharfkit1133'))
+                assert.isTrue(decoded.permission.equals('unittest'))
+
+                await session.transact({action}, {broadcast: true})
             })
         })
-    })
+        suite('modify existing', function () {
+            test('adding key', async () => {
+                // Retrieve existing permission
+                const permission = testAccount.permission('active')
+                const originalKey = 'EOS6RMS3nvoN9StPzZizve6WdovaDkE5KkEcCDXW7LbepyAioMiK6'
+                // Mutate to add a key
+                permission.addKey('PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63')
+                // Get action to commit change to chain
+                const action = testAccount.setPermission(permission)
+                assert.isTrue(action.account.equals('eosio'))
+                assert.isTrue(action.name.equals('updateauth'))
+                assert.isTrue(action.authorization[0].equals(PlaceholderAuth))
 
-    suite('removePermission', () => {
-        test('returns current Action', () => {
-            const action = testAccount.removePermission('someName')
-            assert.deepEqual(deserialize(action), {
-                account: 'eosio',
-                authorization: [
-                    {
-                        actor: '............1',
-                        permission: '............2',
-                    },
-                ],
-                data: '01000000000000000000004a1aa024c50100000000000000',
-                name: 'deleteauth',
+                const decoded = Serializer.decode({
+                    data: action.data,
+                    type: SystemContract.Types.Updateauth,
+                })
+                assert.isTrue(decoded.account.equals('wharfkit1133'))
+                assert.isTrue(decoded.parent.equals('owner'))
+                assert.isTrue(decoded.permission.equals('active'))
+                assert.isTrue(decoded.auth.keys[0].key.equals(permission.required_auth.keys[0].key))
+                assert.isTrue(
+                    decoded.auth.keys[0].weight.equals(permission.required_auth.keys[0].weight)
+                )
+                // The keys will be reordered due to sorting requirements
+                assert.isTrue(
+                    decoded.auth.keys[0].key.equals(
+                        'PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63'
+                    )
+                )
+                assert.isTrue(decoded.auth.keys[1].key.equals(originalKey))
+                assert.isTrue(decoded.auth.keys[1].weight.equals(1))
+                assert.isTrue(decoded.auth.equals(permission.required_auth))
+
+                await session.transact({action}, {broadcast: true})
+            })
+            test('remove key', async () => {
+                // Retrieve existing permission
+                const permission = testAccount.permission('active')
+                const originalKey = 'EOS6RMS3nvoN9StPzZizve6WdovaDkE5KkEcCDXW7LbepyAioMiK6'
+                // It needs to be added here because the cached record doesn't have it.
+                // It should exist on-chain already due to the previous test.
+                // Unsure how to get around this.
+                permission.required_auth.keys.push(
+                    KeyWeight.from({
+                        key: 'PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63',
+                        weight: 1,
+                    })
+                )
+                permission.required_auth.sort()
+                // Mutate to remove a key
+                permission.removeKey('PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63')
+                // Get action to commit change to chain
+                const action = testAccount.setPermission(permission)
+                assert.isTrue(action.account.equals('eosio'))
+                assert.isTrue(action.name.equals('updateauth'))
+                assert.isTrue(action.authorization[0].equals(PlaceholderAuth))
+
+                const decoded = Serializer.decode({
+                    data: action.data,
+                    type: SystemContract.Types.Updateauth,
+                })
+                assert.isTrue(decoded.account.equals('wharfkit1133'))
+                assert.isTrue(decoded.parent.equals('owner'))
+                assert.isTrue(decoded.permission.equals('active'))
+                assert.isTrue(decoded.auth.keys[0].key.equals(originalKey))
+                assert.isTrue(decoded.auth.keys[0].weight.equals(1))
+                assert.isTrue(decoded.auth.equals(permission.required_auth))
+
+                await session.transact({action}, {broadcast: true})
             })
         })
     })
 
     suite('buyRam', () => {
-        test('returns current Action', () => {
+        test('only amount', () => {
             const action = testAccount.buyRam('1.0000 EOS')
-            assert.deepEqual(deserialize(action), {
-                account: 'eosio',
-                authorization: [
-                    {
-                        actor: '............1',
-                        permission: '............2',
-                    },
-                ],
-                data: '01000000000000000100000000000000102700000000000004454f5300000000',
-                name: 'buyram',
+            assert.isTrue(action.account.equals('eosio'))
+            assert.isTrue(action.name.equals('buyram'))
+            assert.isTrue(action.authorization[0].equals(PlaceholderAuth))
+
+            const decoded = Serializer.decode({
+                data: action.data,
+                type: SystemContract.Types.Buyram,
             })
+            assert.isTrue(decoded.payer.equals('wharfkit1133'))
+            assert.isTrue(decoded.receiver.equals('wharfkit1133'))
+            assert.isTrue(decoded.quant.equals('1.0000 EOS'))
+        })
+        test('override receiver', () => {
+            const action = testAccount.buyRam('1.0000 EOS', {
+                receiver: 'wharfkit1112',
+            })
+            assert.isTrue(action.account.equals('eosio'))
+            assert.isTrue(action.name.equals('buyram'))
+            assert.isTrue(action.authorization[0].equals(PlaceholderAuth))
+
+            const decoded = Serializer.decode({
+                data: action.data,
+                type: SystemContract.Types.Buyram,
+            })
+            assert.isTrue(decoded.payer.equals('wharfkit1133'))
+            assert.isTrue(decoded.receiver.equals('wharfkit1112'))
+            assert.isTrue(decoded.quant.equals('1.0000 EOS'))
         })
     })
 
     suite('buyRamBytes', () => {
-        test('returns current Action', () => {
+        test('only bytes', () => {
             const action = testAccount.buyRamBytes(1024)
-            assert.deepEqual(deserialize(action), {
-                account: 'eosio',
-                authorization: [
-                    {
-                        actor: '............1',
-                        permission: '............2',
-                    },
-                ],
-                data: '0100000000000000010000000000000000040000',
-                name: 'buyrambytes',
+            assert.isTrue(action.account.equals('eosio'))
+            assert.isTrue(action.name.equals('buyrambytes'))
+            assert.isTrue(action.authorization[0].equals(PlaceholderAuth))
+
+            const decoded = Serializer.decode({
+                data: action.data,
+                type: SystemContract.Types.Buyrambytes,
             })
+            assert.isTrue(decoded.payer.equals('wharfkit1133'))
+            assert.isTrue(decoded.receiver.equals('wharfkit1133'))
+            assert.isTrue(decoded.bytes.equals(1024))
+        })
+        test('override receiver', () => {
+            const action = testAccount.buyRamBytes(1024, {
+                receiver: 'wharfkit1112',
+            })
+            assert.isTrue(action.account.equals('eosio'))
+            assert.isTrue(action.name.equals('buyrambytes'))
+            assert.isTrue(action.authorization[0].equals(PlaceholderAuth))
+
+            const decoded = Serializer.decode({
+                data: action.data,
+                type: SystemContract.Types.Buyrambytes,
+            })
+            assert.isTrue(decoded.payer.equals('wharfkit1133'))
+            assert.isTrue(decoded.receiver.equals('wharfkit1112'))
+            assert.isTrue(decoded.bytes.equals(1024))
         })
     })
 
-    suite('sellRam', () => {
-        test('returns current Action', () => {
-            const action = testAccount.sellRam(1024)
-            assert.deepEqual(deserialize(action), {
-                account: 'eosio',
-                authorization: [
-                    {
-                        actor: '............1',
-                        permission: '............2',
-                    },
-                ],
-                data: '01000000000000000004000000000000',
-                name: 'sellram',
+    test('sellRam', () => {
+        const action = testAccount.sellRam(1024)
+        assert.isTrue(action.account.equals('eosio'))
+        assert.isTrue(action.name.equals('sellram'))
+        assert.isTrue(action.authorization[0].equals(PlaceholderAuth))
+
+        const decoded = Serializer.decode({data: action.data, type: SystemContract.Types.Sellram})
+        assert.isTrue(decoded.account.equals('wharfkit1133'))
+        assert.isTrue(decoded.bytes.equals(1024))
+    })
+
+    suite('delegate', () => {
+        test('no data', () => {
+            const action = testAccount.delegate({})
+            assert.isTrue(action.account.equals('eosio'))
+            assert.isTrue(action.name.equals('delegatebw'))
+            assert.isTrue(action.authorization[0].equals(PlaceholderAuth))
+
+            const decoded = Serializer.decode({
+                data: action.data,
+                type: SystemContract.Types.Delegatebw,
             })
+            assert.isTrue(decoded.from.equals('wharfkit1133'))
+            assert.isTrue(decoded.receiver.equals('wharfkit1133'))
+            assert.isTrue(decoded.stake_cpu_quantity.equals('0.0000 EOS'))
+            assert.isTrue(decoded.stake_net_quantity.equals('0.0000 EOS'))
+            assert.isFalse(decoded.transfer)
+        })
+        test('cpu only', () => {
+            const action = testAccount.delegate({cpu: '1.0000 EOS'})
+            assert.isTrue(action.account.equals('eosio'))
+            assert.isTrue(action.name.equals('delegatebw'))
+            assert.isTrue(action.authorization[0].equals(PlaceholderAuth))
+
+            const decoded = Serializer.decode({
+                data: action.data,
+                type: SystemContract.Types.Delegatebw,
+            })
+            assert.isTrue(decoded.from.equals('wharfkit1133'))
+            assert.isTrue(decoded.receiver.equals('wharfkit1133'))
+            assert.isTrue(decoded.stake_cpu_quantity.equals('1.0000 EOS'))
+            assert.isTrue(decoded.stake_net_quantity.equals('0.0000 EOS'))
+            assert.isFalse(decoded.transfer)
+        })
+        test('net only', () => {
+            const action = testAccount.delegate({net: '1.0000 EOS'})
+            assert.isTrue(action.account.equals('eosio'))
+            assert.isTrue(action.name.equals('delegatebw'))
+            assert.isTrue(action.authorization[0].equals(PlaceholderAuth))
+
+            const decoded = Serializer.decode({
+                data: action.data,
+                type: SystemContract.Types.Delegatebw,
+            })
+            assert.isTrue(decoded.from.equals('wharfkit1133'))
+            assert.isTrue(decoded.receiver.equals('wharfkit1133'))
+            assert.isTrue(decoded.stake_cpu_quantity.equals('0.0000 EOS'))
+            assert.isTrue(decoded.stake_net_quantity.equals('1.0000 EOS'))
+            assert.isFalse(decoded.transfer)
+        })
+        test('cpu and net', () => {
+            const action = testAccount.delegate({cpu: '1.0000 EOS', net: '0.5000 EOS'})
+            assert.isTrue(action.account.equals('eosio'))
+            assert.isTrue(action.name.equals('delegatebw'))
+            assert.isTrue(action.authorization[0].equals(PlaceholderAuth))
+
+            const decoded = Serializer.decode({
+                data: action.data,
+                type: SystemContract.Types.Delegatebw,
+            })
+            assert.isTrue(decoded.from.equals('wharfkit1133'))
+            assert.isTrue(decoded.receiver.equals('wharfkit1133'))
+            assert.isTrue(decoded.stake_cpu_quantity.equals('1.0000 EOS'))
+            assert.isTrue(decoded.stake_net_quantity.equals('0.5000 EOS'))
+            assert.isFalse(decoded.transfer)
+        })
+        test('override receiver', () => {
+            const action = testAccount.delegate({
+                cpu: '1.0000 EOS',
+                net: '0.5000 EOS',
+                receiver: 'wharfkit1112',
+            })
+            assert.isTrue(action.account.equals('eosio'))
+            assert.isTrue(action.name.equals('delegatebw'))
+            assert.isTrue(action.authorization[0].equals(PlaceholderAuth))
+
+            const decoded = Serializer.decode({
+                data: action.data,
+                type: SystemContract.Types.Delegatebw,
+            })
+            assert.isTrue(decoded.from.equals('wharfkit1133'))
+            assert.isTrue(decoded.receiver.equals('wharfkit1112'))
+            assert.isTrue(decoded.stake_cpu_quantity.equals('1.0000 EOS'))
+            assert.isTrue(decoded.stake_net_quantity.equals('0.5000 EOS'))
+            assert.isFalse(decoded.transfer)
+        })
+        test('override receiver and enable transfer', () => {
+            const action = testAccount.delegate({
+                cpu: '1.0000 EOS',
+                net: '0.5000 EOS',
+                receiver: 'wharfkit1112',
+                transfer: true,
+            })
+            assert.isTrue(action.account.equals('eosio'))
+            assert.isTrue(action.name.equals('delegatebw'))
+            assert.isTrue(action.authorization[0].equals(PlaceholderAuth))
+
+            const decoded = Serializer.decode({
+                data: action.data,
+                type: SystemContract.Types.Delegatebw,
+            })
+            assert.isTrue(decoded.from.equals('wharfkit1133'))
+            assert.isTrue(decoded.receiver.equals('wharfkit1112'))
+            assert.isTrue(decoded.stake_cpu_quantity.equals('1.0000 EOS'))
+            assert.isTrue(decoded.stake_net_quantity.equals('0.5000 EOS'))
+            assert.isTrue(decoded.transfer)
         })
     })
 
-    suite('delegateResources', () => {
-        test('returns current Action', () => {
-            const action = testAccount.delegateResources('1.0000 EOS', '0.5000 EOS')
-            assert.deepEqual(deserialize(action), {
-                account: 'eosio',
-                authorization: [
-                    {
-                        actor: '............1',
-                        permission: '............2',
-                    },
-                ],
-                data: '01000000000000000100000000000000881300000000000004454f5300000000102700000000000004454f530000000000',
-                name: 'delegatebw',
+    suite('undelegate', () => {
+        test('no data', () => {
+            const action = testAccount.undelegate({})
+            assert.isTrue(action.account.equals('eosio'))
+            assert.isTrue(action.name.equals('undelegatebw'))
+            assert.isTrue(action.authorization[0].equals(PlaceholderAuth))
+
+            const decoded = Serializer.decode({
+                data: action.data,
+                type: SystemContract.Types.Undelegatebw,
             })
+            assert.isTrue(decoded.from.equals('wharfkit1133'))
+            assert.isTrue(decoded.receiver.equals('wharfkit1133'))
+            assert.isTrue(decoded.unstake_cpu_quantity.equals('0.0000 EOS'))
+            assert.isTrue(decoded.unstake_net_quantity.equals('0.0000 EOS'))
+        })
+        test('cpu only', () => {
+            const action = testAccount.undelegate({cpu: '1.0000 EOS'})
+            assert.isTrue(action.account.equals('eosio'))
+            assert.isTrue(action.name.equals('undelegatebw'))
+            assert.isTrue(action.authorization[0].equals(PlaceholderAuth))
+
+            const decoded = Serializer.decode({
+                data: action.data,
+                type: SystemContract.Types.Undelegatebw,
+            })
+            assert.isTrue(decoded.from.equals('wharfkit1133'))
+            assert.isTrue(decoded.receiver.equals('wharfkit1133'))
+            assert.isTrue(decoded.unstake_cpu_quantity.equals('1.0000 EOS'))
+            assert.isTrue(decoded.unstake_net_quantity.equals('0.0000 EOS'))
+        })
+        test('net only', () => {
+            const action = testAccount.undelegate({net: '1.0000 EOS'})
+            assert.isTrue(action.account.equals('eosio'))
+            assert.isTrue(action.name.equals('undelegatebw'))
+            assert.isTrue(action.authorization[0].equals(PlaceholderAuth))
+
+            const decoded = Serializer.decode({
+                data: action.data,
+                type: SystemContract.Types.Undelegatebw,
+            })
+            assert.isTrue(decoded.from.equals('wharfkit1133'))
+            assert.isTrue(decoded.receiver.equals('wharfkit1133'))
+            assert.isTrue(decoded.unstake_cpu_quantity.equals('0.0000 EOS'))
+            assert.isTrue(decoded.unstake_net_quantity.equals('1.0000 EOS'))
+        })
+        test('cpu and net', () => {
+            const action = testAccount.undelegate({cpu: '1.0000 EOS', net: '0.5000 EOS'})
+            assert.isTrue(action.account.equals('eosio'))
+            assert.isTrue(action.name.equals('undelegatebw'))
+            assert.isTrue(action.authorization[0].equals(PlaceholderAuth))
+
+            const decoded = Serializer.decode({
+                data: action.data,
+                type: SystemContract.Types.Undelegatebw,
+            })
+            assert.isTrue(decoded.from.equals('wharfkit1133'))
+            assert.isTrue(decoded.receiver.equals('wharfkit1133'))
+            assert.isTrue(decoded.unstake_cpu_quantity.equals('1.0000 EOS'))
+            assert.isTrue(decoded.unstake_net_quantity.equals('0.5000 EOS'))
+        })
+        test('override receiver', () => {
+            const action = testAccount.undelegate({
+                cpu: '1.0000 EOS',
+                net: '0.5000 EOS',
+                receiver: 'wharfkit1112',
+            })
+            assert.isTrue(action.account.equals('eosio'))
+            assert.isTrue(action.name.equals('undelegatebw'))
+            assert.isTrue(action.authorization[0].equals(PlaceholderAuth))
+
+            const decoded = Serializer.decode({
+                data: action.data,
+                type: SystemContract.Types.Undelegatebw,
+            })
+            assert.isTrue(decoded.from.equals('wharfkit1133'))
+            assert.isTrue(decoded.receiver.equals('wharfkit1112'))
+            assert.isTrue(decoded.unstake_cpu_quantity.equals('1.0000 EOS'))
+            assert.isTrue(decoded.unstake_net_quantity.equals('0.5000 EOS'))
         })
     })
 
-    suite('undelegateResources', () => {
-        test('returns current Action', () => {
-            const action = testAccount.undelegateResources('0.5000 EOS', '1.0000 EOS')
-            assert.deepEqual(deserialize(action), {
-                account: 'eosio',
-                authorization: [
-                    {
-                        actor: '............1',
-                        permission: '............2',
-                    },
-                ],
-                data: '01000000000000000100000000000000102700000000000004454f5300000000881300000000000004454f5300000000',
-                name: 'undelegatebw',
-            })
-        })
-    })
-
-    suite('getBalance', function () {
+    suite('balance', function () {
         this.slow(200)
         this.timeout(5 * 1000)
 
         test('returns resources object for system token', async function () {
-            assert.equal(String(await testAccount.getBalance()), '4968.2348 EOS')
+            const balance = await testAccount.balance()
+            assert.instanceOf(balance, Asset)
         })
 
         test('returns resources object for secondary token', async function () {
-            assert.equal(
-                String(await testAccount.getBalance('bingobetoken', 'BINGO')),
-                '1000.0000 BINGO'
-            )
+            const balance = await testAccount.balance('eosio.token', 'EOS')
+            assert.instanceOf(balance, Asset)
         })
 
         test('throws error when token does not exist for given contract', function (done) {
             testAccount
-                .getBalance('eosio.token', 'nonexist')
+                .balance('eosio.token', 'nonexist')
                 .catch((error) => {
                     assert.equal(
                         (error as Error).message,
@@ -238,7 +515,7 @@ suite('Account', function () {
 
         test('throws error when token contract does not exist', function (done) {
             testAccount
-                .getBalance('nonexist')
+                .balance('nonexist')
                 .catch((error) => {
                     assert.equal(
                         (error as Error).message,
