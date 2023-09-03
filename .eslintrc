@@ -1,6 +1,9 @@
 {
     "root": true,
-    "ignorePatterns": ["lib/*", "node_modules/**"],
+    "ignorePatterns": [
+        "lib/*",
+        "node_modules/**"
+    ],
     "extends": [
         "eslint:recommended",
         "plugin:@typescript-eslint/eslint-recommended",
@@ -22,6 +25,7 @@
         "@typescript-eslint/no-namespace": "off",
         "@typescript-eslint/no-non-null-assertion": "off",
         "@typescript-eslint/no-empty-function": "warn",
+        "@typescript-eslint/no-unused-vars": "off",
         "no-inner-declarations": "off"
     }
 }

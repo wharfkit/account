@@ -1,12 +1,12 @@
 {
-    "name": "PACKAGE",
-    "description": "DESCRIPTION",
-    "version": "0.0.0",
-    "homepage": "https://github.com/greymass/PACKAGE",
+    "name": "@wharfkit/account",
+    "description": "Account kit for Wharf Kit",
+    "version": "0.0.4",
+    "homepage": "https://github.com/wharfkit/account",
     "license": "BSD-3-Clause",
-    "main": "lib/PACKAGE.js",
-    "module": "lib/PACKAGE.m.js",
-    "types": "lib/PACKAGE.d.ts",
+    "main": "lib/account.js",
+    "module": "lib/account.m.js",
+    "types": "lib/account.d.ts",
     "sideEffects": false,
     "files": [
         "lib/*",
@@ -16,7 +16,14 @@
         "prepare": "make"
     },
     "dependencies": {
+        "@wharfkit/antelope": "^0.7.3",
+        "@wharfkit/contract": "0.4.2",
+        "@wharfkit/resources": "^1.0.0",
+        "git": "^0.1.5",
         "tslib": "^2.1.0"
+    },
+    "resolutions": {
+        "@wharfkit/antelope": "^0.7.3"
     },
     "devDependencies": {
         "@rollup/plugin-alias": "^4.0.2",
@@ -27,15 +34,18 @@
         "@rollup/plugin-virtual": "^3.0.1",
         "@types/chai": "^4.3.1",
         "@types/mocha": "^10.0.0",
-        "@types/node": "^18.7.18",
+        "@types/node": "^18.11.9",
         "@typescript-eslint/eslint-plugin": "^5.20.0",
         "@typescript-eslint/parser": "^5.20.0",
+        "@wharfkit/mock-data": "^1.0.2",
+        "@wharfkit/session": "^1.0.0",
         "chai": "^4.3.4",
         "eslint": "^8.13.0",
         "eslint-config-prettier": "^8.1.0",
         "eslint-plugin-prettier": "^4.0.0",
         "gh-pages": "^4.0.0",
         "mocha": "^10.0.0",
+        "node-fetch": "^2.6.1",
         "nyc": "^15.1.0",
         "prettier": "^2.2.1",
         "rollup": "^3.2.3",
