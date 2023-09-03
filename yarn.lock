@@ -233,17 +233,6 @@
   resolved "https://registry.yarnpkg.com/@eslint/js/-/js-8.48.0.tgz#642633964e217905436033a2bd08bf322849b7fb"
   integrity sha512-ZSjtmelB7IJfWD2Fvb7+Z+ChTIKWq6kjda95fLcQKNS5aheVHn4IkfgRQE3sIIzTcSLwLcLZUD9UBt+V7+h+Pw==
 
-"@greymass/eosio@^0.6.0", "@greymass/eosio@^0.6.4":
-  version "0.6.11"
-  resolved "https://registry.yarnpkg.com/@greymass/eosio/-/eosio-0.6.11.tgz#9bd1783f8467834563ac893d41524c01aba0228c"
-  integrity sha512-Ud6V7+vQJ+OLxqD7QcKTv/ik/Hd5uaRHyGY9Hzc+cJXezYU4sADX4TyQ8sn6XIr8ebVVNZFvWpc5JR0a9lBzKw==
-  dependencies:
-    bn.js "^4.11.9"
-    brorand "^1.1.0"
-    elliptic "^6.5.4"
-    hash.js "^1.0.0"
-    tslib "^2.0.3"
-
 "@humanwhocodes/config-array@^0.11.10":
   version "0.11.11"
   resolved "https://registry.yarnpkg.com/@humanwhocodes/config-array/-/config-array-0.11.11.tgz#88a04c570dbbc7dd943e4712429c3df09bc32844"
@@ -573,6 +562,13 @@
     hash.js "^1.0.0"
     tslib "^2.0.3"
 
+"@wharfkit/common@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@wharfkit/common/-/common-1.1.0.tgz#1ee9dd1ba9e202002fadd20593f5f42a3e67c827"
+  integrity sha512-A1Ta8zrEXkuEQcEiEexG0BVrYOxqm75qbLYU9tGNhyw4z/vQiF6rzmCOqhmWGg6nE2J2GYPvrPZPZzDmRGtG+w==
+  dependencies:
+    tslib "^2.1.0"
+
 "@wharfkit/contract@0.4.2":
   version "0.4.2"
   resolved "https://registry.yarnpkg.com/@wharfkit/contract/-/contract-0.4.2.tgz#cec2ca9585bf1c63b9458089cbd0388b727b800f"
@@ -583,13 +579,35 @@
     "@wharfkit/signing-request" "^3.0.0"
     tslib "^2.1.0"
 
-"@wharfkit/session@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@wharfkit/session/-/session-0.2.0.tgz#2293dc2582f003292c419152a64735c1f6a6e455"
-  integrity sha512-QF6T3NGCGdPqp+apeGRte48DKuufgCBl0DX/HwmSs3mof20pMdrVLtvQ8fgHqnynxWD+2lPL3Ip/43Hx0vtnAg==
+"@wharfkit/mock-data@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@wharfkit/mock-data/-/mock-data-1.0.2.tgz#81d6327c76032b40e5acf209d507cf6ca2a3ae9f"
+  integrity sha512-Mbf/rZX2dqj5r+h+6NcRsDfRdHZ5OWEk0oIZ6iarXEBV65jmODoLdZlS906m9ndC1bi1ewCm/276JDimIqtLkQ==
   dependencies:
-    "@greymass/eosio" "^0.6.4"
-    eosio-signing-request "^2.5.2"
+    "@wharfkit/antelope" "^0.7.3"
+    "@wharfkit/session" "^1.0.0"
+    "@wharfkit/wallet-plugin-privatekey" "^1.0.0"
+    node-fetch "^2.6.1"
+    tslib "^2.1.0"
+
+"@wharfkit/resources@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@wharfkit/resources/-/resources-1.0.0.tgz#3ad4b6ebea78e061238f2f166374d893e120c95c"
+  integrity sha512-q71ttU3ixuoUgkg1azpmRvR66PaznmESn0fCaUd9LZNbV2fm3STRumRRDvqlyARFG+y0sEICxqpj9JKMWv6KgA==
+  dependencies:
+    "@wharfkit/antelope" "^0.7.3"
+    bn.js "^4.11.9"
+    tslib "^2.1.0"
+
+"@wharfkit/session@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@wharfkit/session/-/session-1.0.0.tgz#09c60d01a6185ab2e451d34462d84de2d7013220"
+  integrity sha512-wXmvOVBZ1Rp/9HPUzGPaD/vpGXv2FCNgl8JRLopKgKPHkkEX/u4untshHR8AwSc0ZitjOlv6ubR2h9/UW8h6ug==
+  dependencies:
+    "@wharfkit/abicache" "^1.1.1"
+    "@wharfkit/antelope" "^0.7.3"
+    "@wharfkit/common" "^1.1.0"
+    "@wharfkit/signing-request" "^3.0.0"
     pako "^2.0.4"
     tslib "^2.1.0"
 
@@ -600,6 +618,13 @@
   dependencies:
     "@wharfkit/antelope" "^0.7.3"
     tslib "^2.0.3"
+
+"@wharfkit/wallet-plugin-privatekey@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@wharfkit/wallet-plugin-privatekey/-/wallet-plugin-privatekey-1.0.0.tgz#2600cce1117ce9391c8078649e05ceaf93780f1d"
+  integrity sha512-V+/7T/cwoHM8fDaM3MZ1DFKrX2+NddBkkWJ8BIFfmEZnGR1W8Qr77t+piOP0/6UM2etmuZh98XLwZS33vORQ0A==
+  dependencies:
+    tslib "^2.1.0"
 
 acorn-jsx@^5.3.2:
   version "5.3.2"
@@ -1049,14 +1074,6 @@ emoji-regex@^8.0.0:
   version "8.0.0"
   resolved "https://registry.yarnpkg.com/emoji-regex/-/emoji-regex-8.0.0.tgz#e818fd69ce5ccfcb404594f842963bf53164cc37"
   integrity sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==
-
-eosio-signing-request@^2.5.2:
-  version "2.5.3"
-  resolved "https://registry.yarnpkg.com/eosio-signing-request/-/eosio-signing-request-2.5.3.tgz#4b15bcc67d2814393a83084c45e4473d638b16e1"
-  integrity sha512-jb4cKjQM+NI8+JwtGClYiCDX9sgSeUreRTE7YkIAga0fo21vtLTjTn0ZUH1zyfQU5b4Drdcs/yUMXdPUtqp9bg==
-  dependencies:
-    "@greymass/eosio" "^0.6.0"
-    tslib "^2.0.3"
 
 es6-error@^4.0.1:
   version "4.1.1"

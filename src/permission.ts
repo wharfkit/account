@@ -2,25 +2,26 @@ import {
     API,
     Authority,
     AuthorityType,
+    isInstanceOf,
     KeyWeight,
     Name,
     NameType,
+    PermissionLevel,
     PermissionLevelType,
     PermissionLevelWeight,
+    PublicKey,
     PublicKeyType,
+    Struct,
+    UInt16Type,
     UInt32Type,
     WaitWeight,
 } from '@wharfkit/antelope'
-
-import type {Session} from '@wharfkit/session'
-import type {Account} from './account'
 
 export interface PermissionData {
     account: NameType
     parent: NameType
     permission: NameType
     auth: AuthorityType | Authority
-    authorized_by: NameType
 }
 
 export interface AddKeyActionParam {
@@ -36,133 +37,123 @@ export interface ActionData {
     authorized_by: NameType
 }
 
-export class Permission {
-    permission_name: Name
-    permission_data: PermissionData
+export type PermissionType =
+    | Permission
+    | API.v1.AccountPermission
+    | {
+          perm_name: NameType
+          parent: NameType
+          required_auth: AuthorityType
+          linked_actions?: LinkedActionType[]
+      }
 
-    constructor(permissionName: NameType, permissionData: PermissionData) {
-        this.permission_name = Name.from(permissionName)
-        this.permission_data = permissionData
-    }
+export type LinkedActionType = LinkedAction | {account: NameType; action: NameType}
 
-    get permissionName(): Name {
-        return this.permission_name
-    }
+@Struct.type('linked_actions')
+export class LinkedAction extends Struct {
+    @Struct.field('name') declare account: Name
+    @Struct.field('name') declare action: Name
+}
 
-    get actionData(): ActionData {
-        return {
-            ...this.permission_data,
-            auth: Authority.from({
-                keys: this.permission_data.auth?.keys?.map(({key, weight}) => {
-                    return {
-                        key: String(key),
-                        weight: Number(weight),
-                    }
-                }),
-                accounts: this.permission_data.auth?.accounts?.map(({permission, weight}) => ({
-                    permission: {
-                        actor: String(permission.actor),
-                        permission: String(permission.permission),
-                    },
-                    weight: Number(weight),
-                })),
-                waits: this.permission_data.auth?.waits?.map(({wait_sec, weight}) => ({
-                    wait_sec: Number(wait_sec),
-                    weight: Number(weight),
-                })),
-                threshold: Number(this.permission_data.auth?.threshold),
-            }),
+export type WaitWeightType = WaitWeight | {wait_sec: UInt32Type; weight: UInt16Type}
+
+@Struct.type('permission')
+export class Permission extends Struct {
+    @Struct.field('name') declare perm_name: Name
+    @Struct.field('name') declare parent: Name
+    @Struct.field(Authority) declare required_auth: Authority
+    @Struct.field(LinkedAction, {array: true, optional: true}) declare linked_actions?: LinkedAction
+
+    static from(value: PermissionType): Permission {
+        if (isInstanceOf(value, Permission)) {
+            return value
         }
+        return super.from(value) as Permission
+    }
+
+    get name(): Name {
+        return this.perm_name
     }
 
     addKey(key: PublicKeyType, weight = 1): void {
-        this.permission_data = {
-            ...this.permission_data,
-            auth: Authority.from({
-                ...(this.permission_data.auth || {}),
-                keys: [
-                    ...(this.permission_data.auth?.keys || []),
-                    KeyWeight.from({
-                        key: key,
-                        weight: weight,
-                    }),
-                ],
-            }),
+        const exists = this.required_auth.keys.find((k: KeyWeight) =>
+            PublicKey.from(key).equals(k.key)
+        )
+        if (exists) {
+            throw new Error(
+                `The provided key (${String(key)}) already exists on the "${
+                    this.perm_name
+                }" permission.`
+            )
         }
+        this.required_auth.keys.push(
+            KeyWeight.from({
+                key: key,
+                weight: weight,
+            })
+        )
+        // Always sort authorities, required by antelopeio/leap
+        this.required_auth.sort()
     }
 
     removeKey(key: PublicKeyType): void {
-        this.permission_data = {
-            ...this.permission_data,
-            auth: Authority.from({
-                ...this.permission_data.auth,
-                keys: this.permission_data.auth?.keys?.filter((keyWeight: {key: PublicKeyType}) => {
-                    return String(keyWeight.key) !== key
-                }),
-            }),
+        const index = this.required_auth.keys.findIndex((k: KeyWeight) =>
+            PublicKey.from(key).equals(k.key)
+        )
+        if (index === -1) {
+            throw new Error(
+                `The provided key (${String(key)}) does not exist on the "${
+                    this.perm_name
+                }" permission.`
+            )
         }
+        this.required_auth.keys.splice(index, 1)
     }
 
-    addAccount(accountPermission: {actor: NameType; permission: NameType}, weight = 1): void {
-        this.permission_data = {
-            ...this.permission_data,
-            auth: Authority.from({
-                ...this.permission_data.auth,
-                accounts: [
-                    ...(this.permission_data.auth.accounts || []),
-                    PermissionLevelWeight.from({
-                        permission: {
-                            actor: accountPermission.actor,
-                            permission: accountPermission.permission,
-                        },
-                        weight: weight,
-                    }),
-                ],
-            }),
+    addAccount(permissionLevel: PermissionLevelType | string, weight = 1): void {
+        const exists = this.required_auth.accounts.find((k: PermissionLevelWeight) =>
+            PermissionLevel.from(permissionLevel).equals(k.permission)
+        )
+        if (exists) {
+            throw new Error(
+                `The provided account (${String(
+                    PermissionLevel.from(permissionLevel)
+                )}) already exists on the "${this.perm_name}" permission.`
+            )
         }
+        this.required_auth.accounts.push(
+            PermissionLevelWeight.from({
+                permission: PermissionLevel.from(permissionLevel),
+                weight: weight,
+            })
+        )
+        // Always sort authorities, required by antelopeio/leap
+        this.required_auth.sort()
     }
 
-    removeAccount(account: NameType): void {
-        this.permission_data = {
-            ...this.permission_data,
-            auth: Authority.from({
-                ...this.permission_data.auth,
-                accounts: this.permission_data.auth?.accounts?.filter(
-                    (permissionWeight: {permission: PermissionLevelType}) => {
-                        return String(permissionWeight.permission?.actor) !== account
-                    }
-                ),
-            }),
+    removeAccount(permissionLevel: PermissionLevelType): void {
+        const index = this.required_auth.accounts.findIndex((a: PermissionLevelWeight) =>
+            PermissionLevel.from(permissionLevel).equals(a.permission)
+        )
+        if (index === -1) {
+            throw new Error(
+                `The provided permission (${String(permissionLevel)}) does not exist on the "${
+                    this.perm_name
+                }" permission.`
+            )
         }
+        this.required_auth.accounts.splice(index, 1)
     }
 
-    addWait(wait_sec: number, weight = 1): void {
-        this.permission_data = {
-            ...this.permission_data,
-            auth: Authority.from({
-                ...this.permission_data.auth,
-                waits: [
-                    ...(this.permission_data.auth.waits || []),
-                    WaitWeight.from({
-                        wait_sec: wait_sec,
-                        weight: weight,
-                    }),
-                ],
-            }),
-        }
+    addWait(wait: WaitWeightType): void {
+        this.required_auth.waits.push(WaitWeight.from(wait))
+        // Always sort authorities, required by antelopeio/leap
+        this.required_auth.sort()
     }
 
-    removeWait(wait_sec: UInt32Type): void {
-        this.permission_data = {
-            ...this.permission_data,
-            auth: Authority.from({
-                ...this.permission_data.auth,
-                waits: this.permission_data.auth?.waits?.filter(
-                    (waitWeight: {wait_sec: number; weight: number}) => {
-                        return Number(waitWeight.wait_sec) !== wait_sec
-                    }
-                ),
-            }),
-        }
+    removeWait(wait: WaitWeightType): void {
+        this.required_auth.waits = this.required_auth.waits.filter(
+            (w: WaitWeight) => !WaitWeight.from(wait).equals(w)
+        )
     }
 }

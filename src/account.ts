@@ -4,129 +4,66 @@ import {
     APIClient,
     Asset,
     AssetType,
-    Authority,
     Name,
     NameType,
+    UInt32Type,
 } from '@wharfkit/antelope'
+import {Contract} from '@wharfkit/contract'
+import {Resources} from '@wharfkit/resources'
 
 import {Permission} from './permission'
-import {Eosio} from './contracts/eosio'
+import {SystemContract} from './contracts/eosio'
+import {Resource, ResourceType} from './resource'
 
 export interface AccountArgs {
-    accountData: API.v1.AccountObject
     client: APIClient
+    contract?: Contract
+    data: API.v1.AccountObject
 }
 
-export interface Resources {
-    cpu_available: number
-    cpu_used: number
-    net_available: number
-    net_used: number
-    ram_quota: number
-    ram_usage: number
+export interface BuyramOptions {
+    receiver?: NameType
+}
+
+export interface DelegateOptions {
+    from?: NameType
+    receiver?: NameType
+    cpu?: AssetType
+    net?: AssetType
+    transfer?: boolean
+}
+
+export interface UndelegateOptions {
+    from?: NameType
+    receiver?: NameType
+    cpu?: AssetType
+    net?: AssetType
 }
 
 export class Account {
-    readonly account_data: API.v1.AccountObject
-    readonly eosioContract: Eosio.Contract
+    readonly data: API.v1.AccountObject
+    readonly systemContract: Contract
     readonly client: APIClient
 
-    constructor({accountData, client}: AccountArgs) {
-        this.account_data = accountData
-        this.eosioContract = new Eosio.Contract({client})
-        this.client = client
+    constructor(args: AccountArgs) {
+        this.data = args.data
+        if (args.contract) {
+            this.systemContract = args.contract
+        } else {
+            this.systemContract = new SystemContract.Contract({client: args.client})
+        }
+        this.client = args.client
     }
 
     get accountName() {
-        return Name.from(this.account_data.account_name)
+        return Name.from(this.data.account_name)
     }
 
-    getPermission(permissionName: NameType): Permission {
-        const permissionObject = this.account_data.permissions.find((permission) =>
-            permission.perm_name.equals(permissionName)
-        )
-
-        if (!permissionObject) {
-            throw new Error(
-                `Permission ${permissionName} does not exist on account ${this.accountName}.`
-            )
-        }
-
-        return new Permission(permissionName, {
-            account: this.accountName,
-            parent: permissionObject.parent,
-            permission: permissionObject.perm_name,
-            auth: Authority.from(permissionObject.required_auth),
-            authorized_by: '............1',
-        })
+    get systemToken() {
+        return Asset.Symbol.from(this.data.total_resources.cpu_weight.symbol)
     }
 
-    updatePermission(permission: Permission): Action {
-        return this.eosioContract.action('updateauth', permission.actionData)
-    }
-
-    removePermission(permissionName: NameType): Action {
-        return this.eosioContract.action('deleteauth', {
-            account: '............1',
-            authorized_by: '............1',
-            permission: permissionName,
-        })
-    }
-
-    buyRam(amount: AssetType): Action {
-        return this.eosioContract.action('buyram', {
-            payer: '............1',
-            receiver: '............1',
-            quant: amount,
-        })
-    }
-
-    buyRamBytes(bytes: number): Action {
-        return this.eosioContract.action('buyrambytes', {
-            payer: '............1',
-            receiver: '............1',
-            bytes,
-        })
-    }
-
-    sellRam(bytes: number): Action {
-        return this.eosioContract.action('sellram', {
-            account: '............1',
-            bytes,
-        })
-    }
-
-    delegateResources(cpu: AssetType, net: AssetType): Action {
-        return this.eosioContract.action('delegatebw', {
-            from: '............1',
-            receiver: '............1',
-            stake_cpu_quantity: cpu,
-            stake_net_quantity: net,
-            transfer: false,
-        })
-    }
-
-    undelegateResources(cpu: AssetType, net: AssetType): Action {
-        return this.eosioContract.action('undelegatebw', {
-            from: '............1',
-            receiver: '............1',
-            unstake_cpu_quantity: cpu,
-            unstake_net_quantity: net,
-        })
-    }
-
-    getResources(): Resources {
-        return {
-            net_available: Number(this.account_data.net_limit.available),
-            net_used: Number(this.account_data.net_limit.available),
-            cpu_available: Number(this.account_data.cpu_limit.available),
-            cpu_used: Number(this.account_data.cpu_limit.used),
-            ram_quota: Number(this.account_data.ram_quota),
-            ram_usage: Number(this.account_data.ram_usage),
-        }
-    }
-
-    getBalance(contract: NameType = 'eosio.token', symbol?: Asset.SymbolType): Promise<Asset> {
+    balance(contract: NameType = 'eosio.token', symbol?: Asset.SymbolType): Promise<Asset> {
         return new Promise((resolve, reject) => {
             this.client.v1.chain
                 .get_currency_balance(contract, String(this.accountName), symbol && String(symbol))
@@ -152,6 +89,113 @@ export class Account {
                     }
                     reject(err)
                 })
+        })
+    }
+
+    permission(permissionName: NameType): Permission {
+        const permission = this.data.permissions.find((permission) =>
+            permission.perm_name.equals(permissionName)
+        )
+
+        if (!permission) {
+            throw new Error(
+                `Permission ${permissionName} does not exist on account ${this.accountName}.`
+            )
+        }
+
+        return Permission.from(permission)
+    }
+
+    resource(resourceType: ResourceType): Resource {
+        return new Resource(resourceType, this.data)
+    }
+
+    // TODO: Refactor once resources library is updated
+    resources(sampleAccount?: NameType) {
+        // Returns an instance of the @wharfkit/resources library
+        //   configured for this blockchain/account
+        return new Resources({
+            api: this.client,
+            sampleAccount: sampleAccount ? String(sampleAccount) : undefined,
+            symbol: this.data.core_liquid_balance
+                ? String(this.data.core_liquid_balance.symbol)
+                : undefined,
+        })
+    }
+
+    setPermission(permission: Permission): Action {
+        return this.systemContract.action('updateauth', {
+            account: this.accountName,
+            auth: permission.required_auth,
+            authorized_by: '',
+            parent: permission.parent,
+            permission: permission.perm_name,
+        })
+    }
+
+    removePermission(permissionName: NameType): Action {
+        return this.systemContract.action('deleteauth', {
+            account: this.accountName,
+            authorized_by: '',
+            permission: permissionName,
+        })
+    }
+
+    linkauth() {
+        // TODO: Implement `linkauth` action calls
+    }
+
+    unlinkauth() {
+        // TODO: Implement `unlinkauth` action calls
+    }
+
+    buyRam(amount: AssetType, options?: BuyramOptions): Action {
+        let receiver = this.accountName
+        if (options && options.receiver) {
+            receiver = Name.from(options.receiver)
+        }
+        return this.systemContract.action('buyram', {
+            payer: this.accountName,
+            quant: amount,
+            receiver,
+        })
+    }
+
+    buyRamBytes(bytes: UInt32Type, options?: BuyramOptions): Action {
+        let receiver = this.accountName
+        if (options && options.receiver) {
+            receiver = Name.from(options.receiver)
+        }
+        return this.systemContract.action('buyrambytes', {
+            bytes,
+            payer: this.accountName,
+            receiver,
+        })
+    }
+
+    sellRam(bytes: UInt32Type): Action {
+        return this.systemContract.action('sellram', {
+            account: this.accountName,
+            bytes,
+        })
+    }
+
+    delegate(value: DelegateOptions): Action {
+        return this.systemContract.action('delegatebw', {
+            from: value.from || this.accountName,
+            receiver: value.receiver || this.accountName,
+            stake_cpu_quantity: value.cpu || Asset.fromUnits(0, this.systemToken),
+            stake_net_quantity: value.net || Asset.fromUnits(0, this.systemToken),
+            transfer: value.transfer !== undefined ? value.transfer : false,
+        })
+    }
+
+    undelegate(value: UndelegateOptions): Action {
+        return this.systemContract.action('undelegatebw', {
+            from: value.from || this.accountName,
+            receiver: value.receiver || this.accountName,
+            unstake_cpu_quantity: value.cpu || Asset.fromUnits(0, this.systemToken),
+            unstake_net_quantity: value.net || Asset.fromUnits(0, this.systemToken),
         })
     }
 }
