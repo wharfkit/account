@@ -11,7 +11,7 @@ import {
 } from '@wharfkit/antelope'
 import {makeClient, mockAccountName} from '@wharfkit/mock-data'
 
-import AccountKit, {Account, Permission} from '../../src'
+import {Account, AccountKit, Permission} from '../../src'
 
 const client = makeClient('https://jungle4.greymass.com')
 const accountKit = new AccountKit({client})
