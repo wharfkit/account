@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 SRC_FILES := $(shell find src -name '*.ts')
-TEST_FILES := $(wildcard test/*.ts)
+TEST_FILES := $(wildcard test/tests/*.ts)
 BIN := ./node_modules/.bin
 MOCHA_OPTS := -u tdd -r ts-node/register -r tsconfig-paths/register --extension ts
 NYC_OPTS := --temp-dir build/nyc_output --report-dir build/coverage
@@ -10,13 +10,13 @@ lib: ${SRC_FILES} package.json tsconfig.json node_modules rollup.config.mjs
 
 .PHONY: test
 test: node_modules
-	@TS_NODE_PROJECT='./test/tsconfig.json' \
-		${BIN}/mocha ${MOCHA_OPTS} test/*.ts --grep '$(grep)'
+	@TS_NODE_PROJECT='./test/tsconfig.json' MOCK_DIR='./test/data' \
+		${BIN}/mocha ${MOCHA_OPTS} test/tests/*.ts --grep '$(grep)'
 
 build/coverage: ${SRC_FILES} ${TEST_FILES} node_modules
-	@TS_NODE_PROJECT='./test/tsconfig.json' \
+	@TS_NODE_PROJECT='./test/tsconfig.json' MOCK_DIR='./test/data' \
 		${BIN}/nyc ${NYC_OPTS} --reporter=html \
-		${BIN}/mocha ${MOCHA_OPTS} -R nyan test/*.ts
+		${BIN}/mocha ${MOCHA_OPTS} -R nyan test/tests/*.ts
 
 .PHONY: coverage
 coverage: build/coverage
@@ -24,9 +24,9 @@ coverage: build/coverage
 
 .PHONY: ci-test
 ci-test: node_modules
-	@TS_NODE_PROJECT='./test/tsconfig.json' \
+	@TS_NODE_PROJECT='./test/tsconfig.json' MOCK_DIR='./test/data' \
 		${BIN}/nyc ${NYC_OPTS} --reporter=text \
-		${BIN}/mocha ${MOCHA_OPTS} -R list test/*.ts
+		${BIN}/mocha ${MOCHA_OPTS} -R list test/tests/*.ts
 
 .PHONY: check
 check: node_modules

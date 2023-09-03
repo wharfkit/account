@@ -16,10 +16,14 @@
         "prepare": "make"
     },
     "dependencies": {
-        "@greymass/eosio": "^0.6.4",
-        "@wharfkit/session": "^0.2.0",
+        "@wharfkit/antelope": "^0.7.3",
+        "@wharfkit/contract": "0.4.2",
+        "@wharfkit/resources": "^1.0.0",
         "git": "^0.1.5",
         "tslib": "^2.1.0"
+    },
+    "resolutions": {
+        "@wharfkit/antelope": "^0.7.3"
     },
     "devDependencies": {
         "@rollup/plugin-alias": "^4.0.2",
@@ -33,6 +37,8 @@
         "@types/node": "^18.11.9",
         "@typescript-eslint/eslint-plugin": "^5.20.0",
         "@typescript-eslint/parser": "^5.20.0",
+        "@wharfkit/mock-data": "^1.0.2",
+        "@wharfkit/session": "^1.0.0",
         "chai": "^4.3.4",
         "eslint": "^8.13.0",
         "eslint-config-prettier": "^8.1.0",
