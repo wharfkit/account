@@ -12,7 +12,7 @@ import {Contract} from '@wharfkit/contract'
 import {Resources} from '@wharfkit/resources'
 
 import {Permission} from './permission'
-import {SystemContract} from './contracts/eosio'
+import * as SystemContract from './contracts/eosio'
 import {Resource, ResourceType} from './resource'
 
 export interface AccountArgs {
