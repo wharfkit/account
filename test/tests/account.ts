@@ -217,6 +217,34 @@ suite('Account', function () {
         })
     })
 
+    test('linkauth', () => {
+        const action = testAccount.linkauth('eosio.token', 'transfer', 'active')
+        assert.isTrue(action.account.equals('eosio'))
+        assert.isTrue(action.name.equals('linkauth'))
+        assert.isTrue(action.authorization[0].equals(PlaceholderAuth))
+
+        const decoded = Serializer.decode({data: action.data, type: SystemContract.Types.Linkauth})
+        assert.isTrue(decoded.account.equals('wharfkit1133'))
+        assert.isTrue(decoded.code.equals('eosio.token'))
+        assert.isTrue(decoded.type.equals('transfer'))
+        assert.isTrue(decoded.requirement.equals('active'))
+    })
+
+    test('unlinkauth', () => {
+        const action = testAccount.unlinkauth('eosio.token', 'transfer')
+        assert.isTrue(action.account.equals('eosio'))
+        assert.isTrue(action.name.equals('unlinkauth'))
+        assert.isTrue(action.authorization[0].equals(PlaceholderAuth))
+
+        const decoded = Serializer.decode({
+            data: action.data,
+            type: SystemContract.Types.Unlinkauth,
+        })
+        assert.isTrue(decoded.account.equals('wharfkit1133'))
+        assert.isTrue(decoded.code.equals('eosio.token'))
+        assert.isTrue(decoded.type.equals('transfer'))
+    })
+
     suite('buyRam', () => {
         test('only amount', () => {
             const action = testAccount.buyRam('1.0000 EOS')
