@@ -12,7 +12,7 @@ import {Contract} from '@wharfkit/contract'
 import {Resources} from '@wharfkit/resources'
 
 import {Permission} from './permission'
-import {SystemContract} from './contracts/eosio'
+import * as SystemContract from './contracts/eosio'
 import {Resource, ResourceType} from './resource'
 
 export interface AccountArgs {
@@ -42,7 +42,7 @@ export interface UndelegateOptions {
 
 export class Account {
     readonly data: API.v1.AccountObject
-    readonly systemContract: Contract
+    readonly systemContract: SystemContract.Contract
     readonly client: APIClient
 
     constructor(args: AccountArgs) {
@@ -141,12 +141,23 @@ export class Account {
         })
     }
 
-    linkauth() {
-        // TODO: Implement `linkauth` action calls
+    linkauth(contract: NameType, action: NameType, requiredPermission: NameType): Action {
+        return this.systemContract.action('linkauth', {
+            account: this.accountName,
+            code: contract,
+            type: action,
+            requirement: requiredPermission,
+            authorized_by: '',
+        })
     }
 
-    unlinkauth() {
-        // TODO: Implement `unlinkauth` action calls
+    unlinkauth(contract: NameType, action: NameType): Action {
+        return this.systemContract.action('unlinkauth', {
+            account: this.accountName,
+            code: contract,
+            type: action,
+            authorized_by: '',
+        })
     }
 
     buyRam(amount: AssetType, options?: BuyramOptions): Action {
