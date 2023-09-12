@@ -16,6 +16,7 @@ import {Resources} from '@wharfkit/resources'
 import {Permission} from './permission'
 import * as SystemContract from './contracts/eosio'
 import {Resource, ResourceType} from './resource'
+import {AccountData, TelosAccountObject, WAXAccountObject} from './types'
 
 export interface AccountArgs {
     chain: ChainDefinitionType
@@ -44,7 +45,7 @@ export interface UndelegateOptions {
 }
 
 export class Account {
-    readonly data: API.v1.AccountObject
+    readonly data: API.v1.AccountObject | TelosAccountObject | WAXAccountObject
     readonly systemContract: SystemContract.Contract
     readonly chain: ChainDefinition
     readonly fetch: Fetch | undefined
