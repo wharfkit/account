@@ -4,11 +4,13 @@ import {
     APIClient,
     Asset,
     AssetType,
+    FetchProvider,
     Name,
     NameType,
     UInt32Type,
 } from '@wharfkit/antelope'
 import {Contract} from '@wharfkit/contract'
+import {ChainDefinition, ChainDefinitionType, Fetch} from '@wharfkit/common'
 import {Resources} from '@wharfkit/resources'
 
 import {Permission} from './permission'
@@ -16,9 +18,10 @@ import * as SystemContract from './contracts/eosio'
 import {Resource, ResourceType} from './resource'
 
 export interface AccountArgs {
-    client: APIClient
+    chain: ChainDefinitionType
     contract?: Contract
     data: API.v1.AccountObject
+    fetch?: Fetch
 }
 
 export interface BuyramOptions {
@@ -43,20 +46,27 @@ export interface UndelegateOptions {
 export class Account {
     readonly data: API.v1.AccountObject
     readonly systemContract: SystemContract.Contract
-    readonly client: APIClient
+    readonly chain: ChainDefinition
+    readonly fetch: Fetch | undefined
 
     constructor(args: AccountArgs) {
+        this.chain = ChainDefinition.from(args.chain)
         this.data = args.data
+        this.fetch = args.fetch
         if (args.contract) {
             this.systemContract = args.contract
         } else {
-            this.systemContract = new SystemContract.Contract({client: args.client})
+            this.systemContract = new SystemContract.Contract({client: this.client})
         }
-        this.client = args.client
     }
 
     get accountName() {
         return Name.from(this.data.account_name)
+    }
+
+    get client() {
+        const provider = new FetchProvider(this.chain.url, {fetch: this.fetch})
+        return new APIClient({provider})
     }
 
     get systemToken() {

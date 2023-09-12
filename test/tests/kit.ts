@@ -1,15 +1,14 @@
 import {assert, expect} from 'chai'
 
 import {Account, AccountKit, SystemContract} from '../../src'
-import {makeClient} from '@wharfkit/mock-data'
-
-const client = makeClient('https://jungle4.greymass.com')
+import {Chains} from '@wharfkit/common'
+import {makeClient, mockFetch} from '@wharfkit/mock-data'
 
 suite('AccountKit', function () {
     let accountKit: AccountKit
 
     this.beforeAll(function () {
-        accountKit = new AccountKit({client})
+        accountKit = new AccountKit({chain: Chains.Jungle4, fetch: mockFetch})
     })
 
     suite('constructor', function () {
@@ -19,7 +18,7 @@ suite('AccountKit', function () {
             } catch (error) {
                 assert.equal(
                     error.message,
-                    'A `client` must be passed when initializing the AccountKit.'
+                    'A `chain` (ChainDefinition) must be passed when initializing the AccountKit.'
                 )
             }
         })
@@ -30,8 +29,9 @@ suite('AccountKit', function () {
 
         test('allow overriding of default contract', function () {
             const kit = new AccountKit({
-                client,
+                chain: Chains.Jungle4,
                 contract: new SystemContract.Contract({client: makeClient()}),
+                fetch: mockFetch,
             })
         })
     })

@@ -1,6 +1,7 @@
 import {assert} from 'chai'
 import {API, Asset, Authority, Int64, KeyWeight, Serializer} from '@wharfkit/antelope'
-import {makeClient, mockSessionArgs, mockSessionOptions} from '@wharfkit/mock-data'
+import {Chains} from '@wharfkit/common'
+import {makeClient, mockFetch, mockSessionArgs, mockSessionOptions} from '@wharfkit/mock-data'
 import {Session} from '@wharfkit/session'
 import {PlaceholderAuth} from '@wharfkit/signing-request'
 
@@ -8,8 +9,7 @@ import {Account, AccountKit, Permission, SystemContract} from '../../src'
 
 const mockAccountName = 'wharfkit1133'
 
-const client = makeClient('https://jungle4.greymass.com')
-const accountKit = new AccountKit({client})
+const accountKit = new AccountKit({chain: Chains.Jungle4, fetch: mockFetch})
 const session = new Session(
     {
         ...mockSessionArgs,
@@ -29,8 +29,9 @@ suite('Account', function () {
 
     test('construct', function () {
         const account = new Account({
-            client,
+            chain: Chains.Jungle4,
             data: testAccount.data,
+            fetch: mockFetch,
         })
 
         assert.instanceOf(account, Account)
