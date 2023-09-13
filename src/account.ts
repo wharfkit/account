@@ -18,10 +18,10 @@ import * as SystemContract from './contracts/eosio'
 import {Resource, ResourceType} from './resource'
 import {AccountData, TelosAccountObject, WAXAccountObject} from './types'
 
-export interface AccountArgs {
+export interface AccountArgs<Data> {
     chain: ChainDefinitionType
     contract?: Contract
-    data: API.v1.AccountObject
+    data: Data
     fetch?: Fetch
 }
 
@@ -44,13 +44,13 @@ export interface UndelegateOptions {
     net?: AssetType
 }
 
-export class Account {
-    readonly data: API.v1.AccountObject | TelosAccountObject | WAXAccountObject
+export class Account<Data extends API.v1.AccountObject = API.v1.AccountObject> {
+    readonly data: Data
     readonly systemContract: SystemContract.Contract
     readonly chain: ChainDefinition
     readonly fetch: Fetch | undefined
 
-    constructor(args: AccountArgs) {
+    constructor(args: AccountArgs<Data>) {
         this.chain = ChainDefinition.from(args.chain)
         this.data = args.data
         this.fetch = args.fetch
