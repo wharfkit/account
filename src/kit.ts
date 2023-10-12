@@ -4,7 +4,7 @@ import {Contract} from '@wharfkit/contract'
 import {Account} from './account'
 import {TelosAccountObject, WAXAccountObject} from './types'
 ​
-export interface ChainDefinition<ResponseType extends API.v1.AccountObject = any> {
+export interface ChainDefinition<DataType extends API.v1.AccountObject = any> {
    id: string
    url: string
    dataType?: typeof API.v1.AccountObject
