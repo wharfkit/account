@@ -5,6 +5,7 @@ import {makeClient} from '@wharfkit/mock-data'
 import { API } from '@wharfkit/antelope'
 import { TelosAccountObject, WAXAccountObject } from 'src/types'
 
+const client = makeClient('https://jungle4.greymass.com')
 
 suite('AccountKit', function () {
     let accountKit: AccountKit
@@ -21,12 +22,20 @@ suite('AccountKit', function () {
         test('allow overriding of default contract', function () {
             const kit = new AccountKit(
                 Chains.Jungle4,
-                new SystemContract.Contract({client: makeClient()}),
+                {   
+                    contract: new SystemContract.Contract({ client }),
+                },
             )
+
+            expect(kit.contract).to.exist
         })
     })
 
     suite('load', function () {
+        this.beforeAll(function () {
+            accountKit = new AccountKit(Chains.Jungle4, { client })
+        })
+
         test('throws error if account does not exist', async function () {
             try {
                 await accountKit.load('nonexistent')
@@ -42,7 +51,7 @@ suite('AccountKit', function () {
         })
 
         test('returns telos account type', async function () {
-            const kit = new AccountKit(Chains.Telos)
+            const kit = new AccountKit(Chains.Telos, { client: makeClient('https://telos.greymass.com') })
             const account = await kit.load('teamgreymass')
             expect(account.data).to.be.instanceOf(API.v1.AccountObject)
             expect(account.data).to.be.instanceOf(TelosAccountObject)
@@ -51,7 +60,7 @@ suite('AccountKit', function () {
         })
 
         test('returns wax account type', async function () {
-            const kit = new AccountKit(Chains.WAX)
+            const kit = new AccountKit(Chains.WAX, { client: makeClient('https://wax.greymass.com') })
             const account = await kit.load('teamgreymass')
             expect(account.data).to.be.instanceOf(API.v1.AccountObject)
             expect(account.data).not.to.be.instanceOf(TelosAccountObject)

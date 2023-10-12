@@ -9,7 +9,7 @@ import {Account, AccountKit, Chains, Permission, SystemContract} from '../../src
 const mockAccountName = 'wharfkit1133'
 
 const client = makeClient('https://jungle4.greymass.com')
-const accountKit = new AccountKit(Chains.Jungle4)
+const accountKit = new AccountKit(Chains.Jungle4, { client })
 const session = new Session(
     {
         ...mockSessionArgs,

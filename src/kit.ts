@@ -24,7 +24,7 @@ export namespace Chains {
     }
     export const TelosTestnet: ChainDefinition<TelosAccountObject> = {
         id: '1eaa0824707c8c16bd25145493bf062aecddfeb56c736f6ba6397f3195f33c9f',
-        url: 'https://telos.greymass.com'
+        url: 'http://test.telos.eosusa.io'
     }
     export const WAX: ChainDefinition<WAXAccountObject> = {
         id: '1064487b3cd1a897ce03ae5b6a865651747e2e152090f99c1d19d44e01aea5a4',
@@ -36,22 +36,29 @@ export namespace Chains {
     }
 }
 
+interface AccountKitOptions {
+    contract?: Contract
+    client?: APIClient
+}
+
 export class AccountKit<DataType extends API.v1.AccountObject = API.v1.AccountObject> {
     readonly chain: ChainDefinition
     readonly client: APIClient
     readonly contract?: Contract
 
-    constructor(chain: ChainDefinition<DataType>, contract?: Contract) {
+    constructor(chain: ChainDefinition<DataType>, options?: AccountKitOptions) {
         this.chain = chain
-        this.contract = contract
-        this.client = new APIClient({ url: this.chain.url })
+        this.contract = options?.contract
+        this.client = options?.client || new APIClient({ url: this.chain.url })
     }
 
     async load(accountName: NameType): Promise<Account<DataType>> {
+        const data = await this.client.v1.chain.get_account(accountName)
+
         return new Account<DataType>({
             client: this.client,
             contract: this.contract,
-            data: await this.client.v1.chain.get_account(accountName) as DataType,
+            data: data as DataType,
         })
     }
 }
