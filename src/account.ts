@@ -15,10 +15,10 @@ import {Permission} from './permission'
 import * as SystemContract from './contracts/eosio'
 import {Resource, ResourceType} from './resource'
 
-export interface AccountArgs {
+export interface AccountArgs<Data extends API.v1.AccountObject = API.v1.AccountObject> {
     client: APIClient
     contract?: Contract
-    data: API.v1.AccountObject
+    data: Data
 }
 
 export interface BuyramOptions {
@@ -40,12 +40,12 @@ export interface UndelegateOptions {
     net?: AssetType
 }
 
-export class Account {
-    readonly data: API.v1.AccountObject
+export class Account<Data extends API.v1.AccountObject = API.v1.AccountObject> {
+    readonly data: Data
     readonly systemContract: SystemContract.Contract
     readonly client: APIClient
 
-    constructor(args: AccountArgs) {
+    constructor(args: AccountArgs<Data>) {
         this.data = args.data
         if (args.contract) {
             this.systemContract = args.contract
