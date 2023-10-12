@@ -14,18 +14,7 @@ suite('AccountKit', function () {
     })
 
     suite('constructor', function () {
-        test('throws error if client is not provided', function () {
-            try {
-                new AccountKit({} as any)
-            } catch (error) {
-                assert.equal(
-                    error.message,
-                    'A `client` must be passed when initializing the AccountKit.'
-                )
-            }
-        })
-
-        test('sets client if provided', function () {
+        test('sets client from chain definition provided', function () {
             expect(accountKit.client).to.exist
         })
 

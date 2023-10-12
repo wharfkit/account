@@ -1,0 +1,85 @@
+{
+    "request": {
+        "path": "https://jungle4.greymass.com/v1/chain/send_transaction",
+        "params": {
+            "method": "POST",
+            "body": "{\"signatures\":[\"SIG_K1_K3d8rXAp6o8uFySHgkgRgDqEoSHVZwccxV39T6C1yTih7M27p2cEuk1vLojBeKACyuXaDrjw2LvezuHG7AYtmPZ4wPddD9\"],\"compression\":0,\"packed_context_free_data\":\"00\",\"packed_trx\":\"914a27652712e2f3ba8800000000010000000000ea30550040cbdaa8aca24a01304608d9c1754de300000000a8ed323218304608d9c1754de300000019ab9cddd4000000000000000000\"}"
+        }
+    },
+    "status": 202,
+    "json": {
+        "transaction_id": "024016e153605cb87483b53a08ef6269e125b35abf5ebc0523557c9f8e46a1cf",
+        "processed": {
+            "id": "024016e153605cb87483b53a08ef6269e125b35abf5ebc0523557c9f8e46a1cf",
+            "block_num": 102634361,
+            "block_time": "2023-10-12T01:21:30.500",
+            "producer_block_id": null,
+            "receipt": {
+                "status": "executed",
+                "cpu_usage_us": 169,
+                "net_usage_words": 15
+            },
+            "elapsed": 169,
+            "net_usage": 120,
+            "scheduled": false,
+            "action_traces": [
+                {
+                    "action_ordinal": 1,
+                    "creator_action_ordinal": 0,
+                    "closest_unnotified_ancestor_action_ordinal": 0,
+                    "receipt": {
+                        "receiver": "eosio",
+                        "act_digest": "1fba57292b4bfba21434191601403dc0db84eae7538e41ef19fe3c828ec64baf",
+                        "global_sequence": 135891855,
+                        "recv_sequence": 102706751,
+                        "auth_sequence": [
+                            [
+                                "wharfkit1133",
+                                43
+                            ]
+                        ],
+                        "code_sequence": 4,
+                        "abi_sequence": 4
+                    },
+                    "receiver": "eosio",
+                    "act": {
+                        "account": "eosio",
+                        "name": "deleteauth",
+                        "authorization": [
+                            {
+                                "actor": "wharfkit1133",
+                                "permission": "active"
+                            }
+                        ],
+                        "data": {
+                            "account": "wharfkit1133",
+                            "permission": "unittest",
+                            "authorized_by": ""
+                        },
+                        "hex_data": "304608d9c1754de300000019ab9cddd40000000000000000"
+                    },
+                    "context_free": false,
+                    "elapsed": 51,
+                    "console": "",
+                    "trx_id": "024016e153605cb87483b53a08ef6269e125b35abf5ebc0523557c9f8e46a1cf",
+                    "block_num": 102634361,
+                    "block_time": "2023-10-12T01:21:30.500",
+                    "producer_block_id": null,
+                    "account_ram_deltas": [
+                        {
+                            "account": "wharfkit1133",
+                            "delta": -338
+                        }
+                    ],
+                    "except": null,
+                    "error_code": null,
+                    "return_value_hex_data": ""
+                }
+            ],
+            "account_ram_delta": null,
+            "except": null,
+            "error_code": null
+        }
+    },
+    "text": "{\"transaction_id\":\"024016e153605cb87483b53a08ef6269e125b35abf5ebc0523557c9f8e46a1cf\",\"processed\":{\"id\":\"024016e153605cb87483b53a08ef6269e125b35abf5ebc0523557c9f8e46a1cf\",\"block_num\":102634361,\"block_time\":\"2023-10-12T01:21:30.500\",\"producer_block_id\":null,\"receipt\":{\"status\":\"executed\",\"cpu_usage_us\":169,\"net_usage_words\":15},\"elapsed\":169,\"net_usage\":120,\"scheduled\":false,\"action_traces\":[{\"action_ordinal\":1,\"creator_action_ordinal\":0,\"closest_unnotified_ancestor_action_ordinal\":0,\"receipt\":{\"receiver\":\"eosio\",\"act_digest\":\"1fba57292b4bfba21434191601403dc0db84eae7538e41ef19fe3c828ec64baf\",\"global_sequence\":135891855,\"recv_sequence\":102706751,\"auth_sequence\":[[\"wharfkit1133\",43]],\"code_sequence\":4,\"abi_sequence\":4},\"receiver\":\"eosio\",\"act\":{\"account\":\"eosio\",\"name\":\"deleteauth\",\"authorization\":[{\"actor\":\"wharfkit1133\",\"permission\":\"active\"}],\"data\":{\"account\":\"wharfkit1133\",\"permission\":\"unittest\",\"authorized_by\":\"\"},\"hex_data\":\"304608d9c1754de300000019ab9cddd40000000000000000\"},\"context_free\":false,\"elapsed\":51,\"console\":\"\",\"trx_id\":\"024016e153605cb87483b53a08ef6269e125b35abf5ebc0523557c9f8e46a1cf\",\"block_num\":102634361,\"block_time\":\"2023-10-12T01:21:30.500\",\"producer_block_id\":null,\"account_ram_deltas\":[{\"account\":\"wharfkit1133\",\"delta\":-338}],\"except\":null,\"error_code\":null,\"return_value_hex_data\":\"\"}],\"account_ram_delta\":null,\"except\":null,\"error_code\":null}}"
+}
