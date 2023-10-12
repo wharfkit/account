@@ -1,0 +1,97 @@
+{
+    "request": {
+        "path": "https://jungle4.greymass.com/v1/chain/send_transaction",
+        "params": {
+            "method": "POST",
+            "body": "{\"signatures\":[\"SIG_K1_KknyFwq5mcQibNuzJEGaxzG6dG34LT7bkz5oFmd8CdsjoYgVt3XxWKGkfjQEbVoq9Y3VNHVWPyBZQ1MGw6MBjfHb5BXFbQ\"],\"compression\":1,\"packed_context_free_data\":\"789c63000000010001\",\"packed_trx\":\"789cfb14a69efa5c6be9c3ed4b188080114430bc32086570387d6b454ed0554603378e9b074b7d1f83c457bc3532f2461700d10dabd5963382b5339d3c563955ffa1d2f24533f404bcb79cbb394f2c486dcdf66489cfe907eeced4e20d85d8000500b1e028c6\"}"
+        }
+    },
+    "status": 202,
+    "json": {
+        "transaction_id": "754faab7dfc1400c3c5a7d229f7f351ec6e43be6c4c7c7b73ce72689ee57a316",
+        "processed": {
+            "id": "754faab7dfc1400c3c5a7d229f7f351ec6e43be6c4c7c7b73ce72689ee57a316",
+            "block_num": 102640697,
+            "block_time": "2023-10-12T02:14:18.500",
+            "producer_block_id": null,
+            "receipt": {
+                "status": "executed",
+                "cpu_usage_us": 149,
+                "net_usage_words": 19
+            },
+            "elapsed": 149,
+            "net_usage": 152,
+            "scheduled": false,
+            "action_traces": [
+                {
+                    "action_ordinal": 1,
+                    "creator_action_ordinal": 0,
+                    "closest_unnotified_ancestor_action_ordinal": 0,
+                    "receipt": {
+                        "receiver": "eosio",
+                        "act_digest": "5d8239b83dcdbae9a7a29f2a5ed47b183e597d7dd16a911270c5c1749230299f",
+                        "global_sequence": 135899172,
+                        "recv_sequence": 102713103,
+                        "auth_sequence": [
+                            [
+                                "wharfkit1133",
+                                47
+                            ]
+                        ],
+                        "code_sequence": 4,
+                        "abi_sequence": 4
+                    },
+                    "receiver": "eosio",
+                    "act": {
+                        "account": "eosio",
+                        "name": "updateauth",
+                        "authorization": [
+                            {
+                                "actor": "wharfkit1133",
+                                "permission": "active"
+                            }
+                        ],
+                        "data": {
+                            "account": "wharfkit1133",
+                            "permission": "active",
+                            "parent": "owner",
+                            "auth": {
+                                "threshold": 1,
+                                "keys": [
+                                    {
+                                        "key": "EOS6RMS3nvoN9StPzZizve6WdovaDkE5KkEcCDXW7LbepyAioMiK6",
+                                        "weight": 1
+                                    }
+                                ],
+                                "accounts": [],
+                                "waits": []
+                            },
+                            "authorized_by": ""
+                        },
+                        "hex_data": "304608d9c1754de300000000a8ed32320000000080ab26a701000000010002c9c679952fe122a7a2982e104bb4ced99e165226acb76318f367c0dd992a0d55010000000000000000000000"
+                    },
+                    "context_free": false,
+                    "elapsed": 46,
+                    "console": "",
+                    "trx_id": "754faab7dfc1400c3c5a7d229f7f351ec6e43be6c4c7c7b73ce72689ee57a316",
+                    "block_num": 102640697,
+                    "block_time": "2023-10-12T02:14:18.500",
+                    "producer_block_id": null,
+                    "account_ram_deltas": [
+                        {
+                            "account": "wharfkit1133",
+                            "delta": 0
+                        }
+                    ],
+                    "except": null,
+                    "error_code": null,
+                    "return_value_hex_data": ""
+                }
+            ],
+            "account_ram_delta": null,
+            "except": null,
+            "error_code": null
+        }
+    },
+    "text": "{\"transaction_id\":\"754faab7dfc1400c3c5a7d229f7f351ec6e43be6c4c7c7b73ce72689ee57a316\",\"processed\":{\"id\":\"754faab7dfc1400c3c5a7d229f7f351ec6e43be6c4c7c7b73ce72689ee57a316\",\"block_num\":102640697,\"block_time\":\"2023-10-12T02:14:18.500\",\"producer_block_id\":null,\"receipt\":{\"status\":\"executed\",\"cpu_usage_us\":149,\"net_usage_words\":19},\"elapsed\":149,\"net_usage\":152,\"scheduled\":false,\"action_traces\":[{\"action_ordinal\":1,\"creator_action_ordinal\":0,\"closest_unnotified_ancestor_action_ordinal\":0,\"receipt\":{\"receiver\":\"eosio\",\"act_digest\":\"5d8239b83dcdbae9a7a29f2a5ed47b183e597d7dd16a911270c5c1749230299f\",\"global_sequence\":135899172,\"recv_sequence\":102713103,\"auth_sequence\":[[\"wharfkit1133\",47]],\"code_sequence\":4,\"abi_sequence\":4},\"receiver\":\"eosio\",\"act\":{\"account\":\"eosio\",\"name\":\"updateauth\",\"authorization\":[{\"actor\":\"wharfkit1133\",\"permission\":\"active\"}],\"data\":{\"account\":\"wharfkit1133\",\"permission\":\"active\",\"parent\":\"owner\",\"auth\":{\"threshold\":1,\"keys\":[{\"key\":\"EOS6RMS3nvoN9StPzZizve6WdovaDkE5KkEcCDXW7LbepyAioMiK6\",\"weight\":1}],\"accounts\":[],\"waits\":[]},\"authorized_by\":\"\"},\"hex_data\":\"304608d9c1754de300000000a8ed32320000000080ab26a701000000010002c9c679952fe122a7a2982e104bb4ced99e165226acb76318f367c0dd992a0d55010000000000000000000000\"},\"context_free\":false,\"elapsed\":46,\"console\":\"\",\"trx_id\":\"754faab7dfc1400c3c5a7d229f7f351ec6e43be6c4c7c7b73ce72689ee57a316\",\"block_num\":102640697,\"block_time\":\"2023-10-12T02:14:18.500\",\"producer_block_id\":null,\"account_ram_deltas\":[{\"account\":\"wharfkit1133\",\"delta\":0}],\"except\":null,\"error_code\":null,\"return_value_hex_data\":\"\"}],\"account_ram_delta\":null,\"except\":null,\"error_code\":null}}"
+}

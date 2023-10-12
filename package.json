@@ -16,13 +16,13 @@
         "prepare": "make"
     },
     "dependencies": {
-        "@wharfkit/antelope": "^0.7.3",
+        "@wharfkit/antelope": "../antelope",
         "@wharfkit/contract": "^0.4.3",
         "@wharfkit/resources": "^1.0.0",
         "tslib": "^2.1.0"
     },
     "resolutions": {
-        "@wharfkit/antelope": "^0.7.3"
+        "@wharfkit/antelope": "../antelope"
     },
     "devDependencies": {
         "@rollup/plugin-alias": "^4.0.2",

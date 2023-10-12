@@ -1,0 +1,101 @@
+{
+    "request": {
+        "path": "https://jungle4.greymass.com/v1/chain/send_transaction",
+        "params": {
+            "method": "POST",
+            "body": "{\"signatures\":[\"SIG_K1_KVFT8RYLNyVg2A8341WdxbBeUMGjgVrT7twJ75rkwH1CmY3j4QkYSLEDet996VU1xnu7WvpGJgGakgHfohFUTGTts5WnhS\"],\"compression\":1,\"packed_context_free_data\":\"789c63000000010001\",\"packed_trx\":\"789cfb14a69efa5c6be9c3ed4b188080114430bc32086570387d6b454ed0554603378e9b074b7d1f83c457bc3532ca471700d10dabd59683b43231301db877698fbc30eb6ffe55479f1db07bbc709293c98c10f56d62354b332fda7e313d0f54c674f258e554fd874acb17cdd013f0de72eee63cb120b535db93253ea71fb83b538b3714e20a280000976739a9\"}"
+        }
+    },
+    "status": 202,
+    "json": {
+        "transaction_id": "18f65a05fb0e23c375a7bf1b786a24845b19fe5cdd60cd17f993c09bdd236dcd",
+        "processed": {
+            "id": "18f65a05fb0e23c375a7bf1b786a24845b19fe5cdd60cd17f993c09bdd236dcd",
+            "block_num": 102640696,
+            "block_time": "2023-10-12T02:14:18.000",
+            "producer_block_id": null,
+            "receipt": {
+                "status": "executed",
+                "cpu_usage_us": 231,
+                "net_usage_words": 24
+            },
+            "elapsed": 231,
+            "net_usage": 192,
+            "scheduled": false,
+            "action_traces": [
+                {
+                    "action_ordinal": 1,
+                    "creator_action_ordinal": 0,
+                    "closest_unnotified_ancestor_action_ordinal": 0,
+                    "receipt": {
+                        "receiver": "eosio",
+                        "act_digest": "212955b8945f634a0f98b8fad6eea1e9ecf2b8ef0ba910b1d5a33d818ce3cebd",
+                        "global_sequence": 135899170,
+                        "recv_sequence": 102713101,
+                        "auth_sequence": [
+                            [
+                                "wharfkit1133",
+                                46
+                            ]
+                        ],
+                        "code_sequence": 4,
+                        "abi_sequence": 4
+                    },
+                    "receiver": "eosio",
+                    "act": {
+                        "account": "eosio",
+                        "name": "updateauth",
+                        "authorization": [
+                            {
+                                "actor": "wharfkit1133",
+                                "permission": "active"
+                            }
+                        ],
+                        "data": {
+                            "account": "wharfkit1133",
+                            "permission": "active",
+                            "parent": "owner",
+                            "auth": {
+                                "threshold": 1,
+                                "keys": [
+                                    {
+                                        "key": "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV",
+                                        "weight": 1
+                                    },
+                                    {
+                                        "key": "EOS6RMS3nvoN9StPzZizve6WdovaDkE5KkEcCDXW7LbepyAioMiK6",
+                                        "weight": 1
+                                    }
+                                ],
+                                "accounts": [],
+                                "waits": []
+                            },
+                            "authorized_by": ""
+                        },
+                        "hex_data": "304608d9c1754de300000000a8ed32320000000080ab26a701000000020002c0ded2bc1f1305fb0faac5e6c03ee3a1924234985427b6167ca569d13df435cf01000002c9c679952fe122a7a2982e104bb4ced99e165226acb76318f367c0dd992a0d55010000000000000000000000"
+                    },
+                    "context_free": false,
+                    "elapsed": 100,
+                    "console": "",
+                    "trx_id": "18f65a05fb0e23c375a7bf1b786a24845b19fe5cdd60cd17f993c09bdd236dcd",
+                    "block_num": 102640696,
+                    "block_time": "2023-10-12T02:14:18.000",
+                    "producer_block_id": null,
+                    "account_ram_deltas": [
+                        {
+                            "account": "wharfkit1133",
+                            "delta": 50
+                        }
+                    ],
+                    "except": null,
+                    "error_code": null,
+                    "return_value_hex_data": ""
+                }
+            ],
+            "account_ram_delta": null,
+            "except": null,
+            "error_code": null
+        }
+    },
+    "text": "{\"transaction_id\":\"18f65a05fb0e23c375a7bf1b786a24845b19fe5cdd60cd17f993c09bdd236dcd\",\"processed\":{\"id\":\"18f65a05fb0e23c375a7bf1b786a24845b19fe5cdd60cd17f993c09bdd236dcd\",\"block_num\":102640696,\"block_time\":\"2023-10-12T02:14:18.000\",\"producer_block_id\":null,\"receipt\":{\"status\":\"executed\",\"cpu_usage_us\":231,\"net_usage_words\":24},\"elapsed\":231,\"net_usage\":192,\"scheduled\":false,\"action_traces\":[{\"action_ordinal\":1,\"creator_action_ordinal\":0,\"closest_unnotified_ancestor_action_ordinal\":0,\"receipt\":{\"receiver\":\"eosio\",\"act_digest\":\"212955b8945f634a0f98b8fad6eea1e9ecf2b8ef0ba910b1d5a33d818ce3cebd\",\"global_sequence\":135899170,\"recv_sequence\":102713101,\"auth_sequence\":[[\"wharfkit1133\",46]],\"code_sequence\":4,\"abi_sequence\":4},\"receiver\":\"eosio\",\"act\":{\"account\":\"eosio\",\"name\":\"updateauth\",\"authorization\":[{\"actor\":\"wharfkit1133\",\"permission\":\"active\"}],\"data\":{\"account\":\"wharfkit1133\",\"permission\":\"active\",\"parent\":\"owner\",\"auth\":{\"threshold\":1,\"keys\":[{\"key\":\"EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV\",\"weight\":1},{\"key\":\"EOS6RMS3nvoN9StPzZizve6WdovaDkE5KkEcCDXW7LbepyAioMiK6\",\"weight\":1}],\"accounts\":[],\"waits\":[]},\"authorized_by\":\"\"},\"hex_data\":\"304608d9c1754de300000000a8ed32320000000080ab26a701000000020002c0ded2bc1f1305fb0faac5e6c03ee3a1924234985427b6167ca569d13df435cf01000002c9c679952fe122a7a2982e104bb4ced99e165226acb76318f367c0dd992a0d55010000000000000000000000\"},\"context_free\":false,\"elapsed\":100,\"console\":\"\",\"trx_id\":\"18f65a05fb0e23c375a7bf1b786a24845b19fe5cdd60cd17f993c09bdd236dcd\",\"block_num\":102640696,\"block_time\":\"2023-10-12T02:14:18.000\",\"producer_block_id\":null,\"account_ram_deltas\":[{\"account\":\"wharfkit1133\",\"delta\":50}],\"except\":null,\"error_code\":null,\"return_value_hex_data\":\"\"}],\"account_ram_delta\":null,\"except\":null,\"error_code\":null}}"
+}

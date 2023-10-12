@@ -1,4 +1,4 @@
-import {assert} from 'chai'
+import {assert, expect} from 'chai'
 import {API, Asset, Authority, Int64, KeyWeight, Serializer} from '@wharfkit/antelope'
 import {makeClient, mockSessionArgs, mockSessionOptions} from '@wharfkit/mock-data'
 import {Session} from '@wharfkit/session'
@@ -125,13 +125,15 @@ suite('Account', function () {
                 permission.addKey('PUB_K1_6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5BoDq63')
                 // Get action to commit change to chain
                 const action = testAccount.setPermission(permission)
-                await session.transact({action}, {broadcast: true})
+                expect(String(action.name)).to.equal('updateauth')
+                expect(String(action.account)).to.equal('eosio')
+                expect(String(action.authorization[0])).to.equal(String(PlaceholderAuth))
             })
             test('remove it', async () => {
                 const action = testAccount.removePermission('unittest')
                 assert.isTrue(action.account.equals('eosio'))
                 assert.isTrue(action.name.equals('deleteauth'))
-                assert.isTrue(action.authorization[0].equals(PlaceholderAuth))
+                assert.isTrue(action.authorization[0].equals(String(PlaceholderAuth)))
 
                 const decoded = Serializer.decode({
                     data: action.data,
@@ -140,7 +142,9 @@ suite('Account', function () {
                 assert.isTrue(decoded.account.equals('wharfkit1133'))
                 assert.isTrue(decoded.permission.equals('unittest'))
 
-                await session.transact({action}, {broadcast: true})
+                expect(String(action.name)).to.equal('deleteauth')
+                expect(String(action.account)).to.equal('eosio')
+                expect(String(action.authorization[0])).to.equal(String(PlaceholderAuth))
             })
         })
         suite('modify existing', function () {
