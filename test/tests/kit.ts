@@ -2,8 +2,8 @@ import {assert, expect} from 'chai'
 
 import {Account, AccountKit, SystemContract} from '../../src'
 import {makeClient} from '@wharfkit/mock-data'
-import { API } from '@wharfkit/antelope'
-import { Chains, TelosAccountObject, WAXAccountObject } from '@wharfkit/common'
+import {API} from '@wharfkit/antelope'
+import {Chains, TelosAccountObject, WAXAccountObject} from '@wharfkit/common'
 
 const client = makeClient('https://jungle4.greymass.com')
 
@@ -50,19 +50,27 @@ suite('AccountKit', function () {
             expect(account).to.be.instanceOf(Account)
         })
 
+        test('returns the default account object type on EOS', async function () {
+            const kit = new AccountKit(Chains.EOS, { client: makeClient('https://eos.greymass.com') })
+            const account = await kit.load('teamgreymass')
+            expect(account.data).to.be.instanceOf(API.v1.AccountObject)
+            expect(account.data).not.to.be.instanceOf(TelosAccountObject)
+            expect(account.data).not.to.be.instanceOf(WAXAccountObject)
+        })
+
         test('returns telos account type', async function () {
             const kit = new AccountKit(Chains.Telos, { client: makeClient('https://telos.greymass.com') })
             const account = await kit.load('teamgreymass')
-            expect(account.data).to.be.instanceOf(API.v1.AccountObject)
-            expect(account.data).to.be.instanceOf(TelosAccountObject)
+            expect(account.data).not.to.be.instanceOf(API.v1.AccountObject)
             expect(account.data).not.to.be.instanceOf(WAXAccountObject)
+            expect(account.data).to.be.instanceOf(TelosAccountObject)
             assert.isDefined(account.data.voter_info?.last_stake)
         })
 
         test('returns wax account type', async function () {
             const kit = new AccountKit(Chains.WAX, { client: makeClient('https://wax.greymass.com') })
             const account = await kit.load('teamgreymass')
-            expect(account.data).to.be.instanceOf(API.v1.AccountObject)
+            expect(account.data).not.to.be.instanceOf(API.v1.AccountObject)
             expect(account.data).not.to.be.instanceOf(TelosAccountObject)
             expect(account.data).to.be.instanceOf(WAXAccountObject)
             assert.isDefined(account.data.voter_info?.unpaid_voteshare)

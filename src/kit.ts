@@ -1,6 +1,6 @@
 import {API, APIClient, NameType} from '@wharfkit/antelope'
 import {Contract} from '@wharfkit/contract'
-import type {ChainDefinition} from '@wharfkit/common'
+import {ChainDefinition} from '@wharfkit/common'
 
 import {Account} from './account'
 
