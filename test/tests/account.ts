@@ -3,8 +3,9 @@ import {API, Asset, Authority, Int64, KeyWeight, Serializer} from '@wharfkit/ant
 import {makeClient, mockSessionArgs, mockSessionOptions} from '@wharfkit/mock-data'
 import {Session} from '@wharfkit/session'
 import {PlaceholderAuth} from '@wharfkit/signing-request'
+import {Chains} from '@wharfkit/common'
 
-import {Account, AccountKit, Chains, Permission, SystemContract} from '../../src'
+import {Account, AccountKit, Permission, SystemContract} from '../../src'
 
 const mockAccountName = 'wharfkit1133'
 

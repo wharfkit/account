@@ -551,8 +551,10 @@
     pako "^2.0.4"
     tslib "^2.1.0"
 
-"@wharfkit/antelope@../antelope", "@wharfkit/antelope@^0.7.3", "@wharfkit/antelope@^0.8.0":
-  version "0.10.0"
+"@wharfkit/antelope@^0.10.1", "@wharfkit/antelope@^0.7.3", "@wharfkit/antelope@^0.8.0":
+  version "0.10.1"
+  resolved "https://registry.yarnpkg.com/@wharfkit/antelope/-/antelope-0.10.1.tgz#c51c89a814fdf409793df161f447a6763ab89840"
+  integrity sha512-sBOe2dFvAlFACeLjQUOrZahqSwoyUWfjY8sxn2B+dViK2WPmD3Lo76a7v/Ko+J6WgA1EjAfp4NGMWyUcBDEJ6Q==
   dependencies:
     bn.js "^4.11.9"
     brorand "^1.1.0"
@@ -560,6 +562,11 @@
     hash.js "^1.0.0"
     pako "^2.1.0"
     tslib "^2.0.3"
+
+"@wharfkit/common@../common":
+  version "1.2.0-rc2"
+  dependencies:
+    tslib "^2.1.0"
 
 "@wharfkit/common@^1.1.0":
   version "1.1.0"

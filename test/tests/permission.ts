@@ -10,8 +10,9 @@ import {
     WaitWeight,
 } from '@wharfkit/antelope'
 import {mockAccountName} from '@wharfkit/mock-data'
+import {Chains} from '@wharfkit/common'
 
-import {Account, AccountKit, Chains, Permission} from '../../src'
+import {Account, AccountKit, Permission} from '../../src'
 
 const accountKit = new AccountKit(Chains.Jungle4)
 

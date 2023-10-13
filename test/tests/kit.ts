@@ -1,9 +1,9 @@
 import {assert, expect} from 'chai'
 
-import {Account, AccountKit, Chains, SystemContract} from '../../src'
+import {Account, AccountKit, SystemContract} from '../../src'
 import {makeClient} from '@wharfkit/mock-data'
 import { API } from '@wharfkit/antelope'
-import { TelosAccountObject, WAXAccountObject } from 'src/types'
+import { Chains, TelosAccountObject, WAXAccountObject } from '@wharfkit/common'
 
 const client = makeClient('https://jungle4.greymass.com')
 
