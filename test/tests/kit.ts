@@ -60,7 +60,7 @@ suite('AccountKit', function () {
                 client: makeClient('https://telos.greymass.com'),
             })
             const account = await kit.load('teamgreymass')
-            expect(account.data).not.to.be.instanceOf(API.v1.AccountObject)
+            expect(account.data).to.be.instanceOf(API.v1.AccountObject)
             expect(account.data).not.to.be.instanceOf(WAXAccountObject)
             expect(account.data).to.be.instanceOf(TelosAccountObject)
             assert.isDefined(account.data.voter_info?.last_stake)
@@ -69,7 +69,7 @@ suite('AccountKit', function () {
         test('returns wax account type', async function () {
             const kit = new AccountKit(Chains.WAX, {client: makeClient('https://wax.greymass.com')})
             const account = await kit.load('teamgreymass')
-            expect(account.data).not.to.be.instanceOf(API.v1.AccountObject)
+            expect(account.data).to.be.instanceOf(API.v1.AccountObject)
             expect(account.data).not.to.be.instanceOf(TelosAccountObject)
             expect(account.data).to.be.instanceOf(WAXAccountObject)
             assert.isDefined(account.data.voter_info?.unpaid_voteshare)
@@ -90,7 +90,7 @@ suite('AccountKit', function () {
                 }
             )
             const account = await kit.load('teamgreymass')
-            expect(account.data).not.to.be.instanceOf(API.v1.AccountObject)
+            expect(account.data).to.be.instanceOf(API.v1.AccountObject)
             expect(account.data).not.to.be.instanceOf(TelosAccountObject)
             expect(account.data).to.be.instanceOf(WAXAccountObject)
             assert.isDefined(account.data.voter_info?.unpaid_voteshare)
