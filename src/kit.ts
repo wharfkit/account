@@ -17,7 +17,7 @@ export class AccountKit<DataType extends API.v1.AccountObject = API.v1.AccountOb
     constructor(chain: ChainDefinition<DataType>, options?: AccountKitOptions) {
         this.chain = chain
         this.contract = options?.contract
-        this.client = options?.client || new APIClient({ url: this.chain.url })
+        this.client = options?.client || new APIClient({url: this.chain.url})
     }
 
     async load(accountName: NameType): Promise<Account<DataType>> {
