@@ -11,7 +11,9 @@ suite('AccountKit', function () {
     let accountKit: AccountKit
 
     this.beforeAll(function () {
-        accountKit = new AccountKit(Chains.Jungle4)
+        accountKit = new AccountKit(Chains.Jungle4, {
+            client: makeClient('https://jungle4.greymass.com'),
+        })
     })
 
     suite('constructor', function () {
