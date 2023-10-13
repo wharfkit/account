@@ -17,7 +17,7 @@
     },
     "dependencies": {
         "@wharfkit/antelope": "^0.10.1",
-        "@wharfkit/common": "../common",
+        "@wharfkit/common": "^1.2.0-rc4",
         "@wharfkit/contract": "^0.4.3",
         "@wharfkit/resources": "^1.0.0",
         "tslib": "^2.1.0"
