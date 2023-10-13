@@ -9,12 +9,14 @@ import {
     UInt16,
     WaitWeight,
 } from '@wharfkit/antelope'
-import {mockAccountName} from '@wharfkit/mock-data'
+import {makeClient, mockAccountName} from '@wharfkit/mock-data'
 import {Chains} from '@wharfkit/common'
 
 import {Account, AccountKit, Permission} from '../../src'
 
-const accountKit = new AccountKit(Chains.Jungle4)
+const accountKit = new AccountKit(Chains.Jungle4, {
+    client: makeClient('https://jungle4.greymass.com'),
+})
 
 suite('Permission', function () {
     let testAccount: Account
