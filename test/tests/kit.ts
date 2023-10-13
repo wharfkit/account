@@ -84,7 +84,10 @@ suite('AccountKit', function () {
                     id: '1064487b3cd1a897ce03ae5b6a865651747e2e152090f99c1d19d44e01aea5a4',
                     url: 'https://wax.greymass.com',
                     accountDataType: WAXAccountObject,
-                })
+                }),
+                {
+                    client: makeClient('https://wax.greymass.com'),
+                }
             )
             const account = await kit.load('teamgreymass')
             expect(account.data).not.to.be.instanceOf(API.v1.AccountObject)
