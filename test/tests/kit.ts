@@ -23,6 +23,7 @@ suite('AccountKit', function () {
 
         test('allow overriding of default contract', function () {
             const kit = new AccountKit(Chains.Jungle4, {
+                client: makeClient('https://jungle4.greymass.com'),
                 contract: new SystemContract.Contract({client}),
             })
 
