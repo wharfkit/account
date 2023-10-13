@@ -3,7 +3,7 @@ import {assert, expect} from 'chai'
 import {Account, AccountKit, SystemContract} from '../../src'
 import {makeClient} from '@wharfkit/mock-data'
 import {API} from '@wharfkit/antelope'
-import {Chains, TelosAccountObject, WAXAccountObject} from '@wharfkit/common'
+import {ChainDefinition, Chains, TelosAccountObject, WAXAccountObject} from '@wharfkit/common'
 
 const client = makeClient('https://jungle4.greymass.com')
 
@@ -68,6 +68,24 @@ suite('AccountKit', function () {
 
         test('returns wax account type', async function () {
             const kit = new AccountKit(Chains.WAX, {client: makeClient('https://wax.greymass.com')})
+            const account = await kit.load('teamgreymass')
+            expect(account.data).not.to.be.instanceOf(API.v1.AccountObject)
+            expect(account.data).not.to.be.instanceOf(TelosAccountObject)
+            expect(account.data).to.be.instanceOf(WAXAccountObject)
+            assert.isDefined(account.data.voter_info?.unpaid_voteshare)
+            assert.isDefined(account.data.voter_info?.unpaid_voteshare_last_updated)
+            assert.isDefined(account.data.voter_info?.unpaid_voteshare_change_rate)
+            assert.isDefined(account.data.voter_info?.last_claim_time)
+        })
+
+        test('returns wax account type from custom definition', async function () {
+            const kit = new AccountKit(
+                ChainDefinition.from<WAXAccountObject>({
+                    id: '1064487b3cd1a897ce03ae5b6a865651747e2e152090f99c1d19d44e01aea5a4',
+                    url: 'https://wax.greymass.com',
+                    accountDataType: WAXAccountObject,
+                })
+            )
             const account = await kit.load('teamgreymass')
             expect(account.data).not.to.be.instanceOf(API.v1.AccountObject)
             expect(account.data).not.to.be.instanceOf(TelosAccountObject)
