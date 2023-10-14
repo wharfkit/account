@@ -217,8 +217,8 @@ suite('Account', function () {
         })
     })
 
-    test('linkauth', () => {
-        const action = testAccount.linkauth('eosio.token', 'transfer', 'active')
+    test('linkAuth', () => {
+        const action = testAccount.linkAuth('eosio.token', 'transfer', 'active')
         assert.isTrue(action.account.equals('eosio'))
         assert.isTrue(action.name.equals('linkauth'))
         assert.isTrue(action.authorization[0].equals(PlaceholderAuth))
@@ -230,8 +230,8 @@ suite('Account', function () {
         assert.isTrue(decoded.requirement.equals('active'))
     })
 
-    test('unlinkauth', () => {
-        const action = testAccount.unlinkauth('eosio.token', 'transfer')
+    test('unlinkAuth', () => {
+        const action = testAccount.unlinkAuth('eosio.token', 'transfer')
         assert.isTrue(action.account.equals('eosio'))
         assert.isTrue(action.name.equals('unlinkauth'))
         assert.isTrue(action.authorization[0].equals(PlaceholderAuth))

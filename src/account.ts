@@ -141,7 +141,7 @@ export class Account {
         })
     }
 
-    linkauth(contract: NameType, action: NameType, requiredPermission: NameType): Action {
+    linkAuth(contract: NameType, action: NameType, requiredPermission: NameType): Action {
         return this.systemContract.action('linkauth', {
             account: this.accountName,
             code: contract,
@@ -151,7 +151,7 @@ export class Account {
         })
     }
 
-    unlinkauth(contract: NameType, action: NameType): Action {
+    unlinkAuth(contract: NameType, action: NameType): Action {
         return this.systemContract.action('unlinkauth', {
             account: this.accountName,
             code: contract,
