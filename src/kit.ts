@@ -1,33 +1,32 @@
-import {APIClient, Name, NameType} from '@wharfkit/antelope'
+import {API, APIClient, NameType} from '@wharfkit/antelope'
 import {Contract} from '@wharfkit/contract'
+import {ChainDefinition} from '@wharfkit/common'
 
 import {Account} from './account'
 
-export interface AccountKitArgs {
-    client: APIClient
+interface AccountKitOptions {
     contract?: Contract
+    client?: APIClient
 }
 
-export class AccountKit {
+export class AccountKit<DataType extends API.v1.AccountObject = API.v1.AccountObject> {
+    readonly chain: ChainDefinition<DataType>
     readonly client: APIClient
     readonly contract?: Contract
 
-    constructor(args: AccountKitArgs) {
-        if (args.contract) {
-            this.contract = args.contract
-        }
-        if (args.client) {
-            this.client = args.client
-        } else {
-            throw new Error('A `client` must be passed when initializing the AccountKit.')
-        }
+    constructor(chain: ChainDefinition<DataType>, options?: AccountKitOptions) {
+        this.chain = chain
+        this.contract = options?.contract
+        this.client = options?.client || new APIClient({url: this.chain.url})
     }
 
-    async load(accountName: NameType): Promise<Account> {
-        return new Account({
+    async load(accountName: NameType): Promise<Account<DataType>> {
+        const data = await this.client.v1.chain.get_account(accountName, this.chain.accountDataType)
+
+        return new Account<DataType>({
             client: this.client,
             contract: this.contract,
-            data: await this.client.v1.chain.get_account(accountName),
+            data: data as DataType,
         })
     }
 }
