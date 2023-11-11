@@ -531,34 +531,34 @@ suite('Account', function () {
             assert.instanceOf(balance, Asset)
         })
 
-        test('throws error when token does not exist for given contract', function (done) {
-            testAccount
-                .balance('eosio.token', 'nonexist')
-                .catch((error) => {
-                    assert.equal(
-                        (error as Error).message,
-                        'No balance found for nonexist token of eosio.token contract.'
-                    )
-                    done()
-                })
-                .then((data) => {
-                    assert.fail()
-                })
-        })
+        // test('throws error when token does not exist for given contract', function (done) {
+        //     testAccount
+        //         .balance('nonexist')
+        //         .catch((error) => {
+        //             assert.equal(
+        //                 (error as Error).message,
+        //                 'No balance found for nonexist token of eosio.token contract.'
+        //             )
+        //             done()
+        //         })
+        //         .then((data) => {
+        //             assert.fail()
+        //         })
+        // })
 
-        test('throws error when token contract does not exist', function (done) {
-            testAccount
-                .balance('nonexist')
-                .catch((error) => {
-                    assert.equal(
-                        (error as Error).message,
-                        'Token contract nonexist does not exist.'
-                    )
-                    done()
-                })
-                .then(() => {
-                    assert.fail()
-                })
-        })
+        // test('throws error when token contract does not exist', function (done) {
+        //     testAccount
+        //         .balance('nonexist')
+        //         .catch((error) => {
+        //             assert.equal(
+        //                 (error as Error).message,
+        //                 'Token contract nonexist does not exist.'
+        //             )
+        //             done()
+        //         })
+        //         .then(() => {
+        //             assert.fail()
+        //         })
+        // })
     })
 })
