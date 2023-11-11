@@ -1,7 +1,7 @@
 {
     "name": "@wharfkit/account",
     "description": "Account kit for Wharf Kit",
-    "version": "0.2.1",
+    "version": "1.0.0",
     "homepage": "https://github.com/wharfkit/account",
     "license": "BSD-3-Clause",
     "main": "lib/account.js",
