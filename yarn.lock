@@ -561,7 +561,7 @@
     pako "^2.0.4"
     tslib "^2.1.0"
 
-"@wharfkit/antelope@^0.10.1", "@wharfkit/antelope@^0.7.3", "@wharfkit/antelope@^0.8.0", "@wharfkit/antelope@^1.0.0":
+"@wharfkit/antelope@^0.10.1", "@wharfkit/antelope@^0.7.3", "@wharfkit/antelope@^1.0.0":
   version "0.10.1"
   resolved "https://registry.yarnpkg.com/@wharfkit/antelope/-/antelope-0.10.1.tgz#c51c89a814fdf409793df161f447a6763ab89840"
   integrity sha512-sBOe2dFvAlFACeLjQUOrZahqSwoyUWfjY8sxn2B+dViK2WPmD3Lo76a7v/Ko+J6WgA1EjAfp4NGMWyUcBDEJ6Q==
@@ -580,21 +580,11 @@
   dependencies:
     tslib "^2.1.0"
 
-"@wharfkit/common@^1.2.0-rc4":
-  version "1.2.0-rc4"
-  resolved "https://registry.yarnpkg.com/@wharfkit/common/-/common-1.2.0-rc4.tgz#2491edf338870b47afadadd92dbb96c21b524ef7"
-  integrity sha512-vV6r1I0tl+3BO7KN3ir68ZWcIMrR+MrGfdduV07N1B463mzDnwCR1aBkhn5ZIXAukWdj7LOpfDLPs5OiAHHGpA==
+"@wharfkit/common@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@wharfkit/common/-/common-1.2.0.tgz#147f783f2ba5cc6fa7dd75863ba98dd05880a9aa"
+  integrity sha512-me/BN8D/4UPkY7yt+4v+E/z62PVj4VKY5+iRb7zoWv0epbW4o4nC6Oer8kBVL7xWC6Guucaol3hkxkTMgrnwlQ==
   dependencies:
-    tslib "^2.1.0"
-
-"@wharfkit/contract@^0.4.3":
-  version "0.4.3"
-  resolved "https://registry.yarnpkg.com/@wharfkit/contract/-/contract-0.4.3.tgz#086ee80ae4b87b14a4d8674fa1f53983a9cc8817"
-  integrity sha512-TjsuUdk9Ep3PJdzp8im4Pw+yDHzF0o7+IReIm5Q6FHe9DWh8HgexETR8VsgzB43bmvKvIUrMZReFRb70wB3P9w==
-  dependencies:
-    "@wharfkit/abicache" "^1.1.1"
-    "@wharfkit/antelope" "^0.8.0"
-    "@wharfkit/signing-request" "^3.0.0"
     tslib "^2.1.0"
 
 "@wharfkit/contract@^1.0.0":
@@ -618,12 +608,12 @@
     node-fetch "^2.6.1"
     tslib "^2.1.0"
 
-"@wharfkit/resources@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@wharfkit/resources/-/resources-1.0.0.tgz#3ad4b6ebea78e061238f2f166374d893e120c95c"
-  integrity sha512-q71ttU3ixuoUgkg1azpmRvR66PaznmESn0fCaUd9LZNbV2fm3STRumRRDvqlyARFG+y0sEICxqpj9JKMWv6KgA==
+"@wharfkit/resources@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@wharfkit/resources/-/resources-1.1.0.tgz#1a90917e41a0fa86c3f3254b0537bbe91b029d3e"
+  integrity sha512-rpVc4ecUDEui+NypidEe8nBVDiBza6CqFkMEIgaPklmGxm6mnkqC2hYwTYdbE8ARf4ulCPaJelXXjEUwI7sBNQ==
   dependencies:
-    "@wharfkit/antelope" "^0.7.3"
+    "@wharfkit/antelope" "^1.0.0"
     bn.js "^4.11.9"
     tslib "^2.1.0"
 

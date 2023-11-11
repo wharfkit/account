@@ -10,11 +10,11 @@ import {
 } from '@wharfkit/antelope'
 import {Contract} from '@wharfkit/contract'
 import {Resources} from '@wharfkit/resources'
+import {Token} from '@wharfkit/token'
 
 import {Permission} from './permission'
 import * as SystemContract from './contracts/eosio'
 import {Resource, ResourceType} from './resource'
-import {Token} from '@wharfkit/token'
 
 export interface AccountArgs<Data extends API.v1.AccountObject = API.v1.AccountObject> {
     client: APIClient
