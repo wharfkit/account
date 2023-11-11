@@ -14,6 +14,7 @@ import {Resources} from '@wharfkit/resources'
 import {Permission} from './permission'
 import * as SystemContract from './contracts/eosio'
 import {Resource, ResourceType} from './resource'
+import {Token} from '@wharfkit/token'
 
 export interface AccountArgs<Data extends API.v1.AccountObject = API.v1.AccountObject> {
     client: APIClient
@@ -44,6 +45,7 @@ export class Account<Data extends API.v1.AccountObject = API.v1.AccountObject> {
     readonly data: Data
     readonly systemContract: SystemContract.Contract
     readonly client: APIClient
+    readonly token: Token
 
     constructor(args: AccountArgs<Data>) {
         this.data = args.data
@@ -53,6 +55,7 @@ export class Account<Data extends API.v1.AccountObject = API.v1.AccountObject> {
             this.systemContract = new SystemContract.Contract({client: args.client})
         }
         this.client = args.client
+        this.token = new Token({client: args.client})
     }
 
     get accountName() {
@@ -63,33 +66,8 @@ export class Account<Data extends API.v1.AccountObject = API.v1.AccountObject> {
         return Asset.Symbol.from(this.data.total_resources.cpu_weight.symbol)
     }
 
-    balance(contract: NameType = 'eosio.token', symbol?: Asset.SymbolType): Promise<Asset> {
-        return new Promise((resolve, reject) => {
-            this.client.v1.chain
-                .get_currency_balance(contract, String(this.accountName), symbol && String(symbol))
-                .then((balances) => {
-                    const balance = (balances as any)[0]
-
-                    if (!balance) {
-                        reject(
-                            new Error(
-                                `No balance found for ${symbol} token of ${contract} contract.`
-                            )
-                        )
-                    }
-
-                    resolve(balance)
-                })
-                .catch((err) => {
-                    if (
-                        err.message.includes('No data') ||
-                        err.message.includes('Account Query Exception')
-                    ) {
-                        reject(new Error(`Token contract ${contract} does not exist.`))
-                    }
-                    reject(err)
-                })
-        })
+    balance(symbol?: Asset.SymbolType) {
+        return this.token.balance(this.accountName, symbol)
     }
 
     permission(permissionName: NameType): Permission {

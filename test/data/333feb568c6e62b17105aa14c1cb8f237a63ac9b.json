@@ -1,0 +1,16 @@
+{
+    "request": {
+        "path": "https://jungle4.greymass.com/v1/chain/get_table_rows",
+        "params": {
+            "method": "POST",
+            "body": "{\"table\":\"accounts\",\"code\":\"eosio.token\",\"scope\":\"wharfkit1133\",\"limit\":1,\"lower_bound\":\"nonexist\",\"upper_bound\":\"nonexist\",\"index_position\":\"primary\",\"key_type\":\"name\",\"json\":false}"
+        }
+    },
+    "status": 200,
+    "json": {
+        "rows": [],
+        "more": false,
+        "next_key": ""
+    },
+    "text": "{\"rows\":[],\"more\":false,\"next_key\":\"\"}"
+}

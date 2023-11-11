@@ -20,6 +20,7 @@
         "@wharfkit/common": "^1.2.0-rc4",
         "@wharfkit/contract": "^0.4.3",
         "@wharfkit/resources": "^1.0.0",
+        "@wharfkit/token": "^1.0.1",
         "tslib": "^2.1.0"
     },
     "resolutions": {

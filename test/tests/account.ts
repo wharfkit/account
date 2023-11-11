@@ -527,7 +527,7 @@ suite('Account', function () {
         })
 
         test('returns resources object for secondary token', async function () {
-            const balance = await testAccount.balance('eosio.token', 'EOS')
+            const balance = await testAccount.balance('EOS')
             assert.instanceOf(balance, Asset)
         })
 
