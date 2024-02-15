@@ -521,44 +521,19 @@ suite('Account', function () {
         this.slow(200)
         this.timeout(5 * 1000)
 
-        test('returns resources object for system token', async function () {
+        test('returns system token balance when no params are passed', async function () {
             const balance = await testAccount.balance()
             assert.instanceOf(balance, Asset)
         })
 
-        test('returns resources object for secondary token', async function () {
+        test('returns proper balance when symbol is passed', async function () {
             const balance = await testAccount.balance('EOS')
             assert.instanceOf(balance, Asset)
         })
 
-        // test('throws error when token does not exist for given contract', function (done) {
-        //     testAccount
-        //         .balance('nonexist')
-        //         .catch((error) => {
-        //             assert.equal(
-        //                 (error as Error).message,
-        //                 'No balance found for nonexist token of eosio.token contract.'
-        //             )
-        //             done()
-        //         })
-        //         .then((data) => {
-        //             assert.fail()
-        //         })
-        // })
-
-        // test('throws error when token contract does not exist', function (done) {
-        //     testAccount
-        //         .balance('nonexist')
-        //         .catch((error) => {
-        //             assert.equal(
-        //                 (error as Error).message,
-        //                 'Token contract nonexist does not exist.'
-        //             )
-        //             done()
-        //         })
-        //         .then(() => {
-        //             assert.fail()
-        //         })
-        // })
+        test('returns proper balance when symbol and contract name are passed', async function () {
+            const balance = await testAccount.balance('EOS', 'eosio.token')
+            assert.instanceOf(balance, Asset)
+        })
     })
 })

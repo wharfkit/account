@@ -1,0 +1,29 @@
+{
+    "request": {
+        "path": "https://jungle4.greymass.com/v1/chain/get_account",
+        "params": {
+            "method": "POST",
+            "body": "{\"account_name\":\"nonexistent\"}",
+            "headers": {}
+        }
+    },
+    "status": 400,
+    "json": {
+        "code": 400,
+        "message": "Account lookup",
+        "error": {
+            "code": 3060002,
+            "name": "account_query_exception",
+            "what": "Account Query Exception",
+            "details": [
+                {
+                    "message": "unable to retrieve account info (unknown key (boost::tuples::tuple<bool, eosio::chain::name, boost::tuples::null_type, boost::tuples::null_type, boost::tuples::null_type, boost::tuples::null_type, boost::tuples::null_type, boost::tuples::null_type, boost::tuples::null_type, boost::tuples::null_type>): (0 nonexistent))",
+                    "file": "chain_plugin.cpp",
+                    "line_number": 2538,
+                    "method": "get_account"
+                }
+            ]
+        }
+    },
+    "text": "{\"code\":400,\"message\":\"Account lookup\",\"error\":{\"code\":3060002,\"name\":\"account_query_exception\",\"what\":\"Account Query Exception\",\"details\":[{\"message\":\"unable to retrieve account info (unknown key (boost::tuples::tuple<bool, eosio::chain::name, boost::tuples::null_type, boost::tuples::null_type, boost::tuples::null_type, boost::tuples::null_type, boost::tuples::null_type, boost::tuples::null_type, boost::tuples::null_type, boost::tuples::null_type>): (0 nonexistent))\",\"file\":\"chain_plugin.cpp\",\"line_number\":2538,\"method\":\"get_account\"}]}}"
+}

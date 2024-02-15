@@ -561,10 +561,10 @@
     pako "^2.0.4"
     tslib "^2.1.0"
 
-"@wharfkit/antelope@^0.10.1", "@wharfkit/antelope@^0.7.3", "@wharfkit/antelope@^1.0.0":
-  version "0.10.1"
-  resolved "https://registry.yarnpkg.com/@wharfkit/antelope/-/antelope-0.10.1.tgz#c51c89a814fdf409793df161f447a6763ab89840"
-  integrity sha512-sBOe2dFvAlFACeLjQUOrZahqSwoyUWfjY8sxn2B+dViK2WPmD3Lo76a7v/Ko+J6WgA1EjAfp4NGMWyUcBDEJ6Q==
+"@wharfkit/antelope@^0.7.3", "@wharfkit/antelope@^1.0.0", "@wharfkit/antelope@^1.0.4":
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/@wharfkit/antelope/-/antelope-1.0.7.tgz#5ca010db963e061b2e8c47c14e55f86817718c2e"
+  integrity sha512-C4DRC4U+qC2XQKUgwznKX6i8xdKo+ZqxkZURrPTtY3v53IvKwj+3amTQQSpuECechS5x6ItcT+/fOFBNlQ2Juw==
   dependencies:
     bn.js "^4.11.9"
     brorand "^1.1.0"
@@ -594,6 +594,16 @@
   dependencies:
     "@wharfkit/abicache" "^1.2.0"
     "@wharfkit/antelope" "^1.0.0"
+    "@wharfkit/signing-request" "^3.1.0"
+    tslib "^2.1.0"
+
+"@wharfkit/contract@^1.1.4":
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/@wharfkit/contract/-/contract-1.1.5.tgz#2ca10090330cbb458049890076089237b644eb0e"
+  integrity sha512-I4w2QFvD/zb4uj5z0U4uQJLRCiZEbrT+AJ9/5goGm6SU42fsRud/k55qSBzW8Ij00OAv2h1+e8rR7xzUruXC9g==
+  dependencies:
+    "@wharfkit/abicache" "^1.2.0"
+    "@wharfkit/antelope" "^1.0.4"
     "@wharfkit/signing-request" "^3.1.0"
     tslib "^2.1.0"
 
@@ -645,13 +655,13 @@
     "@wharfkit/antelope" "^1.0.0"
     tslib "^2.0.3"
 
-"@wharfkit/token@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@wharfkit/token/-/token-1.0.1.tgz#072f51d0294756b26b4270c9cd68af2f27db064b"
-  integrity sha512-vwGaNiZvVf2X64BQLcObF5TxVZhmym1l6vQsNlTrNA225EhLEY15FI8W2HJ9/TrrTj3ZjPbzXtnQWedGsc41wg==
+"@wharfkit/token@^1.1.2":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@wharfkit/token/-/token-1.1.2.tgz#de01dc211c10e6d3ccf9948357e8373bf6067259"
+  integrity sha512-LYAGB7LnE3hxwjNsYYwpxbJ8APi0Y8pmh7i1SeKv13HaPVjuHisTnuPxJm3ndwU7pX9GT3hPyo/By0l3CEuLfw==
   dependencies:
-    "@wharfkit/antelope" "^1.0.0"
-    "@wharfkit/contract" "^1.0.0"
+    "@wharfkit/antelope" "^1.0.4"
+    "@wharfkit/contract" "^1.1.4"
     bn.js "^4.11.9"
     tslib "^2.1.0"
 
