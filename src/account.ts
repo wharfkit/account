@@ -66,8 +66,8 @@ export class Account<Data extends API.v1.AccountObject = API.v1.AccountObject> {
         return Asset.Symbol.from(this.data.total_resources.cpu_weight.symbol)
     }
 
-    balance(symbol?: Asset.SymbolType) {
-        return this.token.balance(this.accountName, symbol)
+    balance(symbol?: Asset.SymbolType, tokenContract?: NameType) {
+        return this.token.balance(this.accountName, symbol, tokenContract)
     }
 
     permission(permissionName: NameType): Permission {

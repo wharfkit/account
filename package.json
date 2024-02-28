@@ -20,11 +20,11 @@
         "@wharfkit/common": "^1.2.0",
         "@wharfkit/contract": "^1.0.0",
         "@wharfkit/resources": "^1.1.0",
-        "@wharfkit/token": "^1.0.1",
+        "@wharfkit/token": "^1.1.2",
         "tslib": "^2.1.0"
     },
     "resolutions": {
-        "@wharfkit/antelope": "^0.10.1"
+        "@wharfkit/antelope": "^1.0.0"
     },
     "devDependencies": {
         "@rollup/plugin-alias": "^4.0.2",

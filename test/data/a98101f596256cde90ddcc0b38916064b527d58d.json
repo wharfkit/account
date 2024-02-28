@@ -3,34 +3,35 @@
         "path": "https://telos.greymass.com/v1/chain/get_account",
         "params": {
             "method": "POST",
-            "body": "{\"account_name\":\"teamgreymass\"}"
+            "body": "{\"account_name\":\"teamgreymass\"}",
+            "headers": {}
         }
     },
     "status": 200,
     "json": {
         "account_name": "teamgreymass",
-        "head_block_num": 304235653,
-        "head_block_time": "2023-10-12T02:26:48.000",
+        "head_block_num": 328225928,
+        "head_block_time": "2024-02-28T00:38:46.500",
         "privileged": false,
         "last_code_update": "1970-01-01T00:00:00.000",
         "created": "2018-12-12T17:46:49.000",
-        "core_liquid_balance": "215249.7163 TLOS",
+        "core_liquid_balance": "341790.3479 TLOS",
         "ram_quota": 16716,
         "net_weight": 10000,
         "cpu_weight": 1000000,
         "net_limit": {
-            "used": 702,
-            "available": 39941998,
-            "max": 39942700,
-            "last_usage_update_time": "2023-10-11T22:27:30.500",
-            "current_used": 585
+            "used": 532,
+            "available": 41118596,
+            "max": 41119128,
+            "last_usage_update_time": "2024-02-28T00:31:04.000",
+            "current_used": 529
         },
         "cpu_limit": {
-            "used": 1611,
-            "available": 642219931,
-            "max": 642221542,
-            "last_usage_update_time": "2023-10-11T22:27:30.500",
-            "current_used": 1343
+            "used": 1404,
+            "available": 649135302,
+            "max": 649136706,
+            "last_usage_update_time": "2024-02-28T00:31:04.000",
+            "current_used": 1396
         },
         "ram_usage": 8366,
         "permissions": [
@@ -157,5 +158,5 @@
         },
         "eosio_any_linked_actions": []
     },
-    "text": "{\"account_name\":\"teamgreymass\",\"head_block_num\":304235653,\"head_block_time\":\"2023-10-12T02:26:48.000\",\"privileged\":false,\"last_code_update\":\"1970-01-01T00:00:00.000\",\"created\":\"2018-12-12T17:46:49.000\",\"core_liquid_balance\":\"215249.7163 TLOS\",\"ram_quota\":16716,\"net_weight\":10000,\"cpu_weight\":1000000,\"net_limit\":{\"used\":702,\"available\":39941998,\"max\":39942700,\"last_usage_update_time\":\"2023-10-11T22:27:30.500\",\"current_used\":585},\"cpu_limit\":{\"used\":1611,\"available\":642219931,\"max\":642221542,\"last_usage_update_time\":\"2023-10-11T22:27:30.500\",\"current_used\":1343},\"ram_usage\":8366,\"permissions\":[{\"perm_name\":\"active\",\"parent\":\"owner\",\"required_auth\":{\"threshold\":1,\"keys\":[{\"key\":\"EOS6gqJ7sdPgjHLFLtks9cRPs5qYHa9U3CwK4P2JasTLWKQ9kXZK1\",\"weight\":1}],\"accounts\":[],\"waits\":[]},\"linked_actions\":[]},{\"perm_name\":\"claim\",\"parent\":\"active\",\"required_auth\":{\"threshold\":1,\"keys\":[{\"key\":\"EOS6DLD9HxMcwn73U41jjdGsNe9vDFRKB26um6qTAqrtYcJFtED4C\",\"weight\":1}],\"accounts\":[],\"waits\":[]},\"linked_actions\":[{\"account\":\"eosio\",\"action\":\"claimrewards\"}]},{\"perm_name\":\"owner\",\"parent\":\"\",\"required_auth\":{\"threshold\":1,\"keys\":[{\"key\":\"EOS8QzGtCea2thiqcTVeXGdyRZpdKYptQznbcWSMj73FD5RgwKN82\",\"weight\":1}],\"accounts\":[],\"waits\":[]},\"linked_actions\":[]},{\"perm_name\":\"producerjson\",\"parent\":\"active\",\"required_auth\":{\"threshold\":1,\"keys\":[{\"key\":\"EOS5JCEciUdfXnQmTyj85T98bXTAZZ1g7Nmajseu7ZWB8DrDa6Etp\",\"weight\":1}],\"accounts\":[],\"waits\":[]},\"linked_actions\":[{\"account\":\"producerjson\",\"action\":\"set\"}]}],\"total_resources\":{\"owner\":\"teamgreymass\",\"net_weight\":\"1.0000 TLOS\",\"cpu_weight\":\"100.0000 TLOS\",\"ram_bytes\":15316},\"self_delegated_bandwidth\":{\"from\":\"teamgreymass\",\"to\":\"teamgreymass\",\"net_weight\":\"1.0000 TLOS\",\"cpu_weight\":\"100.0000 TLOS\"},\"refund_request\":null,\"voter_info\":{\"owner\":\"teamgreymass\",\"proxy\":\"\",\"producers\":[],\"staked\":\"6682315286\",\"last_stake\":0,\"last_vote_weight\":\"0.00000000000000000\",\"proxied_vote_weight\":\"0.00000000000000000\",\"is_proxy\":0,\"flags1\":0,\"reserved2\":0,\"reserved3\":\"0 \"},\"rex_info\":{\"version\":0,\"owner\":\"teamgreymass\",\"vote_stake\":\"568130.5286 TLOS\",\"rex_balance\":\"3326896774.2846 REX\",\"matured_rex\":\"28424569078808\",\"rex_maturities\":[{\"first\":\"2023-02-22T00:00:00\",\"second\":\"4844398664038\"}]},\"subjective_cpu_bill_limit\":{\"used\":0,\"available\":0,\"max\":0,\"last_usage_update_time\":\"2000-01-01T00:00:00.000\",\"current_used\":0},\"eosio_any_linked_actions\":[]}"
+    "text": "{\"account_name\":\"teamgreymass\",\"head_block_num\":328225928,\"head_block_time\":\"2024-02-28T00:38:46.500\",\"privileged\":false,\"last_code_update\":\"1970-01-01T00:00:00.000\",\"created\":\"2018-12-12T17:46:49.000\",\"core_liquid_balance\":\"341790.3479 TLOS\",\"ram_quota\":16716,\"net_weight\":10000,\"cpu_weight\":1000000,\"net_limit\":{\"used\":532,\"available\":41118596,\"max\":41119128,\"last_usage_update_time\":\"2024-02-28T00:31:04.000\",\"current_used\":529},\"cpu_limit\":{\"used\":1404,\"available\":649135302,\"max\":649136706,\"last_usage_update_time\":\"2024-02-28T00:31:04.000\",\"current_used\":1396},\"ram_usage\":8366,\"permissions\":[{\"perm_name\":\"active\",\"parent\":\"owner\",\"required_auth\":{\"threshold\":1,\"keys\":[{\"key\":\"EOS6gqJ7sdPgjHLFLtks9cRPs5qYHa9U3CwK4P2JasTLWKQ9kXZK1\",\"weight\":1}],\"accounts\":[],\"waits\":[]},\"linked_actions\":[]},{\"perm_name\":\"claim\",\"parent\":\"active\",\"required_auth\":{\"threshold\":1,\"keys\":[{\"key\":\"EOS6DLD9HxMcwn73U41jjdGsNe9vDFRKB26um6qTAqrtYcJFtED4C\",\"weight\":1}],\"accounts\":[],\"waits\":[]},\"linked_actions\":[{\"account\":\"eosio\",\"action\":\"claimrewards\"}]},{\"perm_name\":\"owner\",\"parent\":\"\",\"required_auth\":{\"threshold\":1,\"keys\":[{\"key\":\"EOS8QzGtCea2thiqcTVeXGdyRZpdKYptQznbcWSMj73FD5RgwKN82\",\"weight\":1}],\"accounts\":[],\"waits\":[]},\"linked_actions\":[]},{\"perm_name\":\"producerjson\",\"parent\":\"active\",\"required_auth\":{\"threshold\":1,\"keys\":[{\"key\":\"EOS5JCEciUdfXnQmTyj85T98bXTAZZ1g7Nmajseu7ZWB8DrDa6Etp\",\"weight\":1}],\"accounts\":[],\"waits\":[]},\"linked_actions\":[{\"account\":\"producerjson\",\"action\":\"set\"}]}],\"total_resources\":{\"owner\":\"teamgreymass\",\"net_weight\":\"1.0000 TLOS\",\"cpu_weight\":\"100.0000 TLOS\",\"ram_bytes\":15316},\"self_delegated_bandwidth\":{\"from\":\"teamgreymass\",\"to\":\"teamgreymass\",\"net_weight\":\"1.0000 TLOS\",\"cpu_weight\":\"100.0000 TLOS\"},\"refund_request\":null,\"voter_info\":{\"owner\":\"teamgreymass\",\"proxy\":\"\",\"producers\":[],\"staked\":\"6682315286\",\"last_stake\":0,\"last_vote_weight\":\"0.00000000000000000\",\"proxied_vote_weight\":\"0.00000000000000000\",\"is_proxy\":0,\"flags1\":0,\"reserved2\":0,\"reserved3\":\"0 \"},\"rex_info\":{\"version\":0,\"owner\":\"teamgreymass\",\"vote_stake\":\"568130.5286 TLOS\",\"rex_balance\":\"3326896774.2846 REX\",\"matured_rex\":\"28424569078808\",\"rex_maturities\":[{\"first\":\"2023-02-22T00:00:00\",\"second\":\"4844398664038\"}]},\"subjective_cpu_bill_limit\":{\"used\":0,\"available\":0,\"max\":0,\"last_usage_update_time\":\"2000-01-01T00:00:00.000\",\"current_used\":0},\"eosio_any_linked_actions\":[]}"
 }
