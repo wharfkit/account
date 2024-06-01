@@ -618,13 +618,14 @@
     node-fetch "^2.6.1"
     tslib "^2.1.0"
 
-"@wharfkit/resources@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@wharfkit/resources/-/resources-1.1.0.tgz#1a90917e41a0fa86c3f3254b0537bbe91b029d3e"
-  integrity sha512-rpVc4ecUDEui+NypidEe8nBVDiBza6CqFkMEIgaPklmGxm6mnkqC2hYwTYdbE8ARf4ulCPaJelXXjEUwI7sBNQ==
+"@wharfkit/resources@^1.2.3":
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/@wharfkit/resources/-/resources-1.2.3.tgz#9360ff8a21181042e9d709169546ae3d13c46765"
+  integrity sha512-uOf52gdpxfIWOlo0Z/kdMPMpyVk9Rnb9f6O/FACm/VQ13xykrR4AoZGhUnejft2S7RcqVWLjb9oqpOxhDOywBg==
   dependencies:
     "@wharfkit/antelope" "^1.0.0"
     bn.js "^4.11.9"
+    js-big-decimal "^2.0.7"
     tslib "^2.1.0"
 
 "@wharfkit/session@^1.0.0":
@@ -1785,6 +1786,11 @@ jest-worker@^26.2.1:
     "@types/node" "*"
     merge-stream "^2.0.0"
     supports-color "^7.0.0"
+
+js-big-decimal@^2.0.7:
+  version "2.0.7"
+  resolved "https://registry.yarnpkg.com/js-big-decimal/-/js-big-decimal-2.0.7.tgz#fb9b44b4c1eae08903cb191c0cf37b82f3a8d7c4"
+  integrity sha512-XGc79t2Iv3b7LFlYaTT8WoQBuWL4K81aST+dq2YGHV6giedbnoG0s33ju24Uw/BGqLYfPPgn4HGRrPS2mfKk3Q==
 
 js-tokens@^4.0.0:
   version "4.0.0"

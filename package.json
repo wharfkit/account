@@ -19,7 +19,7 @@
         "@wharfkit/antelope": "^1.0.0",
         "@wharfkit/common": "^1.2.0",
         "@wharfkit/contract": "^1.0.0",
-        "@wharfkit/resources": "^1.1.0",
+        "@wharfkit/resources": "^1.2.3",
         "@wharfkit/token": "^1.1.2",
         "tslib": "^2.1.0"
     },
