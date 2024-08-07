@@ -1,4 +1,5 @@
 export * from './account'
 export * from './permission'
+export * from './resource'
 export * from './kit'
 export * as SystemContract from './contracts/eosio'

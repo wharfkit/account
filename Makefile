@@ -1,4 +1,5 @@
 SHELL := /bin/bash
+PATH  := ./node_modules/.bin:$(PATH)
 SRC_FILES := $(shell find src -name '*.ts')
 TEST_FILES := $(wildcard test/tests/*.ts)
 BIN := ./node_modules/.bin
@@ -7,6 +8,10 @@ NYC_OPTS := --temp-dir build/nyc_output --report-dir build/coverage
 
 lib: ${SRC_FILES} package.json tsconfig.json node_modules rollup.config.mjs
 	@${BIN}/rollup -c && touch lib
+
+.PHONY: dev
+dev: node_modules
+	@onchange -k -i 'src/**/*.ts' 'config/*' -- ${BIN}/rollup -c && touch lib
 
 .PHONY: test
 test: node_modules

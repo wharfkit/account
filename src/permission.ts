@@ -11,6 +11,7 @@ import {
     PermissionLevelWeight,
     PublicKey,
     PublicKeyType,
+    Serializer,
     Struct,
     UInt16Type,
     UInt32Type,
@@ -52,7 +53,7 @@ export type LinkedActionType = LinkedAction | {account: NameType; action: NameTy
 @Struct.type('linked_actions')
 export class LinkedAction extends Struct {
     @Struct.field('name') declare account: Name
-    @Struct.field('name') declare action: Name
+    @Struct.field('name', {optional: true}) declare action?: Name
 }
 
 export type WaitWeightType = WaitWeight | {wait_sec: UInt32Type; weight: UInt16Type}

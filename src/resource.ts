@@ -16,6 +16,7 @@ export class Resource {
     readonly used: Int64
     readonly max: Int64
 
+    readonly current_used?: Int64
     readonly weight?: Int64
 
     constructor(resource: ResourceType, data: API.v1.AccountObject) {
@@ -24,6 +25,7 @@ export class Resource {
         switch (resource) {
             case 'cpu': {
                 this.available = this.data.cpu_limit.available
+                this.current_used = this.data.cpu_limit.current_used
                 this.used = this.data.cpu_limit.used
                 this.max = this.data.cpu_limit.max
                 this.weight = this.data.cpu_weight
@@ -31,6 +33,7 @@ export class Resource {
             }
             case 'net': {
                 this.available = this.data.net_limit.available
+                this.current_used = this.data.net_limit.current_used
                 this.used = this.data.net_limit.used
                 this.max = this.data.net_limit.max
                 this.weight = this.data.net_weight
@@ -45,6 +48,17 @@ export class Resource {
             default: {
                 throw new Error(`Unknown resource type (${resource}).`)
             }
+        }
+    }
+
+    toJSON() {
+        return {
+            resource: this.resource,
+            available: this.available,
+            current_used: this.current_used ? this.current_used : this.current_used,
+            used: this.used,
+            max: this.max,
+            weight: this.weight ? this.weight : undefined,
         }
     }
 }
