@@ -1,7 +1,7 @@
 {
     "name": "@wharfkit/account",
     "description": "Account kit for Wharf Kit",
-    "version": "1.1.1",
+    "version": "1.2.0",
     "homepage": "https://github.com/wharfkit/account",
     "license": "BSD-3-Clause",
     "main": "lib/account.js",
@@ -48,6 +48,7 @@
         "mocha": "^10.0.0",
         "node-fetch": "^2.6.1",
         "nyc": "^15.1.0",
+        "onchange": "^7.1",
         "prettier": "^2.2.1",
         "rollup": "^3.2.3",
         "rollup-plugin-dts": "^5.0.0",

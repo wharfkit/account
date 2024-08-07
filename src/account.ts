@@ -84,6 +84,10 @@ export class Account<Data extends API.v1.AccountObject = API.v1.AccountObject> {
         return Permission.from(permission)
     }
 
+    get permissions() {
+        return this.data.permissions.map((permission) => Permission.from(permission))
+    }
+
     resource(resourceType: ResourceType): Resource {
         return new Resource(resourceType, this.data)
     }
