@@ -59,19 +59,7 @@ export class LinkedAction extends Struct {
 export type WaitWeightType = WaitWeight | {wait_sec: UInt32Type; weight: UInt16Type}
 
 @Struct.type('permission')
-export class Permission extends Struct {
-    @Struct.field('name') declare perm_name: Name
-    @Struct.field('name') declare parent: Name
-    @Struct.field(Authority) declare required_auth: Authority
-    @Struct.field(LinkedAction, {array: true, optional: true}) declare linked_actions?: LinkedAction
-
-    static from(value: PermissionType): Permission {
-        if (isInstanceOf(value, Permission)) {
-            return value
-        }
-        return super.from(value) as Permission
-    }
-
+export class Permission extends API.v1.AccountPermission {
     get name(): Name {
         return this.perm_name
     }
