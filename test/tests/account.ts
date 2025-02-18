@@ -102,7 +102,7 @@ suite('Account', function () {
 
             const decoded = Serializer.decode({
                 data: action.data,
-                type: SystemContract.Types.Updateauth,
+                type: SystemContract.Types.updateauth,
             })
             assert.isTrue(decoded.account.equals('wharfkit1133'))
             assert.isTrue(decoded.parent.equals('active'))
@@ -138,7 +138,7 @@ suite('Account', function () {
 
                 const decoded = Serializer.decode({
                     data: action.data,
-                    type: SystemContract.Types.Deleteauth,
+                    type: SystemContract.Types.deleteauth,
                 })
                 assert.isTrue(decoded.account.equals('wharfkit1133'))
                 assert.isTrue(decoded.permission.equals('unittest'))
@@ -163,7 +163,7 @@ suite('Account', function () {
 
                 const decoded = Serializer.decode({
                     data: action.data,
-                    type: SystemContract.Types.Updateauth,
+                    type: SystemContract.Types.updateauth,
                 })
                 assert.isTrue(decoded.account.equals('wharfkit1133'))
                 assert.isTrue(decoded.parent.equals('owner'))
@@ -208,7 +208,7 @@ suite('Account', function () {
 
                 const decoded = Serializer.decode({
                     data: action.data,
-                    type: SystemContract.Types.Updateauth,
+                    type: SystemContract.Types.updateauth,
                 })
                 assert.isTrue(decoded.account.equals('wharfkit1133'))
                 assert.isTrue(decoded.parent.equals('owner'))
@@ -228,7 +228,7 @@ suite('Account', function () {
         assert.isTrue(action.name.equals('linkauth'))
         assert.isTrue(action.authorization[0].equals(PlaceholderAuth))
 
-        const decoded = Serializer.decode({data: action.data, type: SystemContract.Types.Linkauth})
+        const decoded = Serializer.decode({data: action.data, type: SystemContract.Types.linkauth})
         assert.isTrue(decoded.account.equals('wharfkit1133'))
         assert.isTrue(decoded.code.equals('eosio.token'))
         assert.isTrue(decoded.type.equals('transfer'))
@@ -243,7 +243,7 @@ suite('Account', function () {
 
         const decoded = Serializer.decode({
             data: action.data,
-            type: SystemContract.Types.Unlinkauth,
+            type: SystemContract.Types.unlinkauth,
         })
         assert.isTrue(decoded.account.equals('wharfkit1133'))
         assert.isTrue(decoded.code.equals('eosio.token'))
@@ -259,7 +259,7 @@ suite('Account', function () {
 
             const decoded = Serializer.decode({
                 data: action.data,
-                type: SystemContract.Types.Buyram,
+                type: SystemContract.Types.buyram,
             })
             assert.isTrue(decoded.payer.equals('wharfkit1133'))
             assert.isTrue(decoded.receiver.equals('wharfkit1133'))
@@ -275,7 +275,7 @@ suite('Account', function () {
 
             const decoded = Serializer.decode({
                 data: action.data,
-                type: SystemContract.Types.Buyram,
+                type: SystemContract.Types.buyram,
             })
             assert.isTrue(decoded.payer.equals('wharfkit1133'))
             assert.isTrue(decoded.receiver.equals('wharfkit1112'))
@@ -292,7 +292,7 @@ suite('Account', function () {
 
             const decoded = Serializer.decode({
                 data: action.data,
-                type: SystemContract.Types.Buyrambytes,
+                type: SystemContract.Types.buyrambytes,
             })
             assert.isTrue(decoded.payer.equals('wharfkit1133'))
             assert.isTrue(decoded.receiver.equals('wharfkit1133'))
@@ -308,7 +308,7 @@ suite('Account', function () {
 
             const decoded = Serializer.decode({
                 data: action.data,
-                type: SystemContract.Types.Buyrambytes,
+                type: SystemContract.Types.buyrambytes,
             })
             assert.isTrue(decoded.payer.equals('wharfkit1133'))
             assert.isTrue(decoded.receiver.equals('wharfkit1112'))
@@ -322,7 +322,7 @@ suite('Account', function () {
         assert.isTrue(action.name.equals('sellram'))
         assert.isTrue(action.authorization[0].equals(PlaceholderAuth))
 
-        const decoded = Serializer.decode({data: action.data, type: SystemContract.Types.Sellram})
+        const decoded = Serializer.decode({data: action.data, type: SystemContract.Types.sellram})
         assert.isTrue(decoded.account.equals('wharfkit1133'))
         assert.isTrue(decoded.bytes.equals(1024))
     })
@@ -336,7 +336,7 @@ suite('Account', function () {
 
             const decoded = Serializer.decode({
                 data: action.data,
-                type: SystemContract.Types.Delegatebw,
+                type: SystemContract.Types.delegatebw,
             })
             assert.isTrue(decoded.from.equals('wharfkit1133'))
             assert.isTrue(decoded.receiver.equals('wharfkit1133'))
@@ -352,7 +352,7 @@ suite('Account', function () {
 
             const decoded = Serializer.decode({
                 data: action.data,
-                type: SystemContract.Types.Delegatebw,
+                type: SystemContract.Types.delegatebw,
             })
             assert.isTrue(decoded.from.equals('wharfkit1133'))
             assert.isTrue(decoded.receiver.equals('wharfkit1133'))
@@ -368,7 +368,7 @@ suite('Account', function () {
 
             const decoded = Serializer.decode({
                 data: action.data,
-                type: SystemContract.Types.Delegatebw,
+                type: SystemContract.Types.delegatebw,
             })
             assert.isTrue(decoded.from.equals('wharfkit1133'))
             assert.isTrue(decoded.receiver.equals('wharfkit1133'))
@@ -384,7 +384,7 @@ suite('Account', function () {
 
             const decoded = Serializer.decode({
                 data: action.data,
-                type: SystemContract.Types.Delegatebw,
+                type: SystemContract.Types.delegatebw,
             })
             assert.isTrue(decoded.from.equals('wharfkit1133'))
             assert.isTrue(decoded.receiver.equals('wharfkit1133'))
@@ -404,7 +404,7 @@ suite('Account', function () {
 
             const decoded = Serializer.decode({
                 data: action.data,
-                type: SystemContract.Types.Delegatebw,
+                type: SystemContract.Types.delegatebw,
             })
             assert.isTrue(decoded.from.equals('wharfkit1133'))
             assert.isTrue(decoded.receiver.equals('wharfkit1112'))
@@ -425,7 +425,7 @@ suite('Account', function () {
 
             const decoded = Serializer.decode({
                 data: action.data,
-                type: SystemContract.Types.Delegatebw,
+                type: SystemContract.Types.delegatebw,
             })
             assert.isTrue(decoded.from.equals('wharfkit1133'))
             assert.isTrue(decoded.receiver.equals('wharfkit1112'))
@@ -444,7 +444,7 @@ suite('Account', function () {
 
             const decoded = Serializer.decode({
                 data: action.data,
-                type: SystemContract.Types.Undelegatebw,
+                type: SystemContract.Types.undelegatebw,
             })
             assert.isTrue(decoded.from.equals('wharfkit1133'))
             assert.isTrue(decoded.receiver.equals('wharfkit1133'))
@@ -459,7 +459,7 @@ suite('Account', function () {
 
             const decoded = Serializer.decode({
                 data: action.data,
-                type: SystemContract.Types.Undelegatebw,
+                type: SystemContract.Types.undelegatebw,
             })
             assert.isTrue(decoded.from.equals('wharfkit1133'))
             assert.isTrue(decoded.receiver.equals('wharfkit1133'))
@@ -474,7 +474,7 @@ suite('Account', function () {
 
             const decoded = Serializer.decode({
                 data: action.data,
-                type: SystemContract.Types.Undelegatebw,
+                type: SystemContract.Types.undelegatebw,
             })
             assert.isTrue(decoded.from.equals('wharfkit1133'))
             assert.isTrue(decoded.receiver.equals('wharfkit1133'))
@@ -489,7 +489,7 @@ suite('Account', function () {
 
             const decoded = Serializer.decode({
                 data: action.data,
-                type: SystemContract.Types.Undelegatebw,
+                type: SystemContract.Types.undelegatebw,
             })
             assert.isTrue(decoded.from.equals('wharfkit1133'))
             assert.isTrue(decoded.receiver.equals('wharfkit1133'))
@@ -508,7 +508,7 @@ suite('Account', function () {
 
             const decoded = Serializer.decode({
                 data: action.data,
-                type: SystemContract.Types.Undelegatebw,
+                type: SystemContract.Types.undelegatebw,
             })
             assert.isTrue(decoded.from.equals('wharfkit1133'))
             assert.isTrue(decoded.receiver.equals('wharfkit1112'))
