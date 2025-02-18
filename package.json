@@ -24,8 +24,7 @@
         "tslib": "^2.1.0"
     },
     "resolutions": {
-        "@wharfkit/antelope": "^1.0.7",
-        "@wharfkit/contract": "^1.2.1"
+        "@wharfkit/antelope": "^1.0.7"
     },
     "devDependencies": {
         "@rollup/plugin-alias": "^4.0.2",
