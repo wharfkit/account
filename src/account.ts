@@ -43,7 +43,7 @@ export interface UndelegateOptions {
 
 export class Account<Data extends API.v1.AccountObject = API.v1.AccountObject> {
     readonly data: Data
-    readonly systemContract: SystemContract.Contract
+    readonly systemContract: Contract
     readonly client: APIClient
     readonly token: Token
 
