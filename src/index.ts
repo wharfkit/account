@@ -11,3 +11,8 @@ export const SystemContract = {
     TableMap,
     Types,
 }
+
+export {
+    type ActionNameParams as SystemContractActionNameParams,
+    type ActionNames as SystemContractActionNames,
+} from './contracts/eosio'
