@@ -654,6 +654,16 @@
     bn.js "^4.11.9"
     tslib "^2.1.0"
 
+"@wharfkit/token@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@wharfkit/token/-/token-1.2.0.tgz#61bbad26fe7e04b0491feb699198c059357bf8da"
+  integrity sha512-o9pZdMPuyrqjRlXKTNhzb+LTdkyod6qi8nBXLJQlhaCYMlogudfQJB6W5C7kylzJHN4OSvRa0kY1xMPSJye4eA==
+  dependencies:
+    "@wharfkit/antelope" "^1.0.4"
+    "@wharfkit/contract" "^1.1.4"
+    bn.js "^4.11.9"
+    tslib "^2.1.0"
+
 "@wharfkit/wallet-plugin-privatekey@^1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@wharfkit/wallet-plugin-privatekey/-/wallet-plugin-privatekey-1.1.0.tgz#5985bff61895c54d2afbef359cd42da4f3871c7d"
